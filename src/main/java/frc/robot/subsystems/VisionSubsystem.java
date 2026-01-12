@@ -15,20 +15,19 @@ public class VisionSubsystem extends SubsystemBase {
 
   // pipeline layout:
   // 0 - april tags
-  // 1 - Reef Target
-  // 2 - Coral Station Target
 
-  private static int[] reefTags = {6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
-  private static int[] coralTags = {1, 2, 12, 13};
-  private static int[] processorTags = {3, 16};
-  private static int[] bargeTags = {4, 5, 14, 15};
+  private static int[] HUBTags = {2,3,4,5,8,9,10,11,18,19,20,21,24,25,26,27};
+  private static int[] trenchTags = {1,6,7,12,17,22,23,28};
+  private static int[] outpostTags = {13,14,29,30};
+  private static int[] towerTags = {15,16,31,32};
   boolean doRejectUpdate;
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("ReefDistance", VisionSubsystem.DistanceToReef());
-    SmartDashboard.putNumber("CoralStationDistance", VisionSubsystem.DistanceToCoralStation());
-    SmartDashboard.putNumber("ProcessorDistance", VisionSubsystem.DistanceToProcessor());
+    SmartDashboard.putNumber("HUBDistance", VisionSubsystem.DistanceToHUB());
+    SmartDashboard.putNumber("TrenchDistance", VisionSubsystem.DistanceToTrench());
+    SmartDashboard.putNumber("OutpostDistance", VisionSubsystem.DistanceToOutpost());
+    SmartDashboard.putNumber("TowerDistance", VisionSubsystem.DistanceToTower());
 
     /*
     LimelightHelpers.SetRobotOrientation(
@@ -47,6 +46,7 @@ public class VisionSubsystem extends SubsystemBase {
     */
   }
 
+  /** Outputs all the tags that we can see */
   public static int[] getTags() {
     LimelightHelpers.setPipelineIndex(name, 0);
     LimelightResults results = LimelightHelpers.getLatestResults(name);
@@ -60,6 +60,10 @@ public class VisionSubsystem extends SubsystemBase {
     return temp;
   }
 
+  /** Outputs if we can see a tag
+   @param tag the tag to check to see if we can see
+   @apiNote will return null if it cannot find location
+   */
   public static boolean CanSeeTag(int tag) {
     LimelightHelpers.setPipelineIndex(name, 0);
     LimelightResults results = LimelightHelpers.getLatestResults(name);
@@ -74,11 +78,14 @@ public class VisionSubsystem extends SubsystemBase {
     return false;
   }
 
+  /** Gets the pose of the robot in field space based on the tags that we can see 
+   @apiNote will return null if it cannot find location
+  */
   public static Pose3d getRobotPoseInFieldSpace() {
     if (!Robot.isSimulation()) {
       LimelightHelpers.setPipelineIndex(name, 0);
       LimelightResults results = LimelightHelpers.getLatestResults(name);
-      // if the limelights intel is good look for reef tag
+      // if the limelights intel is good look for tag
       while (!results.valid) {
         results = LimelightHelpers.getLatestResults(name);
       }
@@ -89,16 +96,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  public static boolean CanSeeAlgae() {
-    LimelightHelpers.setPipelineIndex(
-        frc.robot.Constants.VisionSubsystemConstants.limelightName, 3);
-    if (LimelightHelpers.getTargetColor(name)[0] != -1) {
-      return true;
-    }
-    return false;
-  }
-
-  public static double[] getReefLocation() {
+  /** Gets the location of the HUB relative to us in 2D space
+   @return X, Y of the HUB in robot space / relative to us
+   @apiNote will output -1, -1 if it cannot find location
+   */
+  public static double[] getHUBLocation() {
     // change the pipeline to apriltags
     LimelightHelpers.setPipelineIndex(name, 0);
 
@@ -106,7 +108,7 @@ public class VisionSubsystem extends SubsystemBase {
     LimelightResults results = LimelightHelpers.getLatestResults(name);
     Pose3d tagPoseRobot = null;
 
-    // if the limelights intel is good look for reef tag
+    // if the limelights intel is good look for tag
     while (!results.valid) {
       results = LimelightHelpers.getLatestResults(name);
     }
@@ -114,22 +116,22 @@ public class VisionSubsystem extends SubsystemBase {
     // loop through all tags in the view of limelight
     for (LimelightTarget_Fiducial tag : results.targets_Fiducials) {
 
-      // find out if any of the tags we have are those of the reef
-      for (int reeftag : reefTags) {
-        if (tag.fiducialID == reeftag) {
+      // find out if any of the tags we have are those of the
+      for (int Htag : HUBTags) {
+        if (tag.fiducialID == Htag) {
 
-          // if we have found a reef tag break out
+          // if we have found a tag break out
           tagPoseRobot = tag.getTargetPose_RobotSpace();
           break;
         }
       }
       if (tagPoseRobot != null) {
 
-        // continue to break out if we have a reef tag
+        // continue to break out if we have a tag
         break;
       }
     }
-    // if the view of the limelight has no reef tags in return -1, -1 so that auto can scan
+    // if the view of the limelight has no tags in return -1, -1 so that auto can scan
     if (tagPoseRobot != null) {
       return new double[] {tagPoseRobot.getX(), tagPoseRobot.getY()};
     } else {
@@ -137,7 +139,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  public static double[] getCoralStationLocation() {
+  /** Gets the location of the Trench relative to us in 2D space
+   @return X, Y of the Trench in robot space / relative to us
+   @apiNote will output -1, -1 if it cannot find location
+   */
+  public static double[] getTrenchLocation() {
 
     // change the pipeline to apriltags
     LimelightHelpers.setPipelineIndex(name, 0);
@@ -146,7 +152,7 @@ public class VisionSubsystem extends SubsystemBase {
     LimelightResults results = LimelightHelpers.getLatestResults(name);
     Pose3d tagPoseRobot = null;
 
-    // if the limelights intel is good look for reef tag
+    // if the limelights intel is good look for tag
     while (!results.valid) {
       results = LimelightHelpers.getLatestResults(name);
     }
@@ -154,22 +160,22 @@ public class VisionSubsystem extends SubsystemBase {
     // loop through all tags in the view of limelight
     for (LimelightTarget_Fiducial tag : results.targets_Fiducials) {
 
-      // find out if any of the tags we have are those of the reef
-      for (int coraltag : coralTags) {
-        if (tag.fiducialID == coraltag) {
+      // find out if any of the tags we have are those of the
+      for (int Htag : trenchTags) {
+        if (tag.fiducialID == Htag) {
 
-          // if we have found a reef tag break out
+          // if we have found a tag break out
           tagPoseRobot = tag.getTargetPose_RobotSpace();
           break;
         }
       }
       if (tagPoseRobot != null) {
 
-        // continue to break out if we have a reef tag
+        // continue to break out if we have a tag
         break;
       }
     }
-    // if the view of the limelight has no reef tags in return -1, -1 so that auto can scan
+    // if the view of the limelight has no tags in return -1, -1 so that auto can scan
     if (tagPoseRobot != null) {
       return new double[] {tagPoseRobot.getX(), tagPoseRobot.getY()};
     } else {
@@ -177,7 +183,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  public static double[] getProcessorLocation() {
+  /** Gets the location of the Outpost relative to us in 2D space
+   @return X, Y of the Outpost in robot space / relative to us
+   @apiNote will output -1, -1 if it cannot find location
+   */
+  public static double[] getOutpostLocation() {
     // change the pipeline to apriltags
     LimelightHelpers.setPipelineIndex(name, 0);
 
@@ -185,7 +195,7 @@ public class VisionSubsystem extends SubsystemBase {
     LimelightResults results = LimelightHelpers.getLatestResults(name);
     Pose3d tagPoseRobot = null;
 
-    // if the limelights intel is good look for reef tag
+    // if the limelights intel is good look for tag
     while (!results.valid) {
       results = LimelightHelpers.getLatestResults(name);
     }
@@ -193,61 +203,192 @@ public class VisionSubsystem extends SubsystemBase {
     // loop through all tags in the view of limelight
     for (LimelightTarget_Fiducial tag : results.targets_Fiducials) {
 
-      // find out if any of the tags we have are those of the reef
-      for (int processorTag : processorTags) {
+      // find out if any of the tags we have are those of the
+      for (int Htag : outpostTags) {
+        if (tag.fiducialID == Htag) {
+
+          // if we have found a tag break out
+          tagPoseRobot = tag.getTargetPose_RobotSpace();
+          break;
+        }
+      }
+      if (tagPoseRobot != null) {
+
+        // continue to break out if we have a tag
+        break;
+      }
+    }
+    // if the view of the limelight has no tags in return -1, -1 so that auto can scan
+    if (tagPoseRobot != null) {
+      return new double[] {tagPoseRobot.getX(), tagPoseRobot.getY()};
+    } else {
+      return new double[] {-1.0, -1.0};
+    }
+  }
+
+  /** Gets the location of the Tower relative to us in 2D space
+   @return X, Y of the Tower in robot space / relative to us
+   @apiNote will output -1, -1 if it cannot find location
+   */
+  public static double[] getTowerLocation() {
+    // change the pipeline to apriltags
+    LimelightHelpers.setPipelineIndex(name, 0);
+
+    // get the results
+    LimelightResults results = LimelightHelpers.getLatestResults(name);
+    Pose3d tagPoseRobot = null;
+
+    // if the limelights intel is good look for tag
+    while (!results.valid) {
+      results = LimelightHelpers.getLatestResults(name);
+    }
+
+    // loop through all tags in the view of limelight
+    for (LimelightTarget_Fiducial tag : results.targets_Fiducials) {
+
+      // find out if any of the tags we have are those of the
+      for (int Htag : towerTags) {
+        if (tag.fiducialID == Htag) {
+
+          // if we have found a tag break out
+          tagPoseRobot = tag.getTargetPose_RobotSpace();
+          break;
+        }
+      }
+      if (tagPoseRobot != null) {
+
+        // continue to break out if we have a tag
+        break;
+      }
+    }
+    // if the view of the limelight has no tags in return -1, -1 so that auto can scan
+    if (tagPoseRobot != null) {
+      return new double[] {tagPoseRobot.getX(), tagPoseRobot.getY()};
+    } else {
+      return new double[] {-1.0, -1.0};
+    }
+  }
+
+  /** Gets the location of the HUB relative to us / in robot space
+   @apiNote will return null if it cannot find location
+  */
+  public static Pose3d getHUBLocationPose3d() {
+    // change the pipeline to apriltags
+    LimelightHelpers.setPipelineIndex(name, 0);
+
+    // get the results
+    LimelightResults results = LimelightHelpers.getLatestResults(name);
+    Pose3d tagPoseRobot = null;
+
+    // if the limelights intel is good look for tag
+    while (!results.valid) {
+      results = LimelightHelpers.getLatestResults(name);
+    }
+
+    // loop through all tags in the view of limelight
+    for (LimelightTarget_Fiducial tag : results.targets_Fiducials) {
+
+      // find out if any of the tags we have are those of the
+      for (int Htag : HUBTags) {
+        if (tag.fiducialID == Htag) {
+
+          // if we have found a tag break out
+          tagPoseRobot = tag.getTargetPose_RobotSpace();
+          break;
+        }
+      }
+      if (tagPoseRobot != null) {
+
+        // continue to break out if we have a tag
+        break;
+      }
+    }
+    // if the view of the limelight has no tags in return -1, -1 so that auto can scan
+    if (tagPoseRobot != null) {
+      return tagPoseRobot;
+    } else {
+      return null;
+    }
+  }
+
+  /** Gets the location of the Trench relative to us / in robot space
+   @apiNote will return null if it cannot find location
+  */
+  public static Pose3d getTrenchLocationPose3d() {
+    // change the pipeline to apriltags
+    LimelightHelpers.setPipelineIndex(name, 0);
+
+    // get the results
+    LimelightResults results = LimelightHelpers.getLatestResults(name);
+    Pose3d tagPoseRobot = null;
+
+    // if the limelights intel is good look for tag
+    while (!results.valid) {
+      results = LimelightHelpers.getLatestResults(name);
+    }
+
+    // loop through all tags in the view of limelight
+    for (LimelightTarget_Fiducial tag : results.targets_Fiducials) {
+
+      // find out if any of the tags we have are those of the
+      for (int Htag : trenchTags) {
+        if (tag.fiducialID == Htag) {
+
+          // if we have found a tag break out
+          tagPoseRobot = tag.getTargetPose_RobotSpace();
+          break;
+        }
+      }
+      if (tagPoseRobot != null) {
+
+        // continue to break out if we have a tag
+        break;
+      }
+    }
+    // if the view of the limelight has no tags in return -1, -1 so that auto can scan
+    if (tagPoseRobot != null) {
+      return tagPoseRobot;
+    } else {
+      return null;
+    }
+  }
+
+  /** Gets the location of the Outpost relative to us / in robot space
+   @apiNote will return null if it cannot find location
+  */
+  public static Pose3d getOutpostLocationPose3d() {
+    // change the pipeline to apriltags
+    LimelightHelpers.setPipelineIndex(name, 0);
+
+    // get the results
+    LimelightResults results = LimelightHelpers.getLatestResults(name);
+    Pose3d tagPoseRobot = null;
+
+    // if the limelights intel is good look for tag
+    while (!results.valid) {
+      results = LimelightHelpers.getLatestResults(name);
+    }
+
+    // loop through all tags in the view of limelight
+    for (LimelightTarget_Fiducial tag : results.targets_Fiducials) {
+
+      // find out if any of the tags we have are those of the
+      for (int processorTag : outpostTags) {
         if (tag.fiducialID == processorTag) {
 
-          // if we have found a reef tag break out
+          // if we have found a tag break out
           tagPoseRobot = tag.getTargetPose_RobotSpace();
           break;
         }
       }
       if (tagPoseRobot != null) {
 
-        // continue to break out if we have a reef tag
+        // continue to break out if we have a tag
         break;
       }
     }
-    // if the view of the limelight has no reef tags in return -1, -1 so that auto can scan
-    if (tagPoseRobot != null) {
-      return new double[] {tagPoseRobot.getX(), tagPoseRobot.getY()};
-    } else {
-      return new double[] {-1.0, -1.0};
-    }
-  }
 
-  public static Pose3d getReefLocationPose3d() {
-    // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, 0);
-
-    // get the results
-    LimelightResults results = LimelightHelpers.getLatestResults(name);
-    Pose3d tagPoseRobot = null;
-
-    // if the limelights intel is good look for reef tag
-    while (!results.valid) {
-      results = LimelightHelpers.getLatestResults(name);
-    }
-
-    // loop through all tags in the view of limelight
-    for (LimelightTarget_Fiducial tag : results.targets_Fiducials) {
-
-      // find out if any of the tags we have are those of the reef
-      for (int reeftag : reefTags) {
-        if (tag.fiducialID == reeftag) {
-
-          // if we have found a reef tag break out
-          tagPoseRobot = tag.getTargetPose_RobotSpace();
-          break;
-        }
-      }
-      if (tagPoseRobot != null) {
-
-        // continue to break out if we have a reef tag
-        break;
-      }
-    }
-    // if the view of the limelight has no reef tags in return -1, -1 so that auto can scan
+    // if the view of the limelight has no tags in return -1, -1 so that auto can scan
     if (tagPoseRobot != null) {
       return tagPoseRobot;
     } else {
@@ -255,7 +396,10 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  public static Pose3d getCoralStationLocationPose3d() {
+  /** Gets the location of the Tower relative to us / in robot space
+   @apiNote will return null if it cannot find location
+  */
+  public static Pose3d getTowerLocationPose3d() {
     // change the pipeline to apriltags
     LimelightHelpers.setPipelineIndex(name, 0);
 
@@ -263,7 +407,7 @@ public class VisionSubsystem extends SubsystemBase {
     LimelightResults results = LimelightHelpers.getLatestResults(name);
     Pose3d tagPoseRobot = null;
 
-    // if the limelights intel is good look for reef tag
+    // if the limelights intel is good look for tag
     while (!results.valid) {
       results = LimelightHelpers.getLatestResults(name);
     }
@@ -271,62 +415,23 @@ public class VisionSubsystem extends SubsystemBase {
     // loop through all tags in the view of limelight
     for (LimelightTarget_Fiducial tag : results.targets_Fiducials) {
 
-      // find out if any of the tags we have are those of the reef
-      for (int coraltag : coralTags) {
-        if (tag.fiducialID == coraltag) {
-
-          // if we have found a reef tag break out
-          tagPoseRobot = tag.getTargetPose_RobotSpace();
-          break;
-        }
-      }
-      if (tagPoseRobot != null) {
-
-        // continue to break out if we have a reef tag
-        break;
-      }
-    }
-    // if the view of the limelight has no reef tags in return -1, -1 so that auto can scan
-    if (tagPoseRobot != null) {
-      return tagPoseRobot;
-    } else {
-      return null;
-    }
-  }
-
-  public static Pose3d getProcessorLocationPose3d() {
-    // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, 0);
-
-    // get the results
-    LimelightResults results = LimelightHelpers.getLatestResults(name);
-    Pose3d tagPoseRobot = null;
-
-    // if the limelights intel is good look for reef tag
-    while (!results.valid) {
-      results = LimelightHelpers.getLatestResults(name);
-    }
-
-    // loop through all tags in the view of limelight
-    for (LimelightTarget_Fiducial tag : results.targets_Fiducials) {
-
-      // find out if any of the tags we have are those of the reef
-      for (int processorTag : processorTags) {
+      // find out if any of the tags we have are those of the
+      for (int processorTag : towerTags) {
         if (tag.fiducialID == processorTag) {
 
-          // if we have found a reef tag break out
+          // if we have found a tag break out
           tagPoseRobot = tag.getTargetPose_RobotSpace();
           break;
         }
       }
       if (tagPoseRobot != null) {
 
-        // continue to break out if we have a reef tag
+        // continue to break out if we have a tag
         break;
       }
     }
 
-    // if the view of the limelight has no reef tags in return -1, -1 so that auto can scan
+    // if the view of the limelight has no tags in return -1, -1 so that auto can scan
     if (tagPoseRobot != null) {
       return tagPoseRobot;
     } else {
@@ -334,7 +439,10 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  public static double DistanceToReef() {
+  /** Gets the distance between us and the closet Apriltag on the HUB
+   @apiNote will return -1 if it cannot find a tag
+  */
+  public static double DistanceToHUB() {
     // change the pipeline to apriltags
     LimelightHelpers.setPipelineIndex(
         frc.robot.Constants.VisionSubsystemConstants.limelightName, 0);
@@ -352,11 +460,11 @@ public class VisionSubsystem extends SubsystemBase {
       int id = fiducial.id; // Tag ID
       double distToRobot = fiducial.distToRobot; // Distance to robot
 
-      // loop through all reef tags to find if this is a reef tag
-      for (int i = 0; i < reefTags.length; i++) {
+      // loop through all tags to find if this is a tag
+      for (int i = 0; i < HUBTags.length; i++) {
 
         // if it is then make it the new shortest
-        if (id == reefTags[i]) {
+        if (id == HUBTags[i]) {
           shortest = distToRobot;
         }
       }
@@ -370,7 +478,10 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  public static double DistanceToCoralStation() {
+  /** Gets the distance between us and the closet Apriltag on the Trench
+   @apiNote will return -1 if it cannot find a tag
+  */
+  public static double DistanceToTrench() {
     // change the pipeline to apriltags
     LimelightHelpers.setPipelineIndex(name, 0);
 
@@ -386,10 +497,10 @@ public class VisionSubsystem extends SubsystemBase {
       double distToRobot = fiducial.distToRobot; // Distance to robot
 
       // loop through all coral Station tags to find if this is a coral Station tag
-      for (int i = 0; i < coralTags.length; i++) {
+      for (int i = 0; i < trenchTags.length; i++) {
 
         // if it is then make it the new shortest
-        if (id == coralTags[i]) {
+        if (id == trenchTags[i]) {
           shortest = distToRobot;
         }
       }
@@ -403,7 +514,10 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  public static double DistanceToProcessor() {
+  /** Gets the distance between us and the closet Apriltag on the Outpost
+   @apiNote will return -1 if it cannot find a tag
+  */
+  public static double DistanceToOutpost() {
     // change the pipeline to apriltags
     LimelightHelpers.setPipelineIndex(name, 0);
 
@@ -419,10 +533,10 @@ public class VisionSubsystem extends SubsystemBase {
       double distToRobot = fiducial.distToRobot; // Distance to robot
 
       // loop through all processor tags to find if this is a processor tag
-      for (int i = 0; i < processorTags.length; i++) {
+      for (int i = 0; i < outpostTags.length; i++) {
 
         // if it is then make it the new shortest
-        if (id == processorTags[i]) {
+        if (id == outpostTags[i]) {
           shortest = distToRobot;
         }
       }
@@ -436,7 +550,10 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  public static double DistanceToBarge() {
+  /** Gets the distance between us and the closet Apriltag on the Tower
+   @apiNote will return -1 if it cannot find a tag
+  */
+  public static double DistanceToTower() {
     // change the pipeline to apriltags
     LimelightHelpers.setPipelineIndex(name, 0);
 
@@ -452,10 +569,10 @@ public class VisionSubsystem extends SubsystemBase {
       double distToRobot = fiducial.distToRobot; // Distance to robot
 
       // loop through all barge tags to find if this is a barge tag
-      for (int i = 0; i < bargeTags.length; i++) {
+      for (int i = 0; i < towerTags.length; i++) {
 
         // if it is then make it the new shortest
-        if (id == bargeTags[i]) {
+        if (id == towerTags[i]) {
           shortest = distToRobot;
         }
       }

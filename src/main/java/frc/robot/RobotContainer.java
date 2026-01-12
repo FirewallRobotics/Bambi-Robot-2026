@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
-@SuppressWarnings("unused")
 public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
