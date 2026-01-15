@@ -1,11 +1,15 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.LimelightHelpers;
 import frc.robot.LimelightHelpers.LimelightResults;
 import frc.robot.LimelightHelpers.LimelightTarget_Fiducial;
+import frc.robot.LimelightHelpers.PoseEstimate;
 import frc.robot.LimelightHelpers.RawFiducial;
 import frc.robot.Robot;
 
@@ -83,16 +87,19 @@ public class VisionSubsystem extends SubsystemBase {
   /** Gets the pose of the robot in field space based on the tags that we can see 
    @apiNote will return null if it cannot find location
   */
-  public static Pose3d getRobotPoseInFieldSpace() {
+  public static Pose2d getRobotPoseInFieldSpace() {
     if (!Robot.isSimulation()) {
       LimelightHelpers.setPipelineIndex(name, 0);
-      LimelightResults results = LimelightHelpers.getLatestResults(name);
-      // if the limelights intel is good look for tag
-      while (!results.valid) {
-        results = LimelightHelpers.getLatestResults(name);
+      double[] botPose = LimelightHelpers.getBotPose(name);
+
+      if (botPose.length != 0){
+        if (botPose[0] == 0){
+            return null;
+        }
+        return new Pose2d(new Translation2d(botPose[0] + 8.7736 ,botPose[1] + 4.0257), new Rotation2d(Math.toRadians(botPose[5])));
       }
-      LimelightTarget_Fiducial tag = results.targets_Fiducials[0];
-      return tag.getRobotPose_FieldSpace();
+      return null;
+
     } else {
       return null;
     }
