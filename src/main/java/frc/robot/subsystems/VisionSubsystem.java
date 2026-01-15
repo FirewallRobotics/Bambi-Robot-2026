@@ -9,6 +9,8 @@ import frc.robot.LimelightHelpers.LimelightTarget_Fiducial;
 import frc.robot.LimelightHelpers.RawFiducial;
 import frc.robot.Robot;
 
+/** This subsystem handles the high level code for specificly
+ * finding and predicting the position of the robot and apriltags associated with objects in our visual field */
 public class VisionSubsystem extends SubsystemBase {
 
   public static String name = frc.robot.Constants.VisionSubsystemConstants.limelightName;
