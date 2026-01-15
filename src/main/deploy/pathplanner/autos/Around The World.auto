@@ -7,6 +7,12 @@
         {
           "type": "path",
           "data": {
+            "pathName": "Move from start 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "Strafe Up Friendly"
           }
         },

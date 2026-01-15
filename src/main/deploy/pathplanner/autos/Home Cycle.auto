@@ -35,12 +35,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Run N' Shoot"
-          }
-        },
-        {
           "type": "named",
           "data": {
             "name": "Shoot"
@@ -56,6 +50,12 @@
           "type": "named",
           "data": {
             "name": "NoShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Go Hang Flipped"
           }
         }
       ]

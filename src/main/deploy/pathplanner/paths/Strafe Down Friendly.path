@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5,
-        "y": 6.5
+        "x": 2.3748388893024037,
+        "y": 5.28358674631866
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +20,8 @@
         "y": 2.5
       },
       "prevControl": {
-        "x": 2.5,
-        "y": 1.1586619718309858
+        "x": 2.391934916628597,
+        "y": 2.7254372146650407
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,8 +33,8 @@
   "pointTowardsZones": [
     {
       "fieldPosition": {
-        "x": 4.5,
-        "y": 4.0
+        "x": 4.6,
+        "y": 4.05
       },
       "rotationOffset": 0.0,
       "minWaypointRelativePos": 0.0,
