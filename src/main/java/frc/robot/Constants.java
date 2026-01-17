@@ -16,4 +16,12 @@ public final class Constants {
   public static class VisionSubsystemConstants {
     public static final String limelightName = "limelight-cyclops";
   }
+
+  public static class ArmConstants {
+
+    public static final double kSVolts = 0.11356;
+    public static final double kGVolts = 0.29175;
+    public static final double kVVoltSecondPerRad = 1.5928;
+    public static final double kAVoltSecondSquaredPerRad = 0.030171;
+  }
 }
