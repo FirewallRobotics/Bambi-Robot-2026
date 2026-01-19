@@ -1,0 +1,49 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Move from start 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Strafe Up Friendly"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Cross-Out High Bump"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Mow Lawn"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Cross-In Low Bump"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Strafe Up Friendly"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

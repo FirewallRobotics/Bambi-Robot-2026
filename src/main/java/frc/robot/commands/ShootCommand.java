@@ -3,5 +3,5 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class ShootCommand extends Command {
-    // TODO: make this; should shoot fuel
+  // TODO: make this; should shoot fuel
 }

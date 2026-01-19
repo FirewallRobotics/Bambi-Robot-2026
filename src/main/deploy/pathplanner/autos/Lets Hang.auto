@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Move from start"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Strafe Down Friendly"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Go Hang"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
