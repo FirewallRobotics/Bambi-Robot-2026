@@ -12,8 +12,10 @@ import frc.robot.LimelightHelpers.LimelightTarget_Fiducial;
 import frc.robot.LimelightHelpers.RawFiducial;
 import frc.robot.Robot;
 
-/** This subsystem handles the high level code for specificly
- * finding and predicting the position of the robot and apriltags associated with objects in our visual field */
+/**
+ * This subsystem handles the high level code for specificly finding and predicting the position of
+ * the robot and apriltags associated with objects in our visual field
+ */
 public class VisionSubsystem extends SubsystemBase {
 
   public static String name = frc.robot.Constants.VisionSubsystemConstants.limelightName;
@@ -21,10 +23,10 @@ public class VisionSubsystem extends SubsystemBase {
   // pipeline layout:
   // 0 - april tags
 
-  private static int[] HUBTags = {2,3,4,5,8,9,10,11,18,19,20,21,24,25,26,27};
-  private static int[] trenchTags = {1,6,7,12,17,22,23,28};
-  private static int[] outpostTags = {13,14,29,30};
-  private static int[] towerTags = {15,16,31,32};
+  private static int[] HUBTags = {2, 3, 4, 5, 8, 9, 10, 11, 18, 19, 20, 21, 24, 25, 26, 27};
+  private static int[] trenchTags = {1, 6, 7, 12, 17, 22, 23, 28};
+  private static int[] outpostTags = {13, 14, 29, 30};
+  private static int[] towerTags = {15, 16, 31, 32};
   boolean doRejectUpdate;
 
   @Override
@@ -79,9 +81,11 @@ public class VisionSubsystem extends SubsystemBase {
     return temp;
   }
 
-  /** Outputs if we can see a tag
-   @param tag the tag to check to see if we can see
-   @apiNote will return null if it cannot get data
+  /**
+   * Outputs if we can see a tag
+   *
+   * @param tag the tag to check to see if we can see
+   * @apiNote will return null if it cannot get data
    */
   public static boolean CanSeeTag(int tag) {
 
@@ -109,9 +113,11 @@ public class VisionSubsystem extends SubsystemBase {
     return false;
   }
 
-  /** Gets the pose of the robot in field space based on the tags that we can see
-   @apiNote will return null if it cannot find location
-  */
+  /**
+   * Gets the pose of the robot in field space based on the tags that we can see
+   *
+   * @apiNote will return null if it cannot find location
+   */
   public static Pose2d getRobotPoseInFieldSpace() {
 
     // Check to see if we are in the sim
@@ -125,21 +131,17 @@ public class VisionSubsystem extends SubsystemBase {
       double[] botPose = LimelightHelpers.getBotPose(name);
 
       // make sure the given position is valid
-      if (botPose.length != 0){
+      if (botPose.length != 0) {
 
         // if the position fails to contain good data return null
-        if (botPose[0] == 0){
-            return null;
+        if (botPose[0] == 0) {
+          return null;
         }
 
         // convert double [x,y] to a pose position
         return new Pose2d(
-          new Translation2d(
-              botPose[0] + 8.7736 ,
-              botPose[1] + 4.0257),
-          new Rotation2d(
-            Math.toRadians(botPose[5]))
-          );
+            new Translation2d(botPose[0] + 8.7736, botPose[1] + 4.0257),
+            new Rotation2d(Math.toRadians(botPose[5])));
       }
 
       // if the position fails to contain good data return null
@@ -151,9 +153,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  /** Gets the location of the HUB relative to us in 2D space
-   @return X, Y of the HUB in robot space / relative to us
-   @apiNote will output -1, -1 if it cannot find location
+  /**
+   * Gets the location of the HUB relative to us in 2D space
+   *
+   * @return X, Y of the HUB in robot space / relative to us
+   * @apiNote will output -1, -1 if it cannot find location
    */
   public static double[] getHUBLocation() {
     // change the pipeline to apriltags
@@ -194,9 +198,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  /** Gets the location of the Trench relative to us in 2D space
-   @return X, Y of the Trench in robot space / relative to us
-   @apiNote will output -1, -1 if it cannot find location
+  /**
+   * Gets the location of the Trench relative to us in 2D space
+   *
+   * @return X, Y of the Trench in robot space / relative to us
+   * @apiNote will output -1, -1 if it cannot find location
    */
   public static double[] getTrenchLocation() {
 
@@ -238,9 +244,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  /** Gets the location of the Outpost relative to us in 2D space
-   @return X, Y of the Outpost in robot space / relative to us
-   @apiNote will output -1, -1 if it cannot find location
+  /**
+   * Gets the location of the Outpost relative to us in 2D space
+   *
+   * @return X, Y of the Outpost in robot space / relative to us
+   * @apiNote will output -1, -1 if it cannot find location
    */
   public static double[] getOutpostLocation() {
     // change the pipeline to apriltags
@@ -281,9 +289,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  /** Gets the location of the Tower relative to us in 2D space
-   @return X, Y of the Tower in robot space / relative to us
-   @apiNote will output -1, -1 if it cannot find location
+  /**
+   * Gets the location of the Tower relative to us in 2D space
+   *
+   * @return X, Y of the Tower in robot space / relative to us
+   * @apiNote will output -1, -1 if it cannot find location
    */
   public static double[] getTowerLocation() {
     // change the pipeline to apriltags
@@ -324,9 +334,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  /** Gets the location of the HUB relative to us / in robot space
-   @apiNote will return null if it cannot find location
-  */
+  /**
+   * Gets the location of the HUB relative to us / in robot space
+   *
+   * @apiNote will return null if it cannot find location
+   */
   public static Pose3d getHUBLocationPose3d() {
     // change the pipeline to apriltags
     LimelightHelpers.setPipelineIndex(name, 0);
@@ -366,9 +378,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  /** Gets the location of the Trench relative to us / in robot space
-   @apiNote will return null if it cannot find location
-  */
+  /**
+   * Gets the location of the Trench relative to us / in robot space
+   *
+   * @apiNote will return null if it cannot find location
+   */
   public static Pose3d getTrenchLocationPose3d() {
     // change the pipeline to apriltags
     LimelightHelpers.setPipelineIndex(name, 0);
@@ -408,9 +422,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  /** Gets the location of the Outpost relative to us / in robot space
-   @apiNote will return null if it cannot find location
-  */
+  /**
+   * Gets the location of the Outpost relative to us / in robot space
+   *
+   * @apiNote will return null if it cannot find location
+   */
   public static Pose3d getOutpostLocationPose3d() {
     // change the pipeline to apriltags
     LimelightHelpers.setPipelineIndex(name, 0);
@@ -451,9 +467,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  /** Gets the location of the Tower relative to us / in robot space
-   @apiNote will return null if it cannot find location
-  */
+  /**
+   * Gets the location of the Tower relative to us / in robot space
+   *
+   * @apiNote will return null if it cannot find location
+   */
   public static Pose3d getTowerLocationPose3d() {
     // change the pipeline to apriltags
     LimelightHelpers.setPipelineIndex(name, 0);
@@ -494,9 +512,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  /** Gets the distance between us and the closet Apriltag on the HUB
-   @apiNote will return -1 if it cannot find a tag
-  */
+  /**
+   * Gets the distance between us and the closet Apriltag on the HUB
+   *
+   * @apiNote will return -1 if it cannot find a tag
+   */
   public static double DistanceToHUB() {
     // change the pipeline to apriltags
     LimelightHelpers.setPipelineIndex(
@@ -533,9 +553,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  /** Gets the distance between us and the closet Apriltag on the Trench
-   @apiNote will return -1 if it cannot find a tag
-  */
+  /**
+   * Gets the distance between us and the closet Apriltag on the Trench
+   *
+   * @apiNote will return -1 if it cannot find a tag
+   */
   public static double DistanceToTrench() {
     // change the pipeline to apriltags
     LimelightHelpers.setPipelineIndex(name, 0);
@@ -569,9 +591,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  /** Gets the distance between us and the closet Apriltag on the Outpost
-   @apiNote will return -1 if it cannot find a tag
-  */
+  /**
+   * Gets the distance between us and the closet Apriltag on the Outpost
+   *
+   * @apiNote will return -1 if it cannot find a tag
+   */
   public static double DistanceToOutpost() {
     // change the pipeline to apriltags
     LimelightHelpers.setPipelineIndex(name, 0);
@@ -605,9 +629,11 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  /** Gets the distance between us and the closet Apriltag on the Tower
-   @apiNote will return -1 if it cannot find a tag
-  */
+  /**
+   * Gets the distance between us and the closet Apriltag on the Tower
+   *
+   * @apiNote will return -1 if it cannot find a tag
+   */
   public static double DistanceToTower() {
     // change the pipeline to apriltags
     LimelightHelpers.setPipelineIndex(name, 0);
