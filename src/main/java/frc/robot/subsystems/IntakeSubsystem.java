@@ -22,8 +22,8 @@ public class IntakeSubsystem extends SubsystemBase {
             ArmConstants.kAVoltSecondSquaredPerRad);
   }
 
-  public void holdUp(Double position) {
-    armFeedfoward.calculate(position, 2, 3);
+  public void holdUp(Double position, Double velocity) {
+    armFeedfoward.calculateWithVelocities(position, velocity, 0);
   }
 
   public void angleArm(Double speed) {
