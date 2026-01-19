@@ -3,12 +3,14 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class IntakeCommand extends Command {
+public class AngleIntakeCommand extends Command {
 
   private final IntakeSubsystem m_IntakeSubsystem;
+  private Double sppd;
 
-  public IntakeCommand(IntakeSubsystem i_Subsystem) {
+  public AngleIntakeCommand(IntakeSubsystem i_Subsystem, Double speed) {
     m_IntakeSubsystem = i_Subsystem;
+    sppd = speed;
   }
 
   @Override
@@ -16,12 +18,12 @@ public class IntakeCommand extends Command {
 
   @Override
   public void execute() {
-    m_IntakeSubsystem.StartIntake(1.0);
+    m_IntakeSubsystem.angleArm(sppd);
   }
 
   @Override
   public void end(boolean interupted) {
-    m_IntakeSubsystem.StopIntake();
+    m_IntakeSubsystem.angleArm(0.0);
   }
 
   @Override
