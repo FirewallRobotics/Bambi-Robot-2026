@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.LimelightHelpers.LimelightResults;
 import frc.robot.LimelightHelpers.LimelightTarget_Fiducial;
@@ -23,10 +24,6 @@ public class VisionSubsystem extends SubsystemBase {
   // pipeline layout:
   // 0 - april tags
 
-  private static int[] HUBTags = {2, 3, 4, 5, 8, 9, 10, 11, 18, 19, 20, 21, 24, 25, 26, 27};
-  private static int[] trenchTags = {1, 6, 7, 12, 17, 22, 23, 28};
-  private static int[] outpostTags = {13, 14, 29, 30};
-  private static int[] towerTags = {15, 16, 31, 32};
   boolean doRejectUpdate;
 
   @Override
@@ -57,7 +54,7 @@ public class VisionSubsystem extends SubsystemBase {
   public static int[] getTags() {
 
     // change the pipelime to apriltags
-    LimelightHelpers.setPipelineIndex(name, 0);
+    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the latest results from the limelight
     LimelightResults results = LimelightHelpers.getLatestResults(name);
@@ -90,7 +87,7 @@ public class VisionSubsystem extends SubsystemBase {
   public static boolean CanSeeTag(int tag) {
 
     // change the pipelime to apriltags
-    LimelightHelpers.setPipelineIndex(name, 0);
+    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the latest results from the limelight
     LimelightResults results = LimelightHelpers.getLatestResults(name);
@@ -125,7 +122,7 @@ public class VisionSubsystem extends SubsystemBase {
     if (!Robot.isSimulation()) {
 
       // get the latest results from the limelight
-      LimelightHelpers.setPipelineIndex(name, 0);
+      LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
       // get the position of the robot on the field in [X, Y]
       double[] botPose = LimelightHelpers.getBotPose(name);
@@ -161,7 +158,7 @@ public class VisionSubsystem extends SubsystemBase {
    */
   public static double[] getHUBLocation() {
     // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, 0);
+    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
     LimelightResults results = LimelightHelpers.getLatestResults(name);
@@ -176,7 +173,7 @@ public class VisionSubsystem extends SubsystemBase {
     for (LimelightTarget_Fiducial tag : results.targets_Fiducials) {
 
       // find out if any of the tags we have are those of the
-      for (int Htag : HUBTags) {
+      for (int Htag : Constants.VisionSubsystemConstants.HUBTags) {
         if (tag.fiducialID == Htag) {
 
           // if we have found a tag break out
@@ -207,7 +204,7 @@ public class VisionSubsystem extends SubsystemBase {
   public static double[] getTrenchLocation() {
 
     // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, 0);
+    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
     LimelightResults results = LimelightHelpers.getLatestResults(name);
@@ -222,7 +219,7 @@ public class VisionSubsystem extends SubsystemBase {
     for (LimelightTarget_Fiducial tag : results.targets_Fiducials) {
 
       // find out if any of the tags we have are those of the
-      for (int Htag : trenchTags) {
+      for (int Htag : Constants.VisionSubsystemConstants.trenchTags) {
         if (tag.fiducialID == Htag) {
 
           // if we have found a tag break out
@@ -252,7 +249,7 @@ public class VisionSubsystem extends SubsystemBase {
    */
   public static double[] getOutpostLocation() {
     // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, 0);
+    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
     LimelightResults results = LimelightHelpers.getLatestResults(name);
@@ -267,7 +264,7 @@ public class VisionSubsystem extends SubsystemBase {
     for (LimelightTarget_Fiducial tag : results.targets_Fiducials) {
 
       // find out if any of the tags we have are those of the
-      for (int Htag : outpostTags) {
+      for (int Htag : Constants.VisionSubsystemConstants.outpostTags) {
         if (tag.fiducialID == Htag) {
 
           // if we have found a tag break out
@@ -297,7 +294,7 @@ public class VisionSubsystem extends SubsystemBase {
    */
   public static double[] getTowerLocation() {
     // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, 0);
+    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
     LimelightResults results = LimelightHelpers.getLatestResults(name);
@@ -312,7 +309,7 @@ public class VisionSubsystem extends SubsystemBase {
     for (LimelightTarget_Fiducial tag : results.targets_Fiducials) {
 
       // find out if any of the tags we have are those of the
-      for (int Htag : towerTags) {
+      for (int Htag : Constants.VisionSubsystemConstants.towerTags) {
         if (tag.fiducialID == Htag) {
 
           // if we have found a tag break out
@@ -341,7 +338,7 @@ public class VisionSubsystem extends SubsystemBase {
    */
   public static Pose3d getHUBLocationPose3d() {
     // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, 0);
+    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
     LimelightResults results = LimelightHelpers.getLatestResults(name);
@@ -356,7 +353,7 @@ public class VisionSubsystem extends SubsystemBase {
     for (LimelightTarget_Fiducial tag : results.targets_Fiducials) {
 
       // find out if any of the tags we have are those of the
-      for (int Htag : HUBTags) {
+      for (int Htag : Constants.VisionSubsystemConstants.HUBTags) {
         if (tag.fiducialID == Htag) {
 
           // if we have found a tag break out
@@ -385,7 +382,7 @@ public class VisionSubsystem extends SubsystemBase {
    */
   public static Pose3d getTrenchLocationPose3d() {
     // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, 0);
+    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
     LimelightResults results = LimelightHelpers.getLatestResults(name);
@@ -400,7 +397,7 @@ public class VisionSubsystem extends SubsystemBase {
     for (LimelightTarget_Fiducial tag : results.targets_Fiducials) {
 
       // find out if any of the tags we have are those of the
-      for (int Htag : trenchTags) {
+      for (int Htag : Constants.VisionSubsystemConstants.trenchTags) {
         if (tag.fiducialID == Htag) {
 
           // if we have found a tag break out
@@ -429,7 +426,7 @@ public class VisionSubsystem extends SubsystemBase {
    */
   public static Pose3d getOutpostLocationPose3d() {
     // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, 0);
+    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
     LimelightResults results = LimelightHelpers.getLatestResults(name);
@@ -444,7 +441,7 @@ public class VisionSubsystem extends SubsystemBase {
     for (LimelightTarget_Fiducial tag : results.targets_Fiducials) {
 
       // find out if any of the tags we have are those of the
-      for (int processorTag : outpostTags) {
+      for (int processorTag : Constants.VisionSubsystemConstants.outpostTags) {
         if (tag.fiducialID == processorTag) {
 
           // if we have found a tag break out
@@ -474,7 +471,7 @@ public class VisionSubsystem extends SubsystemBase {
    */
   public static Pose3d getTowerLocationPose3d() {
     // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, 0);
+    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
     LimelightResults results = LimelightHelpers.getLatestResults(name);
@@ -489,7 +486,7 @@ public class VisionSubsystem extends SubsystemBase {
     for (LimelightTarget_Fiducial tag : results.targets_Fiducials) {
 
       // find out if any of the tags we have are those of the
-      for (int processorTag : towerTags) {
+      for (int processorTag : Constants.VisionSubsystemConstants.towerTags) {
         if (tag.fiducialID == processorTag) {
 
           // if we have found a tag break out
@@ -520,7 +517,7 @@ public class VisionSubsystem extends SubsystemBase {
   public static double DistanceToHUB() {
     // change the pipeline to apriltags
     LimelightHelpers.setPipelineIndex(
-        frc.robot.Constants.VisionSubsystemConstants.limelightName, 0);
+        frc.robot.Constants.VisionSubsystemConstants.limelightName, Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
     RawFiducial[] fiducials =
@@ -536,10 +533,10 @@ public class VisionSubsystem extends SubsystemBase {
       double distToRobot = fiducial.distToRobot; // Distance to robot
 
       // loop through all tags to find if this is a tag
-      for (int i = 0; i < HUBTags.length; i++) {
+      for (int i = 0; i < Constants.VisionSubsystemConstants.HUBTags.length; i++) {
 
         // if it is then make it the new shortest
-        if (id == HUBTags[i]) {
+        if (id == Constants.VisionSubsystemConstants.HUBTags[i]) {
           shortest = distToRobot;
         }
       }
@@ -560,7 +557,7 @@ public class VisionSubsystem extends SubsystemBase {
    */
   public static double DistanceToTrench() {
     // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, 0);
+    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
     RawFiducial[] fiducials = LimelightHelpers.getRawFiducials(name);
@@ -574,10 +571,10 @@ public class VisionSubsystem extends SubsystemBase {
       double distToRobot = fiducial.distToRobot; // Distance to robot
 
       // loop through all coral Station tags to find if this is a coral Station tag
-      for (int i = 0; i < trenchTags.length; i++) {
+      for (int i = 0; i < Constants.VisionSubsystemConstants.trenchTags.length; i++) {
 
         // if it is then make it the new shortest
-        if (id == trenchTags[i]) {
+        if (id == Constants.VisionSubsystemConstants.trenchTags[i]) {
           shortest = distToRobot;
         }
       }
@@ -598,7 +595,7 @@ public class VisionSubsystem extends SubsystemBase {
    */
   public static double DistanceToOutpost() {
     // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, 0);
+    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
     RawFiducial[] fiducials = LimelightHelpers.getRawFiducials(name);
@@ -612,10 +609,10 @@ public class VisionSubsystem extends SubsystemBase {
       double distToRobot = fiducial.distToRobot; // Distance to robot
 
       // loop through all processor tags to find if this is a processor tag
-      for (int i = 0; i < outpostTags.length; i++) {
+      for (int i = 0; i < Constants.VisionSubsystemConstants.outpostTags.length; i++) {
 
         // if it is then make it the new shortest
-        if (id == outpostTags[i]) {
+        if (id == Constants.VisionSubsystemConstants.outpostTags[i]) {
           shortest = distToRobot;
         }
       }
@@ -636,7 +633,7 @@ public class VisionSubsystem extends SubsystemBase {
    */
   public static double DistanceToTower() {
     // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, 0);
+    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
     RawFiducial[] fiducials = LimelightHelpers.getRawFiducials(name);
@@ -650,10 +647,10 @@ public class VisionSubsystem extends SubsystemBase {
       double distToRobot = fiducial.distToRobot; // Distance to robot
 
       // loop through all barge tags to find if this is a barge tag
-      for (int i = 0; i < towerTags.length; i++) {
+      for (int i = 0; i < Constants.VisionSubsystemConstants.towerTags.length; i++) {
 
         // if it is then make it the new shortest
-        if (id == towerTags[i]) {
+        if (id == Constants.VisionSubsystemConstants.towerTags[i]) {
           shortest = distToRobot;
         }
       }
