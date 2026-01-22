@@ -1,19 +1,22 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
 
-  private final Spark arm_motor;
-  private final Spark intake_motor;
+  private final SparkFlex arm_motor;
+  private final SparkFlex intake_motor;
   private ArmFeedforward armFeedfoward;
 
   public IntakeSubsystem() {
-    intake_motor = new Spark(1);
-    arm_motor = new Spark(2);
+    intake_motor = new SparkFlex(ArmConstants.IntakeMotorID, MotorType.kBrushless);
+    arm_motor = new SparkFlex(ArmConstants.ArmMotorID, MotorType.kBrushless);
+
     armFeedfoward =
         new ArmFeedforward(
             ArmConstants.kSVolts,
@@ -23,7 +26,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void holdUp(Double position, Double velocity) {
-    armFeedfoward.calculateWithVelocities(position, velocity, 0);
+    arm_motor.set(armFeedfoward.calculate(position, velocity));
   }
 
   public void angleArm(Double speed) {

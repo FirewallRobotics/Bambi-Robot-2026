@@ -25,6 +25,9 @@ public final class Constants {
   }
 
   public static class ArmConstants {
+    
+    public static final int IntakeMotorID = 0;
+    public static final int ArmMotorID = 1;
 
     public static final double kSVolts = 0.11356;
     public static final double kGVolts = 0.29175;
