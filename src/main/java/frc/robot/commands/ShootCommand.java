@@ -12,7 +12,7 @@ public class ShootCommand extends Command {
 
   @Override
   public void execute() {
-    m_ShooterSubsystem.Shoot(1.0);
+    m_ShooterSubsystem.KickBalls();
   }
 
   @Override
