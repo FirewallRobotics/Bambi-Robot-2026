@@ -4,6 +4,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -157,42 +159,18 @@ public class VisionSubsystem extends SubsystemBase {
    * @apiNote will output -1, -1 if it cannot find location
    */
   public static double[] getHUBLocation() {
-    // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
-
-    // get the results
-    LimelightResults results = LimelightHelpers.getLatestResults(name);
-    Pose3d tagPoseRobot = null;
-
-    // if the limelights intel is bad return null
-    if (!results.valid) {
-      return null;
+    Pose2d currentPose2d = getRobotPoseInFieldSpace();
+    if(currentPose2d == null){
+      return new double[] {-1,-1};
     }
-
-    // loop through all tags in the view of limelight
-    for (LimelightTarget_Fiducial tag : results.targets_Fiducials) {
-
-      // find out if any of the tags we have are those of the
-      for (int Htag : Constants.VisionSubsystemConstants.HUBTags) {
-        if (tag.fiducialID == Htag) {
-
-          // if we have found a tag break out
-          tagPoseRobot = tag.getTargetPose_RobotSpace();
-          break;
-        }
-      }
-      if (tagPoseRobot != null) {
-
-        // continue to break out if we have a tag
-        break;
+    if(DriverStation.getAlliance().isPresent()){
+      if(DriverStation.getAlliance().get().equals(Alliance.Blue)){
+        return new double[] {Math.abs(4.6 - currentPose2d.getX()), Math.abs(4.04 - currentPose2d.getY())};
+      }else{
+        return new double[] {Math.abs(11.9 - currentPose2d.getX()), Math.abs(4.04 - currentPose2d.getY())};
       }
     }
-    // if the view of the limelight has no tags in return -1, -1 so that auto can scan
-    if (tagPoseRobot != null) {
-      return new double[] {tagPoseRobot.getX(), tagPoseRobot.getY()};
-    } else {
-      return new double[] {-1.0, -1.0};
-    }
+    return new double[] {-1,-1};
   }
 
   /**
