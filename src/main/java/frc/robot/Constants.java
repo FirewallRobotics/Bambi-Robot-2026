@@ -25,7 +25,7 @@ public final class Constants {
   }
 
   public static class ArmConstants {
-    
+
     public static final int IntakeMotorID = 0;
     public static final int ArmMotorID = 1;
 

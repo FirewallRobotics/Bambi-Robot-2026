@@ -160,17 +160,21 @@ public class VisionSubsystem extends SubsystemBase {
    */
   public static double[] getHUBLocation() {
     Pose2d currentPose2d = getRobotPoseInFieldSpace();
-    if(currentPose2d == null){
-      return new double[] {-1,-1};
+    if (currentPose2d == null) {
+      return new double[] {-1, -1};
     }
-    if(DriverStation.getAlliance().isPresent()){
-      if(DriverStation.getAlliance().get().equals(Alliance.Blue)){
-        return new double[] {Math.abs(4.6 - currentPose2d.getX()), Math.abs(4.04 - currentPose2d.getY())};
-      }else{
-        return new double[] {Math.abs(11.9 - currentPose2d.getX()), Math.abs(4.04 - currentPose2d.getY())};
+    if (DriverStation.getAlliance().isPresent()) {
+      if (DriverStation.getAlliance().get().equals(Alliance.Blue)) {
+        return new double[] {
+          Math.abs(4.6 - currentPose2d.getX()), Math.abs(4.04 - currentPose2d.getY())
+        };
+      } else {
+        return new double[] {
+          Math.abs(11.9 - currentPose2d.getX()), Math.abs(4.04 - currentPose2d.getY())
+        };
       }
     }
-    return new double[] {-1,-1};
+    return new double[] {-1, -1};
   }
 
   /**
@@ -495,7 +499,8 @@ public class VisionSubsystem extends SubsystemBase {
   public static double DistanceToHUB() {
     // change the pipeline to apriltags
     LimelightHelpers.setPipelineIndex(
-        frc.robot.Constants.VisionSubsystemConstants.limelightName, Constants.VisionSubsystemConstants.ApriltagsPipeline);
+        frc.robot.Constants.VisionSubsystemConstants.limelightName,
+        Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
     RawFiducial[] fiducials =
