@@ -12,7 +12,8 @@ public class ShootCommand extends Command {
 
   @Override
   public void execute() {
-    m_ShooterSubsystem.KickBalls();
+    // Change back to KickBalls when we have the storage
+    m_ShooterSubsystem.Shoot();
   }
 
   @Override
