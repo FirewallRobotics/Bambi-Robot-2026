@@ -153,27 +153,82 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   /**
+   * Gets the angle of the HUB relative to the robot
+   *
+   * @return angle in degrees with 0 being a line pointing from the blue driverstations to red (positive X)
+   * @apiNote will return -1 if it cannot get the angle
+   * @implNote NEEDS TESTING I HAVEN'T USED SWITCH STATEMENTS BEFORE
+   */
+  public static double getAngleToHUB() {
+
+    // get the robots pose in field space
+    Pose2d currentPose2d = getRobotPoseInFieldSpace();
+
+    // if the pose is null then return -1 to note we cannot get the angle
+    if (currentPose2d == null) {
+      return -1;
+    }
+
+    // check if we have an alliance
+    if (DriverStation.getAlliance().isPresent()) {
+
+      // if so then branch for those 2 alliances
+      // does atan of HUB.y - Robot.y / HUB.x - Robot.x and returns the resulting angle in degrees
+      switch (DriverStation.getAlliance().get()) {
+        case Blue:
+          return Math.atan2(
+              Constants.VisionSubsystemConstants.BlueHUBCenter[1] - currentPose2d.getY(),
+              Constants.VisionSubsystemConstants.BlueHUBCenter[0] - currentPose2d.getX());
+        case Red:
+          return Math.atan2(
+              Constants.VisionSubsystemConstants.RedHUBCenter[1] - currentPose2d.getY(),
+              Constants.VisionSubsystemConstants.RedHUBCenter[0] - currentPose2d.getX());
+      }
+    }
+
+    return -1;
+  }
+
+  /**
    * Gets the location of the HUB relative to us in 2D space
    *
    * @return X, Y of the HUB in robot space / relative to us
    * @apiNote will output -1, -1 if it cannot find location
    */
   public static double[] getHUBLocation() {
+
+    // get the robots pose in field space
     Pose2d currentPose2d = getRobotPoseInFieldSpace();
+
+    // if the pose is null then return {-1, -1} to note we cannot get the location
     if (currentPose2d == null) {
       return new double[] {-1, -1};
     }
+
+    // branch for which alliance we are on
     if (DriverStation.getAlliance().isPresent()) {
       if (DriverStation.getAlliance().get().equals(Alliance.Blue)) {
+
+        // if blue then do the math for blue
+        // take the position of the HUB in field space and subtract the robots position, thus giving
+        // the location of the HUB relative to us
         return new double[] {
-          Math.abs(4.6 - currentPose2d.getX()), Math.abs(4.04 - currentPose2d.getY())
+          Math.abs(Constants.VisionSubsystemConstants.BlueHUBCenter[0] - currentPose2d.getX()),
+          Math.abs(Constants.VisionSubsystemConstants.BlueHUBCenter[1] - currentPose2d.getY())
         };
       } else {
+
+        // if red do the math for red
+        // take the position of the HUB in field space and subtract the robots position, thus giving
+        // the location of the HUB relative to us
         return new double[] {
-          Math.abs(11.9 - currentPose2d.getX()), Math.abs(4.04 - currentPose2d.getY())
+          Math.abs(Constants.VisionSubsystemConstants.RedHUBCenter[0] - currentPose2d.getX()),
+          Math.abs(Constants.VisionSubsystemConstants.RedHUBCenter[1] - currentPose2d.getY())
         };
       }
     }
+
+    // if we do not have an alliance then return {-1, -1} as we should not assume
     return new double[] {-1, -1};
   }
 
