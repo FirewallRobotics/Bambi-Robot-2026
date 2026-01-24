@@ -46,13 +46,7 @@
     {
       "name": "Shoot",
       "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "NoShoot",
-      "waypointRelativePos": 1.0,
-      "endWaypointRelativePos": null,
+      "endWaypointRelativePos": 1.0,
       "command": null
     }
   ],

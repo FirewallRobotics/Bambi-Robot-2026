@@ -118,7 +118,7 @@ public class Telemetry {
             m_moduleSpeeds[i].setLength(state.ModuleStates[i].speedMetersPerSecond / (2 * MaxSpeed));
         }
 
-        SmartDashboard.putData("Swerve",
+        SmartDashboard.putData("SwerveActual",
         builder -> {
           builder.setSmartDashboardType("SwerveDrive");
 
@@ -144,6 +144,34 @@ public class Telemetry {
 
           builder.addDoubleProperty(
               "Robot Angle", () -> state.Pose.getRotation().getRadians(), null);
+        });
+
+        SmartDashboard.putData("SwerveTargets",
+        builder -> {
+          builder.setSmartDashboardType("SwerveDrive");
+
+          builder.addDoubleProperty(
+              "Front Left Angle", () -> state.ModuleTargets[0].angle.getRadians(), null);
+          builder.addDoubleProperty(
+              "Front Left Velocity", () -> state.ModuleTargets[0].speedMetersPerSecond, null);
+
+          builder.addDoubleProperty(
+              "Front Right Angle", () -> state.ModuleTargets[1].angle.getRadians(), null);
+          builder.addDoubleProperty(
+              "Front Right Velocity", () ->state.ModuleTargets[1].speedMetersPerSecond, null);
+
+          builder.addDoubleProperty(
+              "Back Left Angle", () -> state.ModuleTargets[2].angle.getRadians(), null);
+          builder.addDoubleProperty(
+              "Back Left Velocity", () -> state.ModuleTargets[2].speedMetersPerSecond, null);
+
+          builder.addDoubleProperty(
+              "Back Right Angle", () -> state.ModuleTargets[3].angle.getRadians(), null);
+          builder.addDoubleProperty(
+              "Back Right Velocity", () -> state.ModuleTargets[3].speedMetersPerSecond, null);
+
+          builder.addDoubleProperty(
+              "Robot Angle", () -> state.RawHeading.getRadians(), null);
         });
     }
 }

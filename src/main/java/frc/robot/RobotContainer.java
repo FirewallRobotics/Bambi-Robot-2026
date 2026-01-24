@@ -7,6 +7,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -17,9 +18,13 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-
+import frc.robot.commands.ClimbLevel1Command;
+import frc.robot.commands.HonkCommand;
+import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.ShootCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.IntakeSubsystem;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -38,7 +43,17 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+    public final IntakeSubsystem intakeSubsystem;
+
     public RobotContainer() {
+
+        intakeSubsystem = new IntakeSubsystem();
+
+        NamedCommands.registerCommand("Honk", new HonkCommand("la-cucaracha.chrp"));
+        NamedCommands.registerCommand("Shoot", new ShootCommand());
+        NamedCommands.registerCommand("Intake", new IntakeCommand(intakeSubsystem));
+        NamedCommands.registerCommand("Climb", new ClimbLevel1Command());
+
         configureBindings();
 
         // Warmup PathPlanner to avoid Java pauses
