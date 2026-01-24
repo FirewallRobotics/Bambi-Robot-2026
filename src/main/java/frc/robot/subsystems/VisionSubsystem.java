@@ -168,10 +168,10 @@ public class VisionSubsystem extends SubsystemBase {
    * @apiNote will return -1 if it cannot get the angle
    * @implNote NEEDS TESTING I HAVEN'T USED SWITCH STATEMENTS BEFORE
    */
-  public static double getAngleToHUB() {
+  public static double getAngleToHUB(CommandSwerveDrivetrain drivetrain) {
 
     // get the robots pose in field space
-    Pose2d currentPose2d = getRobotPoseInFieldSpace();
+    Pose2d currentPose2d = drivetrain.getState().Pose;
 
     double Xangle;
 
