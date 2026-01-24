@@ -173,6 +173,8 @@ public class VisionSubsystem extends SubsystemBase {
     // get the robots pose in field space
     Pose2d currentPose2d = getRobotPoseInFieldSpace();
 
+    double Xangle;
+
     // if the pose is null then return -1 to note we cannot get the angle
     if (currentPose2d == null) {
       return -1;
@@ -185,13 +187,19 @@ public class VisionSubsystem extends SubsystemBase {
       // does atan of HUB.y - Robot.y / HUB.x - Robot.x and returns the resulting angle in degrees
       switch (DriverStation.getAlliance().get()) {
         case Blue:
-          return Math.atan2(
+          Xangle = Math.atan2(
               Constants.VisionSubsystemConstants.BlueHUBCenter[1] - currentPose2d.getY(),
               Constants.VisionSubsystemConstants.BlueHUBCenter[0] - currentPose2d.getX());
+
+          SmartDashboard.putNumber("AngleToHUB", Xangle);
+          return Xangle;
         case Red:
-          return Math.atan2(
+          Xangle = Math.atan2(
               Constants.VisionSubsystemConstants.RedHUBCenter[1] - currentPose2d.getY(),
               Constants.VisionSubsystemConstants.RedHUBCenter[0] - currentPose2d.getX());
+
+          SmartDashboard.putNumber("AngleToHUB", Xangle);
+          return Xangle;
       }
     }
 
