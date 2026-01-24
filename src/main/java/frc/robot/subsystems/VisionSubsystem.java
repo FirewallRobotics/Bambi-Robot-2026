@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,6 +16,7 @@ import frc.robot.LimelightHelpers.LimelightResults;
 import frc.robot.LimelightHelpers.LimelightTarget_Fiducial;
 import frc.robot.LimelightHelpers.RawFiducial;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 
 /**
  * This subsystem handles the high level code for specificly finding and predicting the position of
@@ -26,7 +29,15 @@ public class VisionSubsystem extends SubsystemBase {
   // pipeline layout:
   // 0 - april tags
 
-  boolean doRejectUpdate;
+  private boolean doRejectUpdate;
+  private RobotContainer robotContainer;
+
+  private Pigeon2 m_pigeon2;
+
+  public VisionSubsystem(RobotContainer robotContainer){
+    this.robotContainer = robotContainer;
+    m_pigeon2 = robotContainer.drivetrain.getPigeon2();
+  }
 
   @Override
   public void periodic() {
@@ -35,9 +46,8 @@ public class VisionSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("OutpostDistance", VisionSubsystem.DistanceToOutpost());
     SmartDashboard.putNumber("TowerDistance", VisionSubsystem.DistanceToTower());
 
-    /*
     LimelightHelpers.SetRobotOrientation(
-        name, RobotContainer.drivebase.getHeading().getDegrees(), 0, 0, 0, 0, 0);
+        name, m_pigeon2.getYaw().getValueAsDouble(), 0, m_pigeon2.getPitch().getValueAsDouble(), 0, m_pigeon2.getRoll().getValueAsDouble(), 0);
     LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
     if (mt2 != null) {
       if (mt2.tagCount == 0) {
@@ -46,10 +56,9 @@ public class VisionSubsystem extends SubsystemBase {
         doRejectUpdate = false;
       }
       if (!doRejectUpdate) {
-        RobotContainer.drivebase.addVisionReading(mt2.pose, mt2.timestampSeconds);
+        robotContainer.drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
       }
     }
-    */
   }
 
   /** Outputs all the tags that we can see */

@@ -7,6 +7,7 @@ package frc.robot;
 import com.ctre.phoenix6.HootAutoReplay;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -15,6 +16,8 @@ public class Robot extends TimedRobot {
 
     private final RobotContainer m_robotContainer;
 
+    private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
     /* log and replay timestamp and joystick data */
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
         .withTimestampReplay()
@@ -22,6 +25,10 @@ public class Robot extends TimedRobot {
 
     public Robot() {
         m_robotContainer = new RobotContainer();
+
+        m_chooser.setDefaultOption("Shoot In Circle (Primary scorer, Start on Right)", "Around The World");
+        m_chooser.addOption("Shoot, Empty depot, climb (Start on Left)", "Home Cycle");
+        m_chooser.addOption("Just Empty and Climb (Start on Left)", "Lets Hang");
     }
 
     @Override
@@ -41,7 +48,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+        m_autonomousCommand = m_robotContainer.getAutonomousCommand(m_chooser.getSelected());
 
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().schedule(m_autonomousCommand);
