@@ -3,7 +3,6 @@ package frc.robot.commands;
 import java.util.Arrays;
 import java.util.Collection;
 
-import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.hardware.TalonFX;

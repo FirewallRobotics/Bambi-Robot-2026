@@ -21,7 +21,7 @@ public class DriveAssistanceSubsystem extends SubsystemBase {
     public void driveFacingHUB(double vx, double vy){
         SwerveRequest.RobotCentricFacingAngle request = new RobotCentricFacingAngle();
         request.HeadingController = turnpPidController;
-        request.TargetDirection = new Rotation2d(Math.toRadians(VisionSubsystem.getAngleToHUB()));
+        request.TargetDirection = new Rotation2d(Math.toRadians(VisionSubsystem.getAngleToHUB(drivetrain)));
         request.VelocityX = vx;
         request.VelocityY = vy;
 
