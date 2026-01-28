@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
     public Robot() {
         m_robotContainer = new RobotContainer();
 
-        m_chooser.setDefaultOption("Shoot In Circle (Primary scorer, Start on Right)", "Around The World");
+        m_chooser.setDefaultOption("Shoot In Circle (Primary scorer, Start on Right)", "Grab N Go");
         m_chooser.addOption("Shoot, Empty depot, climb (Start on Left)", "Home Cycle");
         m_chooser.addOption("Just Empty and Climb (Start on Left)", "Lets Hang");
     }
