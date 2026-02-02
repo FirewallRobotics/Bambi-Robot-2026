@@ -1,9 +1,15 @@
 package frc.robot.subsystems;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,14 +27,27 @@ public class ShooterSubsystem extends SubsystemBase {
   private final SparkFlexConfig bShootConfig;
 
   // private final PIDController finalShootPID;
-  private SimpleMotorFeedforward motorFeedforward;
-  private final AbsoluteEncoder tShootEncoder;
-  private final AbsoluteEncoder bShootEncoder;
+  private SimpleMotorFeedforward topMotorFeedforward;
+  private SimpleMotorFeedforward bottomMotorFeedforward;
+  private final RelativeEncoder tShootEncoder;
+  private final RelativeEncoder bShootEncoder;
+
+  private final PIDController tShootPID;
+
+  private double setVelocity;
+  
 
   // private final SparkFlex kickMotor;
 
   public ShooterSubsystem() {
-    shootMotorTop = new SparkFlex(13, MotorType.kBrushless);
+
+    SmartDashboard.putNumber("Velocity Top", 0);
+    SmartDashboard.putNumber("Velocity Bottom", 0);
+    SmartDashboard.putNumber("Current Limit", 0);
+
+    setVelocity = 1200;
+
+    shootMotorTop = new SparkFlex(14, MotorType.kBrushless);
     shootMotorBottom = new SparkFlex(15, MotorType.kBrushless);
     // leftFollow = new SparkFlex(0, MotorType.kBrushless);
     // rightFollow = new SparkFlex(0, MotorType.kBrushless);
@@ -38,23 +57,27 @@ public class ShooterSubsystem extends SubsystemBase {
     tShootConfig = new SparkFlexConfig();
     bShootConfig = new SparkFlexConfig();
 
-    motorFeedforward = new SimpleMotorFeedforward(1, 3, 2);
+    topMotorFeedforward = new SimpleMotorFeedforward(1, 3, 2);
+    bottomMotorFeedforward = new SimpleMotorFeedforward(1, 3, 2);
+    
     // finalShootPID = new PIDController(1, 1, 1);
     // kickMotor = new SparkFlex(0, MotorType.kBrushless);
-    SmartDashboard.putNumber("Velocity Top", 0);
-    SmartDashboard.putNumber("Velocity Bottom", 0);
-    SmartDashboard.putNumber("Acceleration", 0);
-    SmartDashboard.putNumber("Current Limit", 0);
-    tShootEncoder = shootMotorTop.getAbsoluteEncoder();
-    bShootEncoder = shootMotorBottom.getAbsoluteEncoder();
+    
+    tShootPID = new PIDController(0.01, 0, 0);
+    tShootPID.setTolerance(100);
+
+    
+
+    tShootEncoder = shootMotorTop.getEncoder();
+    bShootEncoder = shootMotorBottom.getEncoder();
 
     // lFollowerConfig.inverted(true);
     // lFollowerConfig.follow(shootMotorLeft);
     // rFollowerConfig.inverted(true);
     // rFollowerConfig.follow(shootMotorRight);
 
-    tShootConfig.smartCurrentLimit((int) SmartDashboard.getNumber("Current Limit", 20));
-    bShootConfig.smartCurrentLimit((int) SmartDashboard.getNumber("Current Limit", 20));
+    tShootConfig.smartCurrentLimit(20);
+    bShootConfig.smartCurrentLimit(20);
 
     // tShootConfig.inverted(true);
 
@@ -80,15 +103,17 @@ public class ShooterSubsystem extends SubsystemBase {
   public void Shoot() {
 
     // shootMotorBottom.set(-1);
-    // shootMotorTop.set(1);
+    //shootMotorTop.set(1);
 
-    shootMotorTop.setVoltage(
-        motorFeedforward.calculateWithVelocities(
-            tShootEncoder.getVelocity(), SmartDashboard.getNumber("Velocity Top", 0)));
+    shootMotorTop.setVoltage(topMotorFeedforward.calculateWithVelocities(tShootEncoder.getVelocity(), setVelocity) + tShootPID.calculate(tShootEncoder.getVelocity(), setVelocity));
+
+    // shootMotorTop.setVoltage(
+    //     topMotorFeedforward.calculateWithVelocities(
+    //         tShootEncoder.getVelocity(), 600));
     shootMotorBottom.setVoltage(
-        motorFeedforward.calculateWithVelocities(
-            bShootEncoder.getVelocity(), SmartDashboard.getNumber("Velocity Bottom", 0)));
-
+        bottomMotorFeedforward.calculateWithVelocities(
+            bShootEncoder.getVelocity(), 600));
+    //Logger.getGlobal().log(Level.INFO, "Top V: " + tShootEncoder.getVelocity());
     // shootMotorLeft.setVoltage(
     //     motorFeedforward.calculate(
     //             SmartDashboard.getNumber("Velocity", 0),
