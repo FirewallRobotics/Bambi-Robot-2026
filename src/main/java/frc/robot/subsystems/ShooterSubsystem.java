@@ -1,12 +1,18 @@
 package frc.robot.subsystems;
 
+import java.rmi.server.RMIClassLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.FeedbackSensor;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -33,6 +39,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private final RelativeEncoder bShootEncoder;
 
   private final PIDController tShootPID;
+  private SparkClosedLoopController tShootClosedLoopController;
 
   private double setVelocity;
   
@@ -44,7 +51,6 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Velocity Top", 0);
     SmartDashboard.putNumber("Velocity Bottom", 0);
     SmartDashboard.putNumber("Current Limit", 0);
-
     setVelocity = 1200;
 
     shootMotorTop = new SparkFlex(14, MotorType.kBrushless);
@@ -56,6 +62,8 @@ public class ShooterSubsystem extends SubsystemBase {
     // rFollowerConfig = new SparkFlexConfig();
     tShootConfig = new SparkFlexConfig();
     bShootConfig = new SparkFlexConfig();
+
+    tShootClosedLoopController = shootMotorTop.getClosedLoopController();
 
     topMotorFeedforward = new SimpleMotorFeedforward(1, 3, 2);
     bottomMotorFeedforward = new SimpleMotorFeedforward(1, 3, 2);
@@ -80,6 +88,25 @@ public class ShooterSubsystem extends SubsystemBase {
     bShootConfig.smartCurrentLimit(20);
 
     // tShootConfig.inverted(true);
+    tShootConfig.encoder.positionConversionFactor(1);
+    tShootConfig.encoder.positionConversionFactor(1);
+
+    tShootConfig.closedLoop
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        // Set PID values for position control. We don't need to pass a closed loop
+        // slot, as it will default to slot 0.
+        .p(0.001)
+        .i(0.0000000001)
+        .d(0)
+        .outputRange(-1, 1)
+        // Set PID values for velocity control in slot 1
+        .p(0.0001, ClosedLoopSlot.kSlot1)
+        .i(0, ClosedLoopSlot.kSlot1)
+        .d(0, ClosedLoopSlot.kSlot1)
+        .outputRange(-1, 1, ClosedLoopSlot.kSlot1)
+        .feedForward
+          // kV is now in Volts, so we multiply by the nominal voltage (12V)
+          .kV(12.0 / 5767, ClosedLoopSlot.kSlot1);
 
     shootMotorTop.configure(
         tShootConfig,
@@ -104,8 +131,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // shootMotorBottom.set(-1);
     //shootMotorTop.set(1);
-
-    shootMotorTop.setVoltage(topMotorFeedforward.calculateWithVelocities(tShootEncoder.getVelocity(), setVelocity) + tShootPID.calculate(tShootEncoder.getVelocity(), setVelocity));
+    tShootClosedLoopController.setSetpoint(setVelocity, ControlType.kVelocity);
+    //shootMotorTop.setVoltage(topMotorFeedforward.calculateWithVelocities(tShootEncoder.getVelocity(), setVelocity) + tShootPID.calculate(tShootEncoder.getVelocity(), setVelocity));
 
     // shootMotorTop.setVoltage(
     //     topMotorFeedforward.calculateWithVelocities(
@@ -139,6 +166,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void StopShoot() {
 
+    //shootMotorTop.setVoltage(0);
+    //tShootClosedLoopController.setSetpoint(0, ControlType.kVelocity);
+    
     shootMotorTop.setVoltage(0);
     shootMotorBottom.setVoltage(0);
     // shootMotorTop.set(0);
