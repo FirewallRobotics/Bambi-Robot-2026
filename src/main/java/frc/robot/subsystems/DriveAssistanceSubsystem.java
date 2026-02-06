@@ -7,7 +7,9 @@ import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
@@ -34,7 +36,7 @@ public class DriveAssistanceSubsystem extends SubsystemBase {
         drivetrain.applyRequest(() -> request);
     }
 
-    public void maintainArchAroundHUB(double vx, double vy){
+    public void maintainArchAroundHUB(double vx, double vy, CommandXboxController drivercontroller){
         /**
          * Calculate distance to HUB using similar triangles:
          * distance = (Y difference) / (X difference)
@@ -78,6 +80,7 @@ public class DriveAssistanceSubsystem extends SubsystemBase {
             double angleRad = Math.toRadians(HUBAngle);
             double vxRedirect = vx * Math.cos(angleRad);
             double vyRedirect = vy * Math.sin(angleRad);
+            // drivercontroller.setRumble(RumbleType.kBothRumble, 0.5); Add later
             driveFacingHUB(vxRedirect, vyRedirect);
         } else if(currentdistance < M_mindist){
             // Redirect towards HUB
@@ -85,8 +88,10 @@ public class DriveAssistanceSubsystem extends SubsystemBase {
             // I don't know if this will work. Qwen wrote this
             double vxRedirect = -vx * Math.cos(angleRad);
             double vyRedirect = -vy * Math.sin(angleRad);
+            // drivercontroller.setRumble(RumbleType.kBothRumble, 0.5);
             driveFacingHUB(vxRedirect, vyRedirect);
         } else {
+            // drivercontroller.setRumble(RumbleType.kBothRumble, 0);
             driveFacingHUB(vx, vy);
         }
 
