@@ -5,20 +5,35 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class ShootCommand extends Command {
   private ShooterSubsystem m_ShooterSubsystem;
+  private double previousRPM;
 
   public ShootCommand(ShooterSubsystem s_Subsystem) {
     m_ShooterSubsystem = s_Subsystem;
+    previousRPM = 0;
   }
 
   @Override
   public void execute() {
-    // Change back to KickBalls when we have the storage
+
     m_ShooterSubsystem.Shoot();
+
+    double nowRPM = m_ShooterSubsystem.GetRPM();
+    double rpmRampUp = nowRPM - previousRPM;
+
+    if ((2377.358491 - 50) > rpmRampUp) {
+      if ((m_ShooterSubsystem.GetWantedVelocity() - 70) < m_ShooterSubsystem.GetRPM()
+          && m_ShooterSubsystem.GetRPM() < (m_ShooterSubsystem.GetWantedVelocity() + 20)) {
+        m_ShooterSubsystem.KickBalls();
+      }
+    }
+
+    previousRPM = nowRPM;
   }
 
   @Override
   public void end(boolean interrupted) {
     m_ShooterSubsystem.StopShoot();
+    previousRPM = 0;
   }
 
   @Override
