@@ -19,6 +19,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ShooterSubsystemConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -49,8 +50,7 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Velocity Bottom", 0);
     SmartDashboard.putNumber("Current Limit", 0);
     setVelocity = 2100;
-    double p = 0.0005;
-    double i = 0.0000005;
+    
 
     shootMotorTop = new SparkFlex(14, MotorType.kBrushless);
     shootMotorBottom = new SparkFlex(15, MotorType.kBrushless);
@@ -77,8 +77,8 @@ public class ShooterSubsystem extends SubsystemBase {
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control. We don't need to pass a closed loop
         // slot, as it will default to slot 0.
-        .p(p)
-        .i(i)
+        .p(ShooterSubsystemConstants.shootP)
+        .i(ShooterSubsystemConstants.shootI)
         .d(0)
         .outputRange(-1, 1)
         // Set PID values for velocity control in slot 1
@@ -95,8 +95,8 @@ public class ShooterSubsystem extends SubsystemBase {
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control. We don't need to pass a closed loop
         // slot, as it will default to slot 0.
-        .p(p)
-        .i(i)
+        .p(ShooterSubsystemConstants.shootP)
+        .i(ShooterSubsystemConstants.shootI)
         .d(0)
         .outputRange(-1, 1)
         // Set PID values for velocity control in slot 1

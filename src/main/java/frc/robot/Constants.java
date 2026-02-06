@@ -16,4 +16,9 @@ public final class Constants {
   public static class VisionSubsystemConstants {
     public static final String limelightName = "limelight-cyclops";
   }
+
+  public static class ShooterSubsystemConstants {
+    public static final double shootP = 0.0005;
+    public static final double shootI = 0.0000005;
+  }
 }
