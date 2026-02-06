@@ -157,6 +157,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     shootMotorTop.setVoltage(0);
     shootMotorBottom.setVoltage(0);
+    kickMotor.setVoltage(0);
     // shootMotorTop.set(0);
     // shootMotorBottom.set(0);
 
