@@ -8,6 +8,7 @@ import com.ctre.phoenix6.HootAutoReplay;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -29,6 +30,9 @@ public class Robot extends TimedRobot {
         m_chooser.setDefaultOption("Shoot In Circle (Primary scorer, Start on Right)", "Grab N Go");
         m_chooser.addOption("Shoot, Empty depot, climb (Start on Left)", "Home Cycle");
         m_chooser.addOption("Just Empty and Climb (Start on Left)", "Lets Hang");
+        SmartDashboard.putData(m_chooser);
+
+        m_robotContainer.getLogger().initSwervePublisher(m_robotContainer);
     }
 
     @Override

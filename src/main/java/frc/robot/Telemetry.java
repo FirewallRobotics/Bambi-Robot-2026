@@ -28,7 +28,7 @@ public class Telemetry {
      * 
      * @param maxSpeed Maximum speed in meters per second
      */
-    public Telemetry(double maxSpeed, RobotContainer robotContainer) {
+    public Telemetry(double maxSpeed) {
         MaxSpeed = maxSpeed;
         SignalLogger.start();
 
@@ -36,34 +36,6 @@ public class Telemetry {
         for (int i = 0; i < 4; ++i) {
             SmartDashboard.putData("Module " + i, m_moduleMechanisms[i]);
         }
-
-        SmartDashboard.putData("Swerve",
-        builder -> {
-          builder.setSmartDashboardType("SwerveDrive");
-
-          builder.addDoubleProperty(
-              "Front Left Angle", () -> robotContainer.drivetrain.getState().ModuleStates[0].angle.getRadians(), null);
-          builder.addDoubleProperty(
-              "Front Left Velocity", () -> robotContainer.drivetrain.getState().ModuleStates[0].speedMetersPerSecond, null);
-
-          builder.addDoubleProperty(
-              "Front Right Angle", () -> robotContainer.drivetrain.getState().ModuleStates[1].angle.getRadians(), null);
-          builder.addDoubleProperty(
-              "Front Right Velocity", () ->robotContainer.drivetrain.getState().ModuleStates[1].speedMetersPerSecond, null);
-
-          builder.addDoubleProperty(
-              "Back Left Angle", () -> robotContainer.drivetrain.getState().ModuleStates[2].angle.getRadians(), null);
-          builder.addDoubleProperty(
-              "Back Left Velocity", () -> robotContainer.drivetrain.getState().ModuleStates[2].speedMetersPerSecond, null);
-
-          builder.addDoubleProperty(
-              "Back Right Angle", () -> robotContainer.drivetrain.getState().ModuleStates[3].angle.getRadians(), null);
-          builder.addDoubleProperty(
-              "Back Right Velocity", () -> robotContainer.drivetrain.getState().ModuleStates[3].speedMetersPerSecond, null);
-
-          builder.addDoubleProperty(
-              "Robot Angle", () -> robotContainer.drivetrain.getState().Pose.getRotation().getRadians(), null);
-        });
     }
 
     /* What to publish over networktables for telemetry */
@@ -111,6 +83,37 @@ public class Telemetry {
     };
 
     private final double[] m_poseArray = new double[3];
+
+    // TODO: Verify that we can get Swerve drive status
+    public void initSwervePublisher(RobotContainer robotContainer){
+        SmartDashboard.putData("Swerve",
+        builder -> {
+          builder.setSmartDashboardType("SwerveDrive");
+
+          builder.addDoubleProperty(
+              "Front Left Angle", () -> robotContainer.drivetrain.getState().ModuleStates[0].angle.getRadians(), null);
+          builder.addDoubleProperty(
+              "Front Left Velocity", () -> robotContainer.drivetrain.getState().ModuleStates[0].speedMetersPerSecond, null);
+
+          builder.addDoubleProperty(
+              "Front Right Angle", () -> robotContainer.drivetrain.getState().ModuleStates[1].angle.getRadians(), null);
+          builder.addDoubleProperty(
+              "Front Right Velocity", () ->robotContainer.drivetrain.getState().ModuleStates[1].speedMetersPerSecond, null);
+
+          builder.addDoubleProperty(
+              "Back Left Angle", () -> robotContainer.drivetrain.getState().ModuleStates[2].angle.getRadians(), null);
+          builder.addDoubleProperty(
+              "Back Left Velocity", () -> robotContainer.drivetrain.getState().ModuleStates[2].speedMetersPerSecond, null);
+
+          builder.addDoubleProperty(
+              "Back Right Angle", () -> robotContainer.drivetrain.getState().ModuleStates[3].angle.getRadians(), null);
+          builder.addDoubleProperty(
+              "Back Right Velocity", () -> robotContainer.drivetrain.getState().ModuleStates[3].speedMetersPerSecond, null);
+
+          builder.addDoubleProperty(
+              "Robot Angle", () -> robotContainer.drivetrain.getState().Pose.getRotation().getRadians(), null);
+        });
+    }
 
     /** Accept the swerve drive state and telemeterize it to SmartDashboard and SignalLogger. */
     public void telemeterize(SwerveDriveState state) {

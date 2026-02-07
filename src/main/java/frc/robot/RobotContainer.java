@@ -32,7 +32,11 @@ public class RobotContainer {
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
-    private final Telemetry logger = new Telemetry(MaxSpeed, this);
+    private final Telemetry logger = new Telemetry(MaxSpeed);
+
+    public Telemetry getLogger() {
+        return logger;
+    }
 
     private final CommandXboxController joystick = new CommandXboxController(0);
 
