@@ -25,6 +25,7 @@ import frc.robot.commands.ShootCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -48,10 +49,12 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
     public final IntakeSubsystem intakeSubsystem;
+    public final VisionSubsystem visionSubsystem;
 
     public RobotContainer() {
 
         intakeSubsystem = new IntakeSubsystem();
+        visionSubsystem = new VisionSubsystem(this);
 
         NamedCommands.registerCommand("Honk", new HonkCommand("la-cucaracha.chrp"));
         NamedCommands.registerCommand("Shoot", new ShootCommand());

@@ -48,7 +48,7 @@ public class VisionSubsystem extends SubsystemBase {
 
     LimelightHelpers.SetRobotOrientation(
         name, m_pigeon2.getYaw().getValueAsDouble(), 0, m_pigeon2.getPitch().getValueAsDouble(), 0, m_pigeon2.getRoll().getValueAsDouble(), 0);
-    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name);
+    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
     if (mt2 != null) {
       if (mt2.tagCount == 0) {
         doRejectUpdate = true;
