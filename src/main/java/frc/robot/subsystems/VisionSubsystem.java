@@ -168,10 +168,12 @@ public class VisionSubsystem extends SubsystemBase {
    * @apiNote will return -1 if it cannot get the angle
    * @implNote NEEDS TESTING I HAVEN'T USED SWITCH STATEMENTS BEFORE
    */
-  public static double getAngleToHUB() {
+  public static double getAngleToHUB(CommandSwerveDrivetrain drivetrain) {
 
     // get the robots pose in field space
-    Pose2d currentPose2d = getRobotPoseInFieldSpace();
+    Pose2d currentPose2d = drivetrain.getState().Pose;
+
+    double Xangle;
 
     // if the pose is null then return -1 to note we cannot get the angle
     if (currentPose2d == null) {
@@ -185,13 +187,19 @@ public class VisionSubsystem extends SubsystemBase {
       // does atan of HUB.y - Robot.y / HUB.x - Robot.x and returns the resulting angle in degrees
       switch (DriverStation.getAlliance().get()) {
         case Blue:
-          return Math.atan2(
+          Xangle = Math.atan2(
               Constants.VisionSubsystemConstants.BlueHUBCenter[1] - currentPose2d.getY(),
               Constants.VisionSubsystemConstants.BlueHUBCenter[0] - currentPose2d.getX());
+
+          SmartDashboard.putNumber("AngleToHUB", Xangle);
+          return Xangle;
         case Red:
-          return Math.atan2(
+          Xangle = Math.atan2(
               Constants.VisionSubsystemConstants.RedHUBCenter[1] - currentPose2d.getY(),
               Constants.VisionSubsystemConstants.RedHUBCenter[0] - currentPose2d.getX());
+
+          SmartDashboard.putNumber("AngleToHUB", Xangle);
+          return Xangle;
       }
     }
 
