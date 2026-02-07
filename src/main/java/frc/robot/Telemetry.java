@@ -84,6 +84,38 @@ public class Telemetry {
 
     private final double[] m_poseArray = new double[3];
 
+    // This is your problem now
+    // for whatever reason this gets the module states in field space?
+    public void initSwervePublisher(RobotContainer robotContainer){
+        SmartDashboard.putData("Swerve",
+        builder -> {
+          builder.setSmartDashboardType("SwerveDrive");
+
+          builder.addDoubleProperty(
+              "Front Left Angle", () -> robotContainer.drivetrain.getState().ModuleStates[0].angle.getRadians(), null);
+          builder.addDoubleProperty(
+              "Front Left Velocity", () -> robotContainer.drivetrain.getState().ModuleStates[0].speedMetersPerSecond, null);
+
+          builder.addDoubleProperty(
+              "Front Right Angle", () -> robotContainer.drivetrain.getState().ModuleStates[1].angle.getRadians(), null);
+          builder.addDoubleProperty(
+              "Front Right Velocity", () ->robotContainer.drivetrain.getState().ModuleStates[1].speedMetersPerSecond, null);
+
+          builder.addDoubleProperty(
+              "Back Left Angle", () -> robotContainer.drivetrain.getState().ModuleStates[2].angle.getRadians(), null);
+          builder.addDoubleProperty(
+              "Back Left Velocity", () -> robotContainer.drivetrain.getState().ModuleStates[2].speedMetersPerSecond, null);
+
+          builder.addDoubleProperty(
+              "Back Right Angle", () -> robotContainer.drivetrain.getState().ModuleStates[3].angle.getRadians(), null);
+          builder.addDoubleProperty(
+              "Back Right Velocity", () -> robotContainer.drivetrain.getState().ModuleStates[3].speedMetersPerSecond, null);
+
+          builder.addDoubleProperty(
+              "Robot Angle", () -> robotContainer.drivetrain.getState().Pose.getRotation().getRadians(), null);
+        });
+    }
+
     /** Accept the swerve drive state and telemeterize it to SmartDashboard and SignalLogger. */
     public void telemeterize(SwerveDriveState state) {
         /* Telemeterize the swerve drive state */
