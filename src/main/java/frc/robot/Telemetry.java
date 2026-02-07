@@ -117,5 +117,33 @@ public class Telemetry {
             m_moduleDirections[i].setAngle(state.ModuleStates[i].angle);
             m_moduleSpeeds[i].setLength(state.ModuleStates[i].speedMetersPerSecond / (2 * MaxSpeed));
         }
+
+        SmartDashboard.putData("Swerve",
+        builder -> {
+          builder.setSmartDashboardType("SwerveDrive");
+
+          builder.addDoubleProperty(
+              "Front Left Angle", () -> state.ModuleStates[0].angle.getRadians(), null);
+          builder.addDoubleProperty(
+              "Front Left Velocity", () -> state.ModuleStates[0].speedMetersPerSecond, null);
+
+          builder.addDoubleProperty(
+              "Front Right Angle", () -> state.ModuleStates[1].angle.getRadians(), null);
+          builder.addDoubleProperty(
+              "Front Right Velocity", () ->state.ModuleStates[1].speedMetersPerSecond, null);
+
+          builder.addDoubleProperty(
+              "Back Left Angle", () -> state.ModuleStates[2].angle.getRadians(), null);
+          builder.addDoubleProperty(
+              "Back Left Velocity", () -> state.ModuleStates[2].speedMetersPerSecond, null);
+
+          builder.addDoubleProperty(
+              "Back Right Angle", () -> state.ModuleStates[3].angle.getRadians(), null);
+          builder.addDoubleProperty(
+              "Back Right Velocity", () -> state.ModuleStates[3].speedMetersPerSecond, null);
+
+          builder.addDoubleProperty(
+              "Robot Angle", () -> state.Pose.getRotation().getRadians(), null);
+        });
     }
 }
