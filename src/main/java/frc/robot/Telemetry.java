@@ -84,7 +84,8 @@ public class Telemetry {
 
     private final double[] m_poseArray = new double[3];
 
-    // TODO: Verify that we can get Swerve drive status
+    // This is your problem now
+    // for whatever reason this gets the module states in field space?
     public void initSwervePublisher(RobotContainer robotContainer){
         SmartDashboard.putData("Swerve",
         builder -> {
