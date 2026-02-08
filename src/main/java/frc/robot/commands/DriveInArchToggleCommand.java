@@ -5,23 +5,23 @@ import frc.robot.RobotContainer;
 
 public class DriveInArchToggleCommand extends Command {
 
-    RobotContainer robotContainer;
+  RobotContainer robotContainer;
 
-    public DriveInArchToggleCommand(RobotContainer robotContainer){
-        this.robotContainer = robotContainer;
-    }
+  public DriveInArchToggleCommand(RobotContainer robotContainer) {
+    this.robotContainer = robotContainer;
+  }
 
-    @Override
-    public void initialize(){
-        robotContainer.drivetrain.setDefaultCommand(
-            new DriveInArchCommand(
-                robotContainer.driveAssistanceSubsystem,
-                robotContainer.drivetrain,
-                robotContainer.joystick));
-    }
+  @Override
+  public void initialize() {
+    robotContainer.drivetrain.setDefaultCommand(
+        new DriveInArchCommand(
+            robotContainer.driveAssistanceSubsystem,
+            robotContainer.drivetrain,
+            robotContainer.joystick));
+  }
 
-    @Override
-    public void end(boolean interrupted){
-        robotContainer.DriveFieldOriented();
-    }
+  @Override
+  public void end(boolean interrupted) {
+    robotContainer.DriveFieldOriented();
+  }
 }

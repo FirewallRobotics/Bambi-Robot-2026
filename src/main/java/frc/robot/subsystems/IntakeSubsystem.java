@@ -20,7 +20,7 @@ public class IntakeSubsystem extends SubsystemBase {
   public IntakeSubsystem() {
     intake_motor = new SparkFlex(ArmConstants.IntakeMotorID, MotorType.kBrushless);
     arm_motor = new SparkFlex(ArmConstants.ArmMotorID, MotorType.kBrushless);
-  
+
     PIDcontrol = false;
     PIDTargetPosition = 0;
 
@@ -35,12 +35,14 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic(){
+  public void periodic() {
 
     // checks if the arm is under PID control
     // if so then evaluate and apply the PID
-    if(PIDcontrol){
-      arm_motor.set(armPidController.calculate(arm_motor.getAbsoluteEncoder().getPosition(), PIDTargetPosition));
+    if (PIDcontrol) {
+      arm_motor.set(
+          armPidController.calculate(
+              arm_motor.getAbsoluteEncoder().getPosition(), PIDTargetPosition));
     }
   }
 
@@ -56,10 +58,12 @@ public class IntakeSubsystem extends SubsystemBase {
     arm_motor.set(speed);
   }
 
-  /** <b>Move the intake arm to a target position</b>
-   * <p>will set the target position to be used as the setpoint in the subsystem periodic </p>
+  /**
+   * <b>Move the intake arm to a target position</b>
+   *
+   * <p>will set the target position to be used as the setpoint in the subsystem periodic
    */
-  public void angleArmPID(double targetPosition){
+  public void angleArmPID(double targetPosition) {
     PIDcontrol = true;
     PIDTargetPosition = targetPosition;
   }
