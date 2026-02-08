@@ -7,6 +7,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest.ForwardPerspectiveValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -65,6 +66,7 @@ public class RobotContainer {
 
     face.HeadingController = new PhoenixPIDController(2, 0, 0);
     face.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
+    face.SteerRequestType = SteerRequestType.MotionMagicExpo;
 
     intakeSubsystem = new IntakeSubsystem();
     driveAssistanceSubsystem = new DriveAssistanceSubsystem(drivetrain, this);
