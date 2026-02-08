@@ -7,6 +7,8 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest.ForwardPerspectiveValue;
+import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
@@ -61,6 +63,9 @@ public class RobotContainer {
 
   public RobotContainer() {
 
+    face.HeadingController = new PhoenixPIDController(2, 0, 0);
+    face.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
+
     intakeSubsystem = new IntakeSubsystem();
     driveAssistanceSubsystem = new DriveAssistanceSubsystem(drivetrain, this);
     visionSubsystem = new VisionSubsystem(this);
@@ -105,6 +110,11 @@ public class RobotContainer {
     joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
     drivetrain.registerTelemetry(logger::telemeterize);
+  }
+
+  public void periodic(){
+    face.VelocityX = -joystick.getLeftY() * MaxSpeed;
+    face.VelocityY = -joystick.getLeftX() * MaxSpeed;
   }
 
   public void DriveFieldOriented() {
