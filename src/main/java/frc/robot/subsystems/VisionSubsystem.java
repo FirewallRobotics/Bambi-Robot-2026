@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -34,7 +33,7 @@ public class VisionSubsystem extends SubsystemBase {
 
   private Pigeon2 m_pigeon2;
 
-  public VisionSubsystem(RobotContainer robotContainer){
+  public VisionSubsystem(RobotContainer robotContainer) {
     this.robotContainer = robotContainer;
     m_pigeon2 = robotContainer.drivetrain.getPigeon2();
   }
@@ -45,9 +44,16 @@ public class VisionSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("TrenchDistance", VisionSubsystem.DistanceToTrench());
     SmartDashboard.putNumber("OutpostDistance", VisionSubsystem.DistanceToOutpost());
     SmartDashboard.putNumber("TowerDistance", VisionSubsystem.DistanceToTower());
+    SmartDashboard.putNumber("HUBAngle", VisionSubsystem.getAngleToHUB(robotContainer.drivetrain));
 
     LimelightHelpers.SetRobotOrientation(
-        name, m_pigeon2.getYaw().getValueAsDouble(), 0, m_pigeon2.getPitch().getValueAsDouble(), 0, m_pigeon2.getRoll().getValueAsDouble(), 0);
+        name,
+        m_pigeon2.getYaw().getValueAsDouble(),
+        0,
+        m_pigeon2.getPitch().getValueAsDouble(),
+        0,
+        m_pigeon2.getRoll().getValueAsDouble(),
+        0);
     LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
     if (mt2 != null) {
       if (mt2.tagCount == 0) {
@@ -164,7 +170,8 @@ public class VisionSubsystem extends SubsystemBase {
   /**
    * Gets the angle of the HUB relative to the robot
    *
-   * @return angle in degrees with 0 being a line pointing from the blue driverstations to red (positive X)
+   * @return angle in degrees with 0 being a line pointing from the blue driverstations to red
+   *     (positive X)
    * @apiNote will return -1 if it cannot get the angle
    * @implNote NEEDS TESTING I HAVEN'T USED SWITCH STATEMENTS BEFORE
    */
@@ -187,16 +194,18 @@ public class VisionSubsystem extends SubsystemBase {
       // does atan of HUB.y - Robot.y / HUB.x - Robot.x and returns the resulting angle in degrees
       switch (DriverStation.getAlliance().get()) {
         case Blue:
-          Xangle = Math.atan2(
-              Constants.VisionSubsystemConstants.BlueHUBCenter[1] - currentPose2d.getY(),
-              Constants.VisionSubsystemConstants.BlueHUBCenter[0] - currentPose2d.getX());
+          Xangle =
+              Math.atan2(
+                  Constants.VisionSubsystemConstants.BlueHUBCenter[1] - currentPose2d.getY(),
+                  Constants.VisionSubsystemConstants.BlueHUBCenter[0] - currentPose2d.getX());
 
           SmartDashboard.putNumber("AngleToHUB", Xangle);
           return Xangle;
         case Red:
-          Xangle = Math.atan2(
-              Constants.VisionSubsystemConstants.RedHUBCenter[1] - currentPose2d.getY(),
-              Constants.VisionSubsystemConstants.RedHUBCenter[0] - currentPose2d.getX());
+          Xangle =
+              Math.atan2(
+                  Constants.VisionSubsystemConstants.RedHUBCenter[1] - currentPose2d.getY(),
+                  Constants.VisionSubsystemConstants.RedHUBCenter[0] - currentPose2d.getX());
 
           SmartDashboard.putNumber("AngleToHUB", Xangle);
           return Xangle;

@@ -27,7 +27,7 @@ public final class Constants {
     public static final int[] towerTags = {15, 16, 31, 32};
   }
 
-  public static class DriverAssistanceConstants{
+  public static class DriverAssistanceConstants {
     public static final double minDistFeet = 9;
     public static final double maxDistFeet = 13;
   }
