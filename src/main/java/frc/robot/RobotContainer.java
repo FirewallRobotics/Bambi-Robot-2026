@@ -64,7 +64,7 @@ public class RobotContainer {
 
   public RobotContainer() {
 
-    face.HeadingController = new PhoenixPIDController(2, 0, 0);
+    face.HeadingController = new PhoenixPIDController(2.5, 0, 0);
     face.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
     face.SteerRequestType = SteerRequestType.MotionMagicExpo;
 
