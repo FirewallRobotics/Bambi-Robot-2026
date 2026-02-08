@@ -19,10 +19,9 @@ public class DriveInArchCommand extends Command {
 
     @Override
     public void execute(){
-        driverassitance.maintainArchAroundHUB(
+        driverassitance.driveFacingHUB(
             -joystick.getLeftY(),
-            -joystick.getLeftX(),
-            joystick);
+            -joystick.getLeftX());
     }
 
     public boolean isFinished(){
