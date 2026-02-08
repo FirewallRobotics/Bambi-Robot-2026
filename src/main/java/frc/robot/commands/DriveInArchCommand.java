@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.DriveAssistanceSubsystem;
 
@@ -12,12 +13,10 @@ public class DriveInArchCommand extends Command {
   CommandXboxController joystick;
 
   public DriveInArchCommand(
-      DriveAssistanceSubsystem driverassitance,
-      CommandSwerveDrivetrain drivetrain,
-      CommandXboxController joystick) {
-    this.driverassitance = driverassitance;
-    this.drivetrain = drivetrain;
-    this.joystick = joystick;
+      RobotContainer robotContainer) {
+    this.driverassitance = robotContainer.driveAssistanceSubsystem;
+    this.drivetrain = robotContainer.drivetrain;
+    this.joystick = robotContainer.joystick;
   }
 
   @Override
