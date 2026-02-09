@@ -207,7 +207,7 @@ public class VisionSubsystem extends SubsystemBase {
                   Constants.VisionSubsystemConstants.RedHUBCenter[1] - currentPose2d.getY(),
                   Constants.VisionSubsystemConstants.RedHUBCenter[0] - currentPose2d.getX());
 
-          SmartDashboard.putNumber("AngleToHUB", Xangle);
+          SmartDashboard.putNumber("AngleToHUB", Math.toDegrees(Xangle));
           return Xangle;
       }
     }
