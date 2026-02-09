@@ -8,9 +8,9 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveRequest.ForwardPerspectiveValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
-import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -47,7 +47,8 @@ public class RobotContainer {
               DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-  private final SwerveRequest.FieldCentricFacingAngle face = new SwerveRequest.FieldCentricFacingAngle();
+  private final SwerveRequest.FieldCentricFacingAngle face =
+      new SwerveRequest.FieldCentricFacingAngle();
 
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
@@ -65,8 +66,8 @@ public class RobotContainer {
 
   public RobotContainer() {
 
-    SmartDashboard.putNumber("PointingP", 3.5); 
-    SmartDashboard.putNumber("PointingI", 0.1); 
+    SmartDashboard.putNumber("PointingP", 3.5);
+    SmartDashboard.putNumber("PointingI", 0.1);
     SmartDashboard.putNumber("PointingD", 0);
 
     face.HeadingController = new PhoenixPIDController(3.5, 0.1, 0);
@@ -104,7 +105,7 @@ public class RobotContainer {
             drivetrain.applyRequest(
                 () ->
                     face.withTargetDirection(
-                        new Rotation2d(VisionSubsystem.getAngleToHUB(drivetrain)))));
+                        new Rotation2d(VisionSubsystem.getAngleToHUB(drivetrain) + 3.14))));
 
     // Run SysId routines when holding back/start and X/Y.
     // Note that each routine should be run exactly once in a single log.
@@ -119,10 +120,11 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
   }
 
-  public void periodic(){
-    face.HeadingController.setPID(SmartDashboard.getNumber("PointingP", 3.5), 
-    SmartDashboard.getNumber("PointingI", 0.1), 
-    SmartDashboard.getNumber("PointingD", 0));
+  public void periodic() {
+    face.HeadingController.setPID(
+        SmartDashboard.getNumber("PointingP", 3.5),
+        SmartDashboard.getNumber("PointingI", 0.1),
+        SmartDashboard.getNumber("PointingD", 0));
     face.VelocityX = joystick.getLeftY() * MaxSpeed;
     face.VelocityY = joystick.getLeftX() * MaxSpeed;
   }
