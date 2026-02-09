@@ -44,7 +44,8 @@ public class VisionSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("TrenchDistance", VisionSubsystem.DistanceToTrench());
     SmartDashboard.putNumber("OutpostDistance", VisionSubsystem.DistanceToOutpost());
     SmartDashboard.putNumber("TowerDistance", VisionSubsystem.DistanceToTower());
-    SmartDashboard.putNumber("HUBAngle", Math.toDegrees(VisionSubsystem.getAngleToHUB(robotContainer.drivetrain)));
+    SmartDashboard.putNumber(
+        "HUBAngle", Math.toDegrees(VisionSubsystem.getAngleToHUB(robotContainer.drivetrain)));
 
     LimelightHelpers.SetRobotOrientation(
         name,
@@ -193,24 +194,24 @@ public class VisionSubsystem extends SubsystemBase {
       // does atan of HUB.y - Robot.y / HUB.x - Robot.x and returns the resulting angle in degrees
       switch (DriverStation.getAlliance().get()) {
         case Blue:
-            Xangle =
-                Math.atan2(
-                    Constants.VisionSubsystemConstants.BlueHUBCenter[1] - currentPose2d.getY(),
-                    Constants.VisionSubsystemConstants.BlueHUBCenter[0] - currentPose2d.getX());
-            if (Xangle < 0) {
-                Xangle += 2 * Math.PI;
-            }
-            return Xangle;
+          Xangle =
+              Math.atan2(
+                  Constants.VisionSubsystemConstants.BlueHUBCenter[1] - currentPose2d.getY(),
+                  Constants.VisionSubsystemConstants.BlueHUBCenter[0] - currentPose2d.getX());
+          if (Xangle < 0) {
+            Xangle += 2 * Math.PI;
+          }
+          return Xangle;
 
         case Red:
-            Xangle =
-                Math.atan2(
-                    Constants.VisionSubsystemConstants.RedHUBCenter[1] - currentPose2d.getY(),
-                    Constants.VisionSubsystemConstants.RedHUBCenter[0] - currentPose2d.getX());
-            if (Xangle < 0) {
-                Xangle += 2 * Math.PI;
-            }
-            return Xangle;
+          Xangle =
+              Math.atan2(
+                  Constants.VisionSubsystemConstants.RedHUBCenter[1] - currentPose2d.getY(),
+                  Constants.VisionSubsystemConstants.RedHUBCenter[0] - currentPose2d.getX());
+          if (Xangle < 0) {
+            Xangle += 2 * Math.PI;
+          }
+          return Xangle;
       }
     }
 
