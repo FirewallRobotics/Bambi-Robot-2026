@@ -44,7 +44,7 @@ public class VisionSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("TrenchDistance", VisionSubsystem.DistanceToTrench());
     SmartDashboard.putNumber("OutpostDistance", VisionSubsystem.DistanceToOutpost());
     SmartDashboard.putNumber("TowerDistance", VisionSubsystem.DistanceToTower());
-    SmartDashboard.putNumber("HUBAngle", VisionSubsystem.getAngleToHUB(robotContainer.drivetrain));
+    SmartDashboard.putNumber("HUBAngle", Math.toDegrees(VisionSubsystem.getAngleToHUB(robotContainer.drivetrain)));
 
     LimelightHelpers.SetRobotOrientation(
         name,
@@ -173,7 +173,6 @@ public class VisionSubsystem extends SubsystemBase {
    * @return angle in degrees with 0 being a line pointing from the blue driverstations to red
    *     (positive X)
    * @apiNote will return -1 if it cannot get the angle
-   * @implNote NEEDS TESTING I HAVEN'T USED SWITCH STATEMENTS BEFORE
    */
   public static double getAngleToHUB(CommandSwerveDrivetrain drivetrain) {
 
@@ -199,7 +198,6 @@ public class VisionSubsystem extends SubsystemBase {
                   Constants.VisionSubsystemConstants.BlueHUBCenter[1] - currentPose2d.getY(),
                   Constants.VisionSubsystemConstants.BlueHUBCenter[0] - currentPose2d.getX());
 
-          SmartDashboard.putNumber("AngleToHUB", Xangle);
           return Xangle;
         case Red:
           Xangle =
@@ -207,7 +205,6 @@ public class VisionSubsystem extends SubsystemBase {
                   Constants.VisionSubsystemConstants.RedHUBCenter[1] - currentPose2d.getY(),
                   Constants.VisionSubsystemConstants.RedHUBCenter[0] - currentPose2d.getX());
 
-          SmartDashboard.putNumber("AngleToHUB", Math.toDegrees(Xangle));
           return Xangle;
       }
     }
