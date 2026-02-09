@@ -15,6 +15,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -64,7 +65,11 @@ public class RobotContainer {
 
   public RobotContainer() {
 
-    face.HeadingController = new PhoenixPIDController(2.5, 0, 0);
+    SmartDashboard.putNumber("PointingP", 3.5); 
+    SmartDashboard.putNumber("PointingI", 0.1); 
+    SmartDashboard.putNumber("PointingD", 0);
+
+    face.HeadingController = new PhoenixPIDController(3.5, 0.1, 0);
     face.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
     face.SteerRequestType = SteerRequestType.MotionMagicExpo;
 
@@ -115,8 +120,11 @@ public class RobotContainer {
   }
 
   public void periodic(){
-    face.VelocityX = -joystick.getLeftY() * MaxSpeed;
-    face.VelocityY = -joystick.getLeftX() * MaxSpeed;
+    face.HeadingController.setPID(SmartDashboard.getNumber("PointingP", 3.5), 
+    SmartDashboard.getNumber("PointingI", 0.1), 
+    SmartDashboard.getNumber("PointingD", 0));
+    face.VelocityX = joystick.getLeftY() * MaxSpeed;
+    face.VelocityY = joystick.getLeftX() * MaxSpeed;
   }
 
   public void DriveFieldOriented() {
