@@ -87,7 +87,7 @@ public class VisionSubsystem extends SubsystemBase {
     // loop through all the tags we can see and add them to the list
     for (int i = 0; i < results.targets_Fiducials.length; i++) {
 
-      // get the ID of tag i and put it in the list at position i
+      // get the ID of tag i and put it
       temp[i] = (int) results.targets_Fiducials[i].fiducialID;
     }
 
@@ -193,19 +193,24 @@ public class VisionSubsystem extends SubsystemBase {
       // does atan of HUB.y - Robot.y / HUB.x - Robot.x and returns the resulting angle in degrees
       switch (DriverStation.getAlliance().get()) {
         case Blue:
-          Xangle =
-              Math.atan2(
-                  Constants.VisionSubsystemConstants.BlueHUBCenter[1] - currentPose2d.getY(),
-                  Constants.VisionSubsystemConstants.BlueHUBCenter[0] - currentPose2d.getX());
+            Xangle =
+                Math.atan2(
+                    Constants.VisionSubsystemConstants.BlueHUBCenter[1] - currentPose2d.getY(),
+                    Constants.VisionSubsystemConstants.BlueHUBCenter[0] - currentPose2d.getX());
+            if (Xangle < 0) {
+                Xangle += 2 * Math.PI;
+            }
+            return Xangle;
 
-          return Xangle;
         case Red:
-          Xangle =
-              Math.atan2(
-                  Constants.VisionSubsystemConstants.RedHUBCenter[1] - currentPose2d.getY(),
-                  Constants.VisionSubsystemConstants.RedHUBCenter[0] - currentPose2d.getX());
-
-          return Xangle;
+            Xangle =
+                Math.atan2(
+                    Constants.VisionSubsystemConstants.RedHUBCenter[1] - currentPose2d.getY(),
+                    Constants.VisionSubsystemConstants.RedHUBCenter[0] - currentPose2d.getX());
+            if (Xangle < 0) {
+                Xangle += 2 * Math.PI;
+            }
+            return Xangle;
       }
     }
 
