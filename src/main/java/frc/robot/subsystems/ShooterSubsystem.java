@@ -49,7 +49,7 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Velocity Top", 0);
     SmartDashboard.putNumber("Velocity Bottom", 0);
     SmartDashboard.putNumber("Current Limit", 0);
-    setVelocity = 2100;
+    setVelocity = 1500;
     
 
     shootMotorTop = new SparkFlex(14, MotorType.kBrushless);
@@ -67,8 +67,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     
 
-    tShootConfig.smartCurrentLimit(30);
-    bShootConfig.smartCurrentLimit(30);
+    tShootConfig.smartCurrentLimit(40);
+    bShootConfig.smartCurrentLimit(40);
 
     tShootConfig.encoder.positionConversionFactor(1);
     tShootConfig.encoder.positionConversionFactor(1);
@@ -77,8 +77,8 @@ public class ShooterSubsystem extends SubsystemBase {
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control. We don't need to pass a closed loop
         // slot, as it will default to slot 0.
-        .p(ShooterSubsystemConstants.shootP)
-        .i(ShooterSubsystemConstants.shootI)
+        .p(ShooterSubsystemConstants.shootPTop)
+        .i(ShooterSubsystemConstants.shootITop)
         .d(0)
         .outputRange(-1, 1)
         // Set PID values for velocity control in slot 1
@@ -95,8 +95,8 @@ public class ShooterSubsystem extends SubsystemBase {
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control. We don't need to pass a closed loop
         // slot, as it will default to slot 0.
-        .p(ShooterSubsystemConstants.shootP)
-        .i(ShooterSubsystemConstants.shootI)
+        .p(ShooterSubsystemConstants.shootPBot)
+        .i(ShooterSubsystemConstants.shootIBot)
         .d(0)
         .outputRange(-1, 1)
         // Set PID values for velocity control in slot 1
