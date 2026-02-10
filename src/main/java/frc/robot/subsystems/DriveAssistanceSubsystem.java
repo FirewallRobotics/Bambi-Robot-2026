@@ -90,7 +90,7 @@ public class DriveAssistanceSubsystem extends SubsystemBase {
             return new SwerveRequest.SwerveDriveBrake();
           } else {
             alignRequest.TargetDirection = desiredAngle;
-            alignRequest.HeadingController = new PhoenixPIDController(2, 0, 0);
+            alignRequest.HeadingController = new PhoenixPIDController(2.25, 0, 0);
             alignRequest.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
             return alignRequest
                 .withVelocityX(
