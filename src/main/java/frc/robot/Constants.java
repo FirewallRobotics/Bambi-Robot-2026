@@ -59,7 +59,7 @@ public final class Constants {
     public static final Pose3d blueFerryPoseDepot = new Pose3d(2.1, 2, 0, Rotation3d.kZero);
     public static final Pose3d blueFerryPoseOutpost = new Pose3d(2.1, 6, 0, Rotation3d.kZero);
 
-    public static final Angle epsilonAngleToGoal = Units.Degrees.of(1.0);
+    public static final Angle epsilonAngleToGoal = Units.Degrees.of(5);
 
     public static final Pose3d getHubPose() {
       Pose3d pose =
@@ -88,7 +88,7 @@ public final class Constants {
     public static final PIDController rotationController = getRotationController();
 
     private static final PIDController getRotationController() {
-      PIDController controller = new PIDController(1.5, 0.0, 0.0);
+      PIDController controller = new PIDController(0.05, 0, 0);
       controller.enableContinuousInput(-Math.PI, Math.PI);
       return controller;
     }

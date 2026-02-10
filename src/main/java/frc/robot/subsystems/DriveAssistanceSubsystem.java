@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -23,8 +24,8 @@ public class DriveAssistanceSubsystem extends SubsystemBase {
   private CommandSwerveDrivetrain drivetrain;
   private RobotContainer robotContainer;
 
-  private final SwerveRequest.FieldCentric alignRequest =
-      new SwerveRequest.FieldCentric()
+  private final SwerveRequest.FieldCentricFacingAngle alignRequest =
+      new SwerveRequest.FieldCentricFacingAngle()
           .withDeadband(DriveConstants.maxSpeed * 0.1) // Add a 10% deadband to translation only
           .withDriveRequestType(
               DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
@@ -77,30 +78,27 @@ public class DriveAssistanceSubsystem extends SubsystemBase {
           Rotation2d desiredAngle =
               offsetAngle
                   .plus(drivePose.relativeTo(targetPose).getTranslation().getAngle())
-                  .plus(Rotation2d.k180deg)
                   .plus(shooterAngleOffset);
           Rotation2d currentAngle = drivePose.getRotation();
           Rotation2d deltaAngle = currentAngle.minus(desiredAngle);
           double wrappedAngleDeg = MathUtil.inputModulus(deltaAngle.getDegrees(), -180.0, 180.0);
+          SmartDashboard.putNumber("ANGLE", desiredAngle.getDegrees());
 
           if ((Math.abs(wrappedAngleDeg)
                   < DriveConstants.epsilonAngleToGoal.in(Units.Degrees)) // if facing goal already
               && Math.hypot(controllerVelX, controllerVelY) < 0.1) {
             return new SwerveRequest.SwerveDriveBrake();
           } else {
-            double rotationalRate =
-                DriveConstants.rotationController.calculate(
-                    currentAngle.getRadians(), desiredAngle.getRadians());
+            alignRequest.TargetDirection = desiredAngle;
+            alignRequest.HeadingController = new PhoenixPIDController(2, 0, 0);
+            alignRequest.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
             return alignRequest
                 .withVelocityX(
                     controllerVelX
                         * DriveConstants.maxSpeed) // Drive forward with negative Y (forward)
                 .withVelocityY(
                     -controller.getLeftX()
-                        * DriveConstants.maxSpeed) // Drive left with negative X (left)
-                .withRotationalRate(
-                    -rotationalRate
-                        * DriveConstants.maxAngularRate); // Use angular rate for rotation
+                        * DriveConstants.maxSpeed);
           }
         });
   }
