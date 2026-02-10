@@ -197,9 +197,6 @@ public class VisionSubsystem extends SubsystemBase {
                 Math.atan2(
                     Constants.VisionSubsystemConstants.BlueHUBCenter[1] - currentPose2d.getY(),
                     Constants.VisionSubsystemConstants.BlueHUBCenter[0] - currentPose2d.getX());
-            if (Xangle < 0) {
-                Xangle += 2 * Math.PI;
-            }
             return Xangle;
 
         case Red:
@@ -207,9 +204,6 @@ public class VisionSubsystem extends SubsystemBase {
                 Math.atan2(
                     Constants.VisionSubsystemConstants.RedHUBCenter[1] - currentPose2d.getY(),
                     Constants.VisionSubsystemConstants.RedHUBCenter[0] - currentPose2d.getX());
-            if (Xangle < 0) {
-                Xangle += 2 * Math.PI;
-            }
             return Xangle;
       }
     }

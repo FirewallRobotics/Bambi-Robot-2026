@@ -66,13 +66,14 @@ public class RobotContainer {
 
   public RobotContainer() {
 
-    SmartDashboard.putNumber("PointingP", 3.5);
-    SmartDashboard.putNumber("PointingI", 0.1);
+    SmartDashboard.putNumber("PointingP", 2.25);
+    SmartDashboard.putNumber("PointingI", 0);
     SmartDashboard.putNumber("PointingD", 0);
 
-    face.HeadingController = new PhoenixPIDController(3.5, 0.1, 0);
+    face.HeadingController = new PhoenixPIDController(2.25, 0, 0);
     face.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
     face.SteerRequestType = SteerRequestType.MotionMagicExpo;
+    face.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
 
     intakeSubsystem = new IntakeSubsystem();
     driveAssistanceSubsystem = new DriveAssistanceSubsystem(drivetrain, this);
@@ -122,8 +123,8 @@ public class RobotContainer {
 
   public void periodic() {
     face.HeadingController.setPID(
-        SmartDashboard.getNumber("PointingP", 3.5),
-        SmartDashboard.getNumber("PointingI", 0.1),
+        SmartDashboard.getNumber("PointingP", 2.25),
+        SmartDashboard.getNumber("PointingI", 0),
         SmartDashboard.getNumber("PointingD", 0));
     face.VelocityX = joystick.getLeftY() * MaxSpeed;
     face.VelocityY = joystick.getLeftX() * MaxSpeed;
