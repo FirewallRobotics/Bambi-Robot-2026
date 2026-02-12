@@ -39,7 +39,8 @@ public class ShooterSubsystem extends SubsystemBase {
   private SparkClosedLoopController tShootClosedLoopController;
   private SparkClosedLoopController bSparkClosedLoopController;
 
-  private double setVelocity;
+  private double setVelocityTop;
+  private double setVelocityBottom;
   
 
   // private final SparkFlex kickMotor;
@@ -49,7 +50,8 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Velocity Top", 0);
     SmartDashboard.putNumber("Velocity Bottom", 0);
     SmartDashboard.putNumber("Current Limit", 0);
-    setVelocity = 1500;
+    setVelocityTop = 1500;
+    setVelocityBottom = 1500;
     
 
     shootMotorTop = new SparkFlex(14, MotorType.kBrushless);
@@ -129,8 +131,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // shootMotorBottom.set(-1);
     //shootMotorTop.set(1);
-    tShootClosedLoopController.setSetpoint(setVelocity, ControlType.kVelocity);
-    bSparkClosedLoopController.setSetpoint(setVelocity, ControlType.kVelocity);
+    tShootClosedLoopController.setSetpoint(setVelocityTop, ControlType.kVelocity);
+    bSparkClosedLoopController.setSetpoint(setVelocityBottom, ControlType.kVelocity);
     
   }
 
