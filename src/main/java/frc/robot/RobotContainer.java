@@ -70,7 +70,7 @@ public class RobotContainer {
     SmartDashboard.putNumber("PointingI", 0);
     SmartDashboard.putNumber("PointingD", 0);
 
-    face.HeadingController = new PhoenixPIDController(2.25, 0, 0);
+    face.HeadingController = new PhoenixPIDController(3, 0, 0);
     face.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
     face.SteerRequestType = SteerRequestType.MotionMagicExpo;
     face.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
@@ -114,6 +114,7 @@ public class RobotContainer {
     joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
     joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
     joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+    joystick.y().whileTrue(new HonkCommand("la-cucaracha.chrp"));
 
     // Reset the field-centric heading on left bumper press.
     joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
