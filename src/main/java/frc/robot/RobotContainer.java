@@ -70,10 +70,11 @@ public class RobotContainer {
     SmartDashboard.putNumber("PointingI", 0);
     SmartDashboard.putNumber("PointingD", 0);
 
-    face.HeadingController = new PhoenixPIDController(3, 0, 0);
+    face.HeadingController = new PhoenixPIDController(8, 0.25, 0);
     face.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
     face.SteerRequestType = SteerRequestType.MotionMagicExpo;
     face.HeadingController.enableContinuousInput(-Math.PI, Math.PI);
+    // max out speed at 2
 
     intakeSubsystem = new IntakeSubsystem();
     driveAssistanceSubsystem = new DriveAssistanceSubsystem(drivetrain, this);

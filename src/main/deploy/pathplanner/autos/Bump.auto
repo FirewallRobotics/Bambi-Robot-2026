@@ -11,24 +11,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "ShootTill"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "NoShoot"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Copy of Cross-Out High Bump"
@@ -44,24 +26,6 @@
           "type": "path",
           "data": {
             "pathName": "MoonWalk"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootTill"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 6.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "NoShoot"
           }
         }
       ]

@@ -11,21 +11,9 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "ShootTill"
-          }
-        },
-        {
           "type": "wait",
           "data": {
-            "waitTime": 1.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "NoShoot"
+            "waitTime": 1.25
           }
         },
         {
@@ -35,21 +23,9 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "ShootTill"
-          }
-        },
-        {
           "type": "wait",
           "data": {
-            "waitTime": 8.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "NoShoot"
+            "waitTime": 4.0
           }
         },
         {
