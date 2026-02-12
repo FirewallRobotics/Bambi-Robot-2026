@@ -44,6 +44,7 @@ public class VisionSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("TrenchDistance", VisionSubsystem.DistanceToTrench());
     SmartDashboard.putNumber("OutpostDistance", VisionSubsystem.DistanceToOutpost());
     SmartDashboard.putNumber("TowerDistance", VisionSubsystem.DistanceToTower());
+    SmartDashboard.putNumber("HUBAngle", VisionSubsystem.getAngleToHUB(robotContainer.drivetrain));
 
     for(int i = 0; i < name.length; i++){
       LimelightHelpers.SetRobotOrientation(
