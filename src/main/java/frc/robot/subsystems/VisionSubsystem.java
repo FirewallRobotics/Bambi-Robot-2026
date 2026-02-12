@@ -23,7 +23,7 @@ import frc.robot.RobotContainer;
  */
 public class VisionSubsystem extends SubsystemBase {
 
-  public static String name = frc.robot.Constants.VisionSubsystemConstants.limelightName;
+  public static String[] name = frc.robot.Constants.VisionSubsystemConstants.limelightName;
 
   // pipeline layout:
   // 0 - april tags
@@ -45,35 +45,38 @@ public class VisionSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("OutpostDistance", VisionSubsystem.DistanceToOutpost());
     SmartDashboard.putNumber("TowerDistance", VisionSubsystem.DistanceToTower());
 
-    LimelightHelpers.SetRobotOrientation(
-        name,
+    for(int i = 0; i < name.length; i++){
+      LimelightHelpers.SetRobotOrientation(
+        name[i],
         m_pigeon2.getYaw().getValueAsDouble(),
         0,
         m_pigeon2.getPitch().getValueAsDouble(),
         0,
         m_pigeon2.getRoll().getValueAsDouble(),
         0);
-    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(name);
-    if (mt2 != null) {
-      if (mt2.tagCount == 0) {
-        doRejectUpdate = true;
-      } else {
-        doRejectUpdate = false;
-      }
-      if (!doRejectUpdate) {
-        robotContainer.drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(name[i]);
+      if (mt2 != null) {
+        if (mt2.tagCount == 0) {
+          doRejectUpdate = true;
+        } else {
+          doRejectUpdate = false;
+        }
+        if (!doRejectUpdate) {
+          robotContainer.drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+        }
       }
     }
+    
   }
 
   /** Outputs all the tags that we can see */
   public static int[] getTags() {
 
     // change the pipelime to apriltags
-    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
+    LimelightHelpers.setPipelineIndex(name[0], Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the latest results from the limelight
-    LimelightResults results = LimelightHelpers.getLatestResults(name);
+    LimelightResults results = LimelightHelpers.getLatestResults(name[0]);
 
     // if the limelights intel is bad return null
     if (!results.valid) {
@@ -103,10 +106,10 @@ public class VisionSubsystem extends SubsystemBase {
   public static boolean CanSeeTag(int tag) {
 
     // change the pipelime to apriltags
-    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
+    LimelightHelpers.setPipelineIndex(name[0], Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the latest results from the limelight
-    LimelightResults results = LimelightHelpers.getLatestResults(name);
+    LimelightResults results = LimelightHelpers.getLatestResults(name[0]);
 
     // if the limelights intel is bad return false
     if (!results.valid) {
@@ -138,10 +141,10 @@ public class VisionSubsystem extends SubsystemBase {
     if (!Robot.isSimulation()) {
 
       // get the latest results from the limelight
-      LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
+      LimelightHelpers.setPipelineIndex(name[0], Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
       // get the position of the robot on the field in [X, Y]
-      double[] botPose = LimelightHelpers.getBotPose(name);
+      double[] botPose = LimelightHelpers.getBotPose(name[0]);
 
       // make sure the given position is valid
       if (botPose.length != 0) {
@@ -266,10 +269,10 @@ public class VisionSubsystem extends SubsystemBase {
   public static double[] getTrenchLocation() {
 
     // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
+    LimelightHelpers.setPipelineIndex(name[0], Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
-    LimelightResults results = LimelightHelpers.getLatestResults(name);
+    LimelightResults results = LimelightHelpers.getLatestResults(name[0]);
     Pose3d tagPoseRobot = null;
 
     // if the limelights intel is bad return null
@@ -311,10 +314,10 @@ public class VisionSubsystem extends SubsystemBase {
    */
   public static double[] getOutpostLocation() {
     // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
+    LimelightHelpers.setPipelineIndex(name[0], Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
-    LimelightResults results = LimelightHelpers.getLatestResults(name);
+    LimelightResults results = LimelightHelpers.getLatestResults(name[0]);
     Pose3d tagPoseRobot = null;
 
     // if the limelights intel is bad return null
@@ -356,10 +359,10 @@ public class VisionSubsystem extends SubsystemBase {
    */
   public static double[] getTowerLocation() {
     // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
+    LimelightHelpers.setPipelineIndex(name[0], Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
-    LimelightResults results = LimelightHelpers.getLatestResults(name);
+    LimelightResults results = LimelightHelpers.getLatestResults(name[0]);
     Pose3d tagPoseRobot = null;
 
     // if the limelights intel is bad return null
@@ -400,10 +403,10 @@ public class VisionSubsystem extends SubsystemBase {
    */
   public static Pose3d getHUBLocationPose3d() {
     // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
+    LimelightHelpers.setPipelineIndex(name[0], Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
-    LimelightResults results = LimelightHelpers.getLatestResults(name);
+    LimelightResults results = LimelightHelpers.getLatestResults(name[0]);
     Pose3d tagPoseRobot = null;
 
     // if the limelights intel is bad return null
@@ -444,10 +447,10 @@ public class VisionSubsystem extends SubsystemBase {
    */
   public static Pose3d getTrenchLocationPose3d() {
     // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
+    LimelightHelpers.setPipelineIndex(name[0], Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
-    LimelightResults results = LimelightHelpers.getLatestResults(name);
+    LimelightResults results = LimelightHelpers.getLatestResults(name[0]);
     Pose3d tagPoseRobot = null;
 
     // if the limelights intel is bad return null
@@ -488,10 +491,10 @@ public class VisionSubsystem extends SubsystemBase {
    */
   public static Pose3d getOutpostLocationPose3d() {
     // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
+    LimelightHelpers.setPipelineIndex(name[0], Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
-    LimelightResults results = LimelightHelpers.getLatestResults(name);
+    LimelightResults results = LimelightHelpers.getLatestResults(name[0]);
     Pose3d tagPoseRobot = null;
 
     // if the limelights intel is bad return null
@@ -533,10 +536,10 @@ public class VisionSubsystem extends SubsystemBase {
    */
   public static Pose3d getTowerLocationPose3d() {
     // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
+    LimelightHelpers.setPipelineIndex(name[0], Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
-    LimelightResults results = LimelightHelpers.getLatestResults(name);
+    LimelightResults results = LimelightHelpers.getLatestResults(name[0]);
     Pose3d tagPoseRobot = null;
 
     // if the limelights intel is bad return null
@@ -579,13 +582,13 @@ public class VisionSubsystem extends SubsystemBase {
   public static double DistanceToHUB() {
     // change the pipeline to apriltags
     LimelightHelpers.setPipelineIndex(
-        frc.robot.Constants.VisionSubsystemConstants.limelightName,
+        frc.robot.Constants.VisionSubsystemConstants.limelightName[0],
         Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
     RawFiducial[] fiducials =
         LimelightHelpers.getRawFiducials(
-            frc.robot.Constants.VisionSubsystemConstants.limelightName);
+            frc.robot.Constants.VisionSubsystemConstants.limelightName[0]);
 
     // make the variable to hold the shortest distance start it at the max value for doubles
     double shortest = Double.MAX_VALUE;
@@ -620,10 +623,10 @@ public class VisionSubsystem extends SubsystemBase {
    */
   public static double DistanceToTrench() {
     // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
+    LimelightHelpers.setPipelineIndex(name[0], Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
-    RawFiducial[] fiducials = LimelightHelpers.getRawFiducials(name);
+    RawFiducial[] fiducials = LimelightHelpers.getRawFiducials(name[0]);
 
     // make the variable to hold the shortest distance start it at the max value for doubles
     double shortest = Double.MAX_VALUE;
@@ -658,10 +661,10 @@ public class VisionSubsystem extends SubsystemBase {
    */
   public static double DistanceToOutpost() {
     // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
+    LimelightHelpers.setPipelineIndex(name[0], Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
-    RawFiducial[] fiducials = LimelightHelpers.getRawFiducials(name);
+    RawFiducial[] fiducials = LimelightHelpers.getRawFiducials(name[0]);
 
     // make the variable to hold the shortest distance start it at the max value for doubles
     double shortest = Double.MAX_VALUE;
@@ -696,10 +699,10 @@ public class VisionSubsystem extends SubsystemBase {
    */
   public static double DistanceToTower() {
     // change the pipeline to apriltags
-    LimelightHelpers.setPipelineIndex(name, Constants.VisionSubsystemConstants.ApriltagsPipeline);
+    LimelightHelpers.setPipelineIndex(name[0], Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
     // get the results
-    RawFiducial[] fiducials = LimelightHelpers.getRawFiducials(name);
+    RawFiducial[] fiducials = LimelightHelpers.getRawFiducials(name[0]);
 
     // make the variable to hold the shortest distance start it at the max value for doubles
     double shortest = Double.MAX_VALUE;

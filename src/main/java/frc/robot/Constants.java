@@ -14,7 +14,7 @@ package frc.robot;
  */
 public final class Constants {
   public static class VisionSubsystemConstants {
-    public static final String limelightName = "limelight-cyclops";
+    public static final String[] limelightName = {"limelight-cyclops", "limelight-iris"};
 
     public static final int ApriltagsPipeline = 0;
 

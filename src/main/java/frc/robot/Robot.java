@@ -5,6 +5,8 @@
 package frc.robot;
 
 import com.ctre.phoenix6.HootAutoReplay;
+
+import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,6 +25,10 @@ public class Robot extends TimedRobot {
       new HootAutoReplay().withTimestampReplay().withJoystickReplay();
 
   public Robot() {
+
+    PortForwarder.add(5801, "172.29.0.1", 5801);
+    PortForwarder.add(5800, "172.29.0.1", 5800);
+
     m_robotContainer = new RobotContainer();
 
     m_chooser.setDefaultOption("Shoot In Circle (Primary scorer, Start on Right)", "Grab N Go");
