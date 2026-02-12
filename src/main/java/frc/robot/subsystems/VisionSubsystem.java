@@ -113,7 +113,7 @@ public class VisionSubsystem extends SubsystemBase {
           name[j], Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
       // get the latest results from the limelight
-      LimelightResults results = LimelightHelpers.getLatestResults(name[0]);
+      LimelightResults results = LimelightHelpers.getLatestResults(name[j]);
 
       // if the limelights intel is bad return false
       if (!results.valid) {
@@ -127,6 +127,40 @@ public class VisionSubsystem extends SubsystemBase {
         if (SeenTag.fiducialID == tag) {
           return true;
         }
+      }
+    }
+
+    // if the tag doesn't appear in the data then return false
+    return false;
+  }
+
+  /**
+   * Outputs if we can see a tag
+   *
+   * @param tag the tag to check to see if we can see
+   * @param limelightID ID of the limelight to check (0 is main, 1 is secondary)
+   * @apiNote will return null if it cannot get data
+   */
+  public static boolean CanSeeTag(int tag, int limelightID) {
+
+    // change the pipelime to apriltags
+    LimelightHelpers.setPipelineIndex(
+        name[limelightID], Constants.VisionSubsystemConstants.ApriltagsPipeline);
+
+    // get the latest results from the limelight
+    LimelightResults results = LimelightHelpers.getLatestResults(name[limelightID]);
+
+    // if the limelights intel is bad return false
+    if (!results.valid) {
+      return false;
+    }
+
+    // loop through every tag we can see
+    for (LimelightTarget_Fiducial SeenTag : results.targets_Fiducials) {
+
+      // if that tag is the one we are looking for return true
+      if (SeenTag.fiducialID == tag) {
+        return true;
       }
     }
 
