@@ -149,8 +149,7 @@ public class ShooterSubsystem extends SubsystemBase {
   // Shoot balls. None adjustable velocity
   public void Shoot() {
 
-    // shootMotorBottom.set(-1);
-    //shootMotorTop.set(1);
+    
     tShootClosedLoopController.setSetpoint(setVelocityTop, ControlType.kVelocity);
     bSparkClosedLoopController.setSetpoint(setVelocityBottom, ControlType.kVelocity);
     
@@ -166,19 +165,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void StopShoot() {
 
-    // shootMotorTop.setVoltage(0);
-    // tShootClosedLoopController.setSetpoint(0, ControlType.kVelocity);
 
     shootMotorTop.setVoltage(0);
     shootMotorBottom.setVoltage(0);
     kickMotor.setVoltage(0);
-    // shootMotorTop.set(0);
-    // shootMotorBottom.set(0);
-
-    // shootMotorLeft.set(0);
-    // shootMotorLeft.setVoltage(0);
-    // shootMotorRight.set(0);
-    // shootMotorRight.setVoltage(0);
+    
   }
 
   public double GetRPM() {
