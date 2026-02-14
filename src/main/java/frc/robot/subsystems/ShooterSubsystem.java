@@ -4,6 +4,8 @@ import java.rmi.server.RMIClassLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.ejml.equation.IntegerSequence.Range;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -41,6 +43,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private double setVelocityTop;
   private double setVelocityBottom;
+  private final double RPM_AT_8FT;
+  private final double RANGE_AT_1500;
+  private final double RPM_PER_FOOT;
+
+  private final double robotX;
+  private final double robotY;
+  
   
 
   // private final SparkFlex kickMotor;
@@ -52,6 +61,13 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Current Limit", 0);
     setVelocityTop = 1500;
     setVelocityBottom = 1500;
+
+    RPM_AT_8FT = 1500;
+    RANGE_AT_1500 = 8;
+    RPM_PER_FOOT = 75;
+
+    robotX = 0;
+    robotY = 0;
     
 
     shootMotorTop = new SparkFlex(14, MotorType.kBrushless);
@@ -131,7 +147,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     // shootMotorBottom.set(-1);
     //shootMotorTop.set(1);
-    tShootClosedLoopController.setSetpoint(setVelocityTop, ControlType.kVelocity);
+    //We need Feet per second, the x ft per second, the y fet per second, flight time, and min and max
+    tShootClosedLoopController.setSetpoint(rpmToHitTarget(robotX, robotY, MetersToFeet(6.4), MetersToFeet(6), setVelocityTop, setVelocityBottom, RPM_PER_FOOT, RPM_AT_8FT, RANGE_AT_1500), ControlType.kVelocity);
     bSparkClosedLoopController.setSetpoint(setVelocityBottom, ControlType.kVelocity);
     
   }
@@ -159,5 +176,29 @@ public class ShooterSubsystem extends SubsystemBase {
     // shootMotorLeft.setVoltage(0);
     // shootMotorRight.set(0);
     // shootMotorRight.setVoltage(0);
+  }
+
+  public double rpmToHitTarget(double robotXFT, double robotYFT, double targetXFT, double targetYFT, double vxFtPerSec, double vyFTPerSec, double flightTimeSec, double minRpm, double maxRpm){
+    double dx = targetXFT - robotXFT;
+    double dy = targetYFT - robotYFT;
+    double distanceFt = Math.hypot(dx, dy);
+
+    if(distanceFt < 1e-6){
+      //This is when we are smack up against the hub
+      return Math.max(minRpm, Math.min(maxRpm, RPM_AT_8FT));
+    }
+    double ux = dx / distanceFt;
+    double uy = dy / distanceFt;
+
+    double vParallel = vxFtPerSec * ux + vyFTPerSec * uy;
+    double stationaryEquivalentRangeFt = distanceFt - vParallel * flightTimeSec;
+
+    double rpmToHitTarget = RPM_AT_8FT + RPM_PER_FOOT * (stationaryEquivalentRangeFt - RANGE_AT_1500);
+
+    return Math.max(minRpm, Math.min(maxRpm, rpmToHitTarget));
+  }
+
+  private double MetersToFeet(double meters){
+    return meters * 3.2808399;
   }
 }
