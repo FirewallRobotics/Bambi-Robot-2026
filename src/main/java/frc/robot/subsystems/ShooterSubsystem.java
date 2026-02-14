@@ -57,14 +57,17 @@ public class ShooterSubsystem extends SubsystemBase {
     tFollowerConfig = new SparkFlexConfig();
     tShootConfig = new SparkFlexConfig();
     bShootConfig = new SparkFlexConfig();
+    //commented to add when we know kicker runs
     //kickConfig = new SparkFlexConfig();
 
     tShootClosedLoopController = shootMotorTop.getClosedLoopController();
     bSparkClosedLoopController = shootMotorBottom.getClosedLoopController();
+    //commented to add when we know kicker runs
     //kickClosedLoopController = kickMotor.getClosedLoopController();
 
     tShootConfig.smartCurrentLimit(40);
     bShootConfig.smartCurrentLimit(40);
+    //commented to add when we know kicker runs
     //kickConfig.smartCurrentLimit(30);
 
     //This might cause issues
@@ -107,6 +110,7 @@ public class ShooterSubsystem extends SubsystemBase {
         // kV is now in Volts, so we multiply by the nominal voltage (12V)
         .kV(12.0 / 5767, ClosedLoopSlot.kSlot1);
 
+    //commented to add when we know kicker runs
     // kickConfig
     //     .closedLoop
     //     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
@@ -134,6 +138,7 @@ public class ShooterSubsystem extends SubsystemBase {
         com.revrobotics.ResetMode.kNoResetSafeParameters,
         com.revrobotics.PersistMode.kPersistParameters);
     
+    //commented to add when we know kicker runs
     // kickMotor.configure(
     //   kickConfig,
     //   com.revrobotics.ResetMode.kNoResetSafeParameters,
@@ -154,6 +159,7 @@ public class ShooterSubsystem extends SubsystemBase {
   // Used to kick the balls up from the storage up into the shooter
   public void KickBalls() {
     kickMotor.set(1);
+    //commented to add when we know kicker runs
     //kickClosedLoopController.setSetpoint(setVelocityKicker, ControlType.kVelocity);
     
   }
