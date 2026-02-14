@@ -35,7 +35,7 @@ public class DriveAssistanceSubsystem extends SubsystemBase {
     return run(() -> {
           if (Math.toRadians(VisionSubsystem.getAngleToHUB(drivetrain))
               == drivetrain.getState().Pose.getRotation().getRadians()) {
-            joystick.setRumble(RumbleType.kBothRumble, 0.25);
+            joystick.setRumble(RumbleType.kBothRumble, 0.75);
           } else if (Math.toRadians(VisionSubsystem.getAngleToHUB(drivetrain))
               > drivetrain.getState().Pose.getRotation().getRadians()) {
             joystick.setRumble(RumbleType.kLeftRumble, 0.25);
@@ -57,7 +57,7 @@ public class DriveAssistanceSubsystem extends SubsystemBase {
     return run(() -> {
           if (Math.toRadians(VisionSubsystem.getAngleToHUB(drivetrain))
               == drivetrain.getState().Pose.getRotation().getRadians()) {
-            joystick.setRumble(RumbleType.kBothRumble, 0.25);
+            joystick.setRumble(RumbleType.kBothRumble, 0.75);
           } else {
             joystick.setRumble(RumbleType.kBothRumble, 0);
           }
