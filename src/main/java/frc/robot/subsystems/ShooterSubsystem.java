@@ -59,12 +59,12 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Velocity Top", 0);
     SmartDashboard.putNumber("Velocity Bottom", 0);
     SmartDashboard.putNumber("Current Limit", 0);
-    setVelocityTop = 1500;
-    setVelocityBottom = 1500;
+    setVelocityTop = 1600;
+    setVelocityBottom = 1600;
 
-    RPM_AT_8FT = 1500;
+    RPM_AT_8FT = 1600;
     RANGE_AT_1500 = 8;
-    RPM_PER_FOOT = 75;
+    RPM_PER_FOOT = 50;
 
     robotX = 0;
     robotY = 0;
@@ -148,8 +148,9 @@ public class ShooterSubsystem extends SubsystemBase {
     // shootMotorBottom.set(-1);
     //shootMotorTop.set(1);
     //We need Feet per second, the x ft per second, the y fet per second, flight time, and min and max
-    tShootClosedLoopController.setSetpoint(rpmToHitTarget(robotX, robotY, MetersToFeet(6.4), MetersToFeet(6), setVelocityTop, setVelocityBottom, RPM_PER_FOOT, RPM_AT_8FT, RANGE_AT_1500), ControlType.kVelocity);
-    bSparkClosedLoopController.setSetpoint(setVelocityBottom, ControlType.kVelocity);
+    double target = rpmToHitTarget(robotX, robotY, MetersToFeet(6.4), MetersToFeet(6), getXvPerFt(RPM_PER_FOOT, false), getXvPerFt(RPM_PER_FOOT, true), RPM_PER_FOOT, RPM_AT_8FT, RANGE_AT_1500);
+    tShootClosedLoopController.setSetpoint(target, ControlType.kVelocity);
+    bSparkClosedLoopController.setSetpoint(target, ControlType.kVelocity);
     
   }
 
@@ -200,5 +201,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private double MetersToFeet(double meters){
     return meters * 3.2808399;
+  }
+
+  private double getXvPerFt(double vel, boolean GettingVy){
+    if(GettingVy){
+      return Math.cos(160) * vel;
+    }
+
+    return Math.sin(160) * vel;
   }
 }
