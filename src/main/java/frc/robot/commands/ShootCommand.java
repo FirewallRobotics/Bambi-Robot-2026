@@ -20,7 +20,7 @@ public class ShootCommand extends Command {
     double nowRPM = m_ShooterSubsystem.GetRPM();
     double rpmRampUp = nowRPM - previousRPM;
 
-    if ((2377.358491 - 50) > rpmRampUp) {
+    if (Math.abs(rpmRampUp) < 50) {
       if ((m_ShooterSubsystem.GetWantedVelocity() - 70) < m_ShooterSubsystem.GetRPM()
           && m_ShooterSubsystem.GetRPM() < (m_ShooterSubsystem.GetWantedVelocity() + 20)) {
         m_ShooterSubsystem.KickBalls();
