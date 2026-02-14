@@ -91,6 +91,7 @@ public class RobotContainer {
         .whileTrue(drivetrain.applyRequest(() -> idle).ignoringDisable(true));
 
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+    joystick.b().whileTrue(driveAssistanceSubsystem.vibrateIfFaceingHUBDiscriptive(joystick).repeatedly());
     joystick
         .b()
         .whileTrue(
