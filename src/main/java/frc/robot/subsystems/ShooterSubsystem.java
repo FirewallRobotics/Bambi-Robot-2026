@@ -33,8 +33,8 @@ public class ShooterSubsystem extends SubsystemBase {
   private double setVelocityKicker;
 
   private final SparkFlex kickMotor;
-  // private final SparkFlexConfig kickConfig;
-  // private final SparkClosedLoopController kickClosedLoopController;
+  private final SparkFlexConfig kickConfig;
+  private final SparkClosedLoopController kickClosedLoopController;
 
 
   public ShooterSubsystem() {
@@ -44,31 +44,32 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Current Limit", 0);
     setVelocityTop = 1600;
     setVelocityBottom = 1600;
-    setVelocityKicker = 0;
+    setVelocityKicker = 5000;
     
 
     shootMotorTop = new SparkFlex(14, MotorType.kBrushless);
     shootMotorBottom = new SparkFlex(15, MotorType.kBrushless);
     shootFollowTop = new SparkFlex(13, MotorType.kBrushless);
     shootFollowBottom = new SparkFlex(16, MotorType.kBrushless);
-    kickMotor = new SparkFlex(17, MotorType.kBrushless);
+    kickMotor = new SparkFlex(12, MotorType.kBrushless);
 
     bFollowerConfig = new SparkFlexConfig();
     tFollowerConfig = new SparkFlexConfig();
     tShootConfig = new SparkFlexConfig();
     bShootConfig = new SparkFlexConfig();
     //commented to add when we know kicker runs
-    //kickConfig = new SparkFlexConfig();
+    kickConfig = new SparkFlexConfig();
+    
 
     tShootClosedLoopController = shootMotorTop.getClosedLoopController();
     bSparkClosedLoopController = shootMotorBottom.getClosedLoopController();
     //commented to add when we know kicker runs
-    //kickClosedLoopController = kickMotor.getClosedLoopController();
+    kickClosedLoopController = kickMotor.getClosedLoopController();
 
     tShootConfig.smartCurrentLimit(40);
     bShootConfig.smartCurrentLimit(40);
     //commented to add when we know kicker runs
-    //kickConfig.smartCurrentLimit(30);
+    kickConfig.smartCurrentLimit(30);
 
     //This might cause issues
     // tShootConfig.encoder.positionConversionFactor(1);
@@ -111,23 +112,25 @@ public class ShooterSubsystem extends SubsystemBase {
         .kV(12.0 / 5767, ClosedLoopSlot.kSlot1);
 
     //commented to add when we know kicker runs
-    // kickConfig
-    //     .closedLoop
-    //     .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-    //     // Set PID values for position control. We don't need to pass a closed loop
-    //     // slot, as it will default to slot 0.
-    //     .p(0)
-    //     .i(0)
-    //     .d(0)
-    //     .outputRange(-1, 1)
-    //     // Set PID values for velocity control in slot 1
-    //     .p(0.0001, ClosedLoopSlot.kSlot1)
-    //     .i(0, ClosedLoopSlot.kSlot1)
-    //     .d(0, ClosedLoopSlot.kSlot1)
-    //     .outputRange(-1, 1, ClosedLoopSlot.kSlot1)
-    //     .feedForward
-    //     // kV is now in Volts, so we multiply by the nominal voltage (12V)
-    //     .kV(12.0 / 5767, ClosedLoopSlot.kSlot1);
+    kickConfig
+        .closedLoop
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        // Set PID values for position control. We don't need to pass a closed loop
+        // slot, as it will default to slot 0.
+        //0.00039
+        .p(0.00039)
+        //0.000002
+        .i(0.0000016)
+        .d(0)
+        .outputRange(-1, 1)
+        // Set PID values for velocity control in slot 1
+        .p(0.0001, ClosedLoopSlot.kSlot1)
+        .i(0, ClosedLoopSlot.kSlot1)
+        .d(0, ClosedLoopSlot.kSlot1)
+        .outputRange(-1, 1, ClosedLoopSlot.kSlot1)
+        .feedForward
+        // kV is now in Volts, so we multiply by the nominal voltage (12V)
+        .kV(12.0 / 5767, ClosedLoopSlot.kSlot1);
 
     shootMotorTop.configure(
         tShootConfig,
@@ -139,11 +142,11 @@ public class ShooterSubsystem extends SubsystemBase {
         com.revrobotics.PersistMode.kPersistParameters);
     
     //commented to add when we know kicker runs
-    // kickMotor.configure(
-    //   kickConfig,
-    //   com.revrobotics.ResetMode.kNoResetSafeParameters,
-    //   com.revrobotics.PersistMode.kPersistParameters
-    // );
+    kickMotor.configure(
+      kickConfig,
+      com.revrobotics.ResetMode.kNoResetSafeParameters,
+      com.revrobotics.PersistMode.kPersistParameters
+    );
   }
 
   // Shoot balls. None adjustable velocity
@@ -157,9 +160,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
   // Used to kick the balls up from the storage up into the shooter
   public void KickBalls() {
-    kickMotor.set(1);
+    //kickMotor.set(1);
     //commented to add when we know kicker runs
-    //kickClosedLoopController.setSetpoint(setVelocityKicker, ControlType.kVelocity);
+    kickClosedLoopController.setSetpoint(setVelocityKicker, ControlType.kVelocity);
     
   }
 
