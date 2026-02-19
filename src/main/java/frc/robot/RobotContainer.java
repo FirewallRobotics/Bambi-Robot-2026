@@ -24,6 +24,7 @@ import frc.robot.commands.HonkCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.DriveAssistanceSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -56,6 +57,7 @@ public class RobotContainer {
   public final CommandXboxController joystick = new CommandXboxController(0);
 
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    public final ClimberSubsystem climberSubsystem;
 
   public final IntakeSubsystem intakeSubsystem;
   public final DriveAssistanceSubsystem driveAssistanceSubsystem;
@@ -67,13 +69,14 @@ public class RobotContainer {
     face.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
 
     intakeSubsystem = new IntakeSubsystem();
+    climberSubsystem = new ClimberSubsystem();
     driveAssistanceSubsystem = new DriveAssistanceSubsystem(drivetrain, this);
     visionSubsystem = new VisionSubsystem(this);
 
     NamedCommands.registerCommand("Honk", new HonkCommand("la-cucaracha.chrp"));
     NamedCommands.registerCommand("Shoot", new ShootCommand());
     NamedCommands.registerCommand("Intake", new IntakeCommand(intakeSubsystem));
-    NamedCommands.registerCommand("Climb", new ClimbLevel1Command());
+    NamedCommands.registerCommand("Climb", new ClimbLevel1Command(drivetrain, climberSubsystem));
 
     configureBindings();
 
