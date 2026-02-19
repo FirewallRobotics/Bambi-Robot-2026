@@ -4,10 +4,13 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -27,6 +30,9 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     DriverStation.silenceJoystickConnectionWarning(true);
+
+    NamedCommands.registerCommand("Move", new IntakeCommand(shooterSubsystem));
+    NamedCommands.registerCommand("Shoot", new ShootCommand(shooterSubsystem));
   }
 
   public void init() {

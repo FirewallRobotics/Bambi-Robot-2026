@@ -166,6 +166,10 @@ public class ShooterSubsystem extends SubsystemBase {
     
   }
 
+  public void stopkicking(){
+    kickClosedLoopController.setSetpoint(0, ControlType.kVelocity);
+  }
+
   public void StopShoot() {
 
 
