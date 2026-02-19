@@ -42,4 +42,16 @@ public final class Constants {
     public static final double kVVoltSecondPerRad = 1.5928;
     public static final double kAVoltSecondSquaredPerRad = 0.030171;
   }
+
+  public static class ClimberSubsystem {
+    public static final int CLIMBER_MOTOR_PORT_LEFT = 2;
+    public static final int CLIMBER_MOTOR_PORT_RIGHT = 3;
+    public static final boolean CLIMBER_MOTOR_LEFT_INVERTED = false;
+    public static final boolean CLIMBER_MOTOR_RIGHT_INVERTED = true;
+    public static final double CLIMBER_KP = 0.1; // Placeholder value, adjust as needed
+    public static final double CLIMBER_KI = 0.0; // Placeholder value, adjust as needed
+    public static final double CLIMBER_KD = 0.0; // Placeholder value, adjust as needed
+    public static final double CLIMBER_EXTENDED_POSITION = 100.0; // Placeholder value, adjust as needed
+    public static final double CLIMBER_RETRACTED_POSITION = 0.0; // Placeholder value, adjust as needed
+   }
 }
