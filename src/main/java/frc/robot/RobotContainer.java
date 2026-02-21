@@ -5,8 +5,10 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -53,5 +55,9 @@ public class RobotContainer {
   private void configureBindings() {
     driverXbox.rightTrigger().whileTrue(new ShootCommand(shooterSubsystem));
 
+  }
+
+  public Command getAutonomousCommand(String name) {
+    return new PathPlannerAuto(name);
   }
 }
