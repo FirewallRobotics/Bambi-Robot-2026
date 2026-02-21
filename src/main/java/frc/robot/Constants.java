@@ -20,9 +20,9 @@ public final class Constants {
   //0.0007
   //0.0000005
   public static class ShooterSubsystemConstants {
-    public static final double shootPTop = 0.0005;
-    public static final double shootPBot = 0.0005;
-    public static final double shootITop = 0.0000005;
-    public static final double shootIBot = 0.0000005;
+    public static final double shootPTop = 0.00058;
+    public static final double shootPBot = 0.00058;
+    public static final double shootITop = 0.0000007;
+    public static final double shootIBot = 0.0000007;
   }
 }

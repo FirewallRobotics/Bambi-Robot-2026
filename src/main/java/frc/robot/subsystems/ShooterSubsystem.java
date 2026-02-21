@@ -42,8 +42,8 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Velocity Top", 0);
     SmartDashboard.putNumber("Velocity Bottom", 0);
     SmartDashboard.putNumber("Current Limit", 0);
-    setVelocityTop = 1350;
-    setVelocityBottom = 1350;
+    setVelocityTop = 1400;
+    setVelocityBottom = 1400;
     setVelocityKicker = 3000;
     
 
@@ -87,7 +87,7 @@ public class ShooterSubsystem extends SubsystemBase {
         // Set PID values for velocity control in slot 1
         .p(ShooterSubsystemConstants.shootPTop, ClosedLoopSlot.kSlot1)
         .i(ShooterSubsystemConstants.shootITop, ClosedLoopSlot.kSlot1)
-        .d(0.0007, ClosedLoopSlot.kSlot1)
+        .d(0.0000, ClosedLoopSlot.kSlot1)
         .outputRange(-1, 1, ClosedLoopSlot.kSlot1)
         .feedForward
         // kV is now in Volts, so we multiply by the nominal voltage (12V)
