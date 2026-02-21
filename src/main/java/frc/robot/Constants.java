@@ -14,9 +14,46 @@ package frc.robot;
  */
 public final class Constants {
   public static class VisionSubsystemConstants {
-    public static final String limelightName = "limelight-cyclops";
+    public static final String[] limelightName = {"limelight-cyclops", "limelight-iris"};
+
+    public static final int ApriltagsPipeline = 0;
+
+    public static final double[] BlueHUBCenter = {4.6, 4.04};
+    public static final double[] RedHUBCenter = {11.9, 4.04};
+
+    public static final int[] HUBTags = {2, 3, 4, 5, 8, 9, 10, 11, 18, 19, 20, 21, 24, 25, 26, 27};
+    public static final int[] trenchTags = {1, 6, 7, 12, 17, 22, 23, 28};
+    public static final int[] outpostTags = {13, 14, 29, 30};
+    public static final int[] towerTags = {15, 16, 31, 32};
   }
 
+  public static class DriverAssistanceConstants {
+    public static final double minDistFeet = 9;
+    public static final double maxDistFeet = 13;
+  }
+
+  public static class ArmConstants {
+
+    public static final int IntakeMotorID = 0;
+    public static final int ArmMotorID = 1;
+
+    public static final double kSVolts = 0.11356;
+    public static final double kGVolts = 0.29175;
+    public static final double kVVoltSecondPerRad = 1.5928;
+    public static final double kAVoltSecondSquaredPerRad = 0.030171;
+  }
+
+  public static class ClimberSubsystem {
+    public static final int CLIMBER_MOTOR_PORT_LEFT = 2;
+    public static final int CLIMBER_MOTOR_PORT_RIGHT = 3;
+    public static final boolean CLIMBER_MOTOR_LEFT_INVERTED = false;
+    public static final boolean CLIMBER_MOTOR_RIGHT_INVERTED = true;
+    public static final double CLIMBER_KP = 0.1; // Placeholder value, adjust as needed
+    public static final double CLIMBER_KI = 0.0; // Placeholder value, adjust as needed
+    public static final double CLIMBER_KD = 0.0; // Placeholder value, adjust as needed
+    public static final double CLIMBER_EXTENDED_POSITION = 100.0; // Placeholder value, adjust as needed
+    public static final double CLIMBER_RETRACTED_POSITION = 0.0; // Placeholder value, adjust as needed
+   }
   public static class ShooterSubsystemConstants {
     public static final double shootPTop = 0.0005;
     public static final double shootPBot = 0.0005;
