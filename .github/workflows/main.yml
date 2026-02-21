@@ -30,7 +30,7 @@ jobs:
       run: chmod +x gradlew
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
-      run: ./gradlew build
+      run: ./gradlew build; ./gradlew test
     # when we fail to build its usually spotless so lets apply it
     #- name: Run Spotless
     #  if: failure()
