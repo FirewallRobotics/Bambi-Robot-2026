@@ -54,4 +54,10 @@ public final class Constants {
     public static final double CLIMBER_EXTENDED_POSITION = 100.0; // Placeholder value, adjust as needed
     public static final double CLIMBER_RETRACTED_POSITION = 0.0; // Placeholder value, adjust as needed
    }
+  public static class ShooterSubsystemConstants {
+    public static final double shootPTop = 0.0005;
+    public static final double shootPBot = 0.0005;
+    public static final double shootITop = 0.0000005;
+    public static final double shootIBot = 0.0000005;
+  }
 }
