@@ -17,6 +17,8 @@ public final class Constants {
     public static final String limelightName = "limelight-cyclops";
   }
 
+  //0.0007
+  //0.0000005
   public static class ShooterSubsystemConstants {
     public static final double shootPTop = 0.0005;
     public static final double shootPBot = 0.0005;

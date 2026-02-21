@@ -42,14 +42,14 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Velocity Top", 0);
     SmartDashboard.putNumber("Velocity Bottom", 0);
     SmartDashboard.putNumber("Current Limit", 0);
-    setVelocityTop = 1600;
-    setVelocityBottom = 1600;
-    setVelocityKicker = 5000;
+    setVelocityTop = 1350;
+    setVelocityBottom = 1350;
+    setVelocityKicker = 3000;
     
 
-    shootMotorTop = new SparkFlex(14, MotorType.kBrushless);
+    shootMotorTop = new SparkFlex(13, MotorType.kBrushless);
     shootMotorBottom = new SparkFlex(15, MotorType.kBrushless);
-    shootFollowTop = new SparkFlex(13, MotorType.kBrushless);
+    shootFollowTop = new SparkFlex(14, MotorType.kBrushless);
     shootFollowBottom = new SparkFlex(16, MotorType.kBrushless);
     kickMotor = new SparkFlex(12, MotorType.kBrushless);
 
@@ -69,7 +69,7 @@ public class ShooterSubsystem extends SubsystemBase {
     tShootConfig.smartCurrentLimit(40);
     bShootConfig.smartCurrentLimit(40);
     //commented to add when we know kicker runs
-    kickConfig.smartCurrentLimit(30);
+    kickConfig.smartCurrentLimit(40);
 
     //This might cause issues
     // tShootConfig.encoder.positionConversionFactor(1);
@@ -82,12 +82,12 @@ public class ShooterSubsystem extends SubsystemBase {
         // slot, as it will default to slot 0.
         .p(ShooterSubsystemConstants.shootPTop)
         .i(ShooterSubsystemConstants.shootITop)
-        .d(0)
+        .d(0.0000)
         .outputRange(-1, 1)
         // Set PID values for velocity control in slot 1
-        .p(0.0001, ClosedLoopSlot.kSlot1)
-        .i(0, ClosedLoopSlot.kSlot1)
-        .d(0, ClosedLoopSlot.kSlot1)
+        .p(ShooterSubsystemConstants.shootPTop, ClosedLoopSlot.kSlot1)
+        .i(ShooterSubsystemConstants.shootITop, ClosedLoopSlot.kSlot1)
+        .d(0.0007, ClosedLoopSlot.kSlot1)
         .outputRange(-1, 1, ClosedLoopSlot.kSlot1)
         .feedForward
         // kV is now in Volts, so we multiply by the nominal voltage (12V)
@@ -100,27 +100,29 @@ public class ShooterSubsystem extends SubsystemBase {
         // slot, as it will default to slot 0.
         .p(ShooterSubsystemConstants.shootPTop)
         .i(ShooterSubsystemConstants.shootITop)
-        .d(0)
+        .d(0.0000)
         .outputRange(-1, 1)
         // Set PID values for velocity control in slot 1
-        .p(0.0001, ClosedLoopSlot.kSlot1)
-        .i(0, ClosedLoopSlot.kSlot1)
-        .d(0, ClosedLoopSlot.kSlot1)
+        .p(ShooterSubsystemConstants.shootPTop, ClosedLoopSlot.kSlot1)
+        .i(ShooterSubsystemConstants.shootITop, ClosedLoopSlot.kSlot1)
+        .d(0.0007, ClosedLoopSlot.kSlot1)
         .outputRange(-1, 1, ClosedLoopSlot.kSlot1)
         .feedForward
         // kV is now in Volts, so we multiply by the nominal voltage (12V)
         .kV(12.0 / 5767, ClosedLoopSlot.kSlot1);
 
     //commented to add when we know kicker runs
+    //0.00039
+    //0.0000016
     kickConfig
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control. We don't need to pass a closed loop
         // slot, as it will default to slot 0.
         //0.00039
-        .p(0.00039)
+        .p(0.00034)
         //0.000002
-        .i(0.0000016)
+        .i(0.0000009)
         .d(0)
         .outputRange(-1, 1)
         // Set PID values for velocity control in slot 1
