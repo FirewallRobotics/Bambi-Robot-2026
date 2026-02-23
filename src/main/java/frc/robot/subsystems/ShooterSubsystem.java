@@ -42,8 +42,8 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Velocity Top", 0);
     SmartDashboard.putNumber("Velocity Bottom", 0);
     SmartDashboard.putNumber("Current Limit", 0);
-    setVelocityTop = 1500;
-    setVelocityBottom = 1500;
+    setVelocityTop = 1550;
+    setVelocityBottom = 1550;
     setVelocityKicker = 3000;
     
 
@@ -98,14 +98,14 @@ public class ShooterSubsystem extends SubsystemBase {
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control. We don't need to pass a closed loop
         // slot, as it will default to slot 0.
-        .p(ShooterSubsystemConstants.shootPTop)
-        .i(ShooterSubsystemConstants.shootITop)
+        .p(ShooterSubsystemConstants.shootPBot)
+        .i(ShooterSubsystemConstants.shootIBot)
         .d(0.0000)
         .outputRange(-1, 1)
         // Set PID values for velocity control in slot 1
-        .p(ShooterSubsystemConstants.shootPTop, ClosedLoopSlot.kSlot1)
-        .i(ShooterSubsystemConstants.shootITop, ClosedLoopSlot.kSlot1)
-        .d(0.0007, ClosedLoopSlot.kSlot1)
+        .p(ShooterSubsystemConstants.shootPBot, ClosedLoopSlot.kSlot1)
+        .i(ShooterSubsystemConstants.shootIBot, ClosedLoopSlot.kSlot1)
+        .d(0.0000, ClosedLoopSlot.kSlot1)
         .outputRange(-1, 1, ClosedLoopSlot.kSlot1)
         .feedForward
         // kV is now in Volts, so we multiply by the nominal voltage (12V)
