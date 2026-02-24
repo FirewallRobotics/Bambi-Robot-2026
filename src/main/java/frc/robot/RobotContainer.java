@@ -8,7 +8,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.commands.AngleArmCommand;
 import frc.robot.commands.IntakeCommand;
 
 /**
@@ -22,6 +24,7 @@ public class RobotContainer {
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final CommandXboxController driverXbox = new CommandXboxController(0);
   final static IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
+  final static IntakeArmSubsystem m_IntakeArmSubsystem = new IntakeArmSubsystem();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -44,7 +47,8 @@ public class RobotContainer {
    */
   private void configureBindings() {
         driverXbox.leftTrigger().whileTrue(new IntakeCommand(m_IntakeSubsystem));
-
+        driverXbox.povLeft().whileTrue(new AngleArmCommand(m_IntakeArmSubsystem, false));
+        driverXbox.povRight().whileTrue(new AngleArmCommand(m_IntakeArmSubsystem, true));
 
   }
 }
