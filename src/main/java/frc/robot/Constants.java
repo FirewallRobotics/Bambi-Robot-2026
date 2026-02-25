@@ -13,20 +13,5 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class VisionSubsystemConstants {
-    public static final String limelightName = "limelight-cyclops";
-  }
-
-  public static class ShooterSubsystemConstants {
-    public static final double shootPTop = 0.0005;
-    public static final double shootPBot = 0.0005;
-    public static final double shootITop = 0.0000005;
-    public static final double shootIBot = 0.0000005;
-  }
-
-  public static class IntakeSubsystemConstants{
-    public static final double intakeVelocity = -4000;
-    public static final double intakeP = 0.0003;
-    public static final double intakeI = 0.000001;
-  }
+  
 }
