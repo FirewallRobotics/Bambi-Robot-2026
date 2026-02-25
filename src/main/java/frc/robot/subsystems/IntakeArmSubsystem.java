@@ -71,4 +71,5 @@ public class IntakeArmSubsystem extends SubsystemBase{
             armClosedLoopController.setSetpoint(downPosition, ControlType.kPosition);
         }
     }
+
 }

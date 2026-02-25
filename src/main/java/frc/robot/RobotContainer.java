@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.commands.AngleArmCommand;
 import frc.robot.commands.IntakeCommand;
 
 /**
@@ -47,8 +46,6 @@ public class RobotContainer {
    */
   private void configureBindings() {
         driverXbox.leftTrigger().whileTrue(new IntakeCommand(m_IntakeSubsystem));
-        driverXbox.povLeft().whileTrue(new AngleArmCommand(m_IntakeArmSubsystem, false));
-        driverXbox.povRight().whileTrue(new AngleArmCommand(m_IntakeArmSubsystem, true));
 
   }
 }
