@@ -4,11 +4,13 @@ import requests
 import turtle
 import time
 import math
+import random
 
 global turt, sizeX, sizeY, lastmatchkey, NxtBluTeamKeys, NxtRedTeamKeys
 
 turt = turtle.Turtle()
 turtle.tracer(0,0)
+turtle.bgcolor("cornsilk4")
 
 # TODO: put into loop
 sizeX = turt.getscreen().xscale
@@ -38,15 +40,17 @@ def askBlueAlliance():
                 nxtmatchresp = requests.get(lstmatch, headers={'X-TBA-Auth-Key': Authkey})
                 nxtmatchresp = nxtmatchresp.json()
 
+                NxtName = nxtmatchresp['key']
+                NxtTime = nxtmatchresp['time']
                 NxtAliData = nxtmatchresp['alliances']
                 NxtBlueAliData = NxtAliData['blue']
                 NxtBluTeamKeys = NxtBlueAliData['team_keys']
                 NxtRedAliData = NxtAliData['red']
                 NxtRedTeamKeys = NxtRedAliData['team_keys']
-                return [NxtBluTeamKeys, NxtRedTeamKeys, True]
+                return [NxtBluTeamKeys, NxtRedTeamKeys, [NxtName, NxtTime], True]
 
         lastmatchkey = data['next_match_key']
-    return [None, None, False]
+    return [None, None, [None, None], False]
 
 def drawField(counter):
     global turt, sizeX, sizeY
@@ -69,7 +73,7 @@ def drawField(counter):
     turt.up()
     turt.end_fill()
 
-    turt.fillcolor("Red")
+    turt.fillcolor("firebrick1")
     turt.begin_fill()
     turt.down()
     for i in range(0,2):
@@ -84,7 +88,7 @@ def drawField(counter):
     turt.right(90)
     turt.forward(1440*sizeX)
     turt.right(90)
-    turt.fillcolor("Blue")
+    turt.fillcolor("DeepSkyBlue")
     turt.begin_fill()
     turt.down()
     for i in range(0,2):
@@ -103,7 +107,7 @@ def drawField(counter):
     turt.color("Blue")
     turt.pensize(15)
     turt.down()
-    turt.forward(1440*(counter/60))
+    turt.forward(1440*(counter/30))
     turt.up()
     turt.color("Black")
     turt.pensize(1)
@@ -111,7 +115,7 @@ def drawField(counter):
     
 
 
-def populateData(blue, red):
+def populateData(blue, red, fieldData):
     global turt, sizeX, sizeY
 
     turt.forward(720*sizeX)
@@ -161,6 +165,11 @@ def populateData(blue, red):
     turt.write(red[2][1] + " - " + blue[1][2], font=('Arial', 30, 'normal'))
 
     turt.home()
+    turt.left(90)
+    turt.forward(303)
+    turt.write(fieldData[0], align="center",font=('Arial', 30, 'bold'))
+    turt.backward(50)
+    turt.write(fieldData[1], align="center",font=('Arial', 25, 'bold'))
     
     # titles to be assigned:
     # - Highest Shield > Good defense
@@ -179,27 +188,6 @@ def populateData(blue, red):
 
     highestoverallShield = 0
 
-    for i in range(0,len(blue)):
-        try:
-            if int(blue[i][1]) > highestShieldBlue:
-                highestShieldBlue = int(blue[i][1])
-                highestShieldIndexB = i
-        except:
-            print("Cannot parse: " + blue[i][1])
-
-    for i in range(0,len(red)):
-        try:
-            if int(red[i][1]) > highestShieldRed:
-                highestShieldRed = int(red[i][1])
-                highestShieldIndexR = i
-        except:
-            print("Cannot parse: " + blue[i][1])
-
-    if highestShieldBlue > highestShieldRed:
-        highestoverallShield = blue[highestShieldIndexB][0]
-    elif highestShieldBlue < highestShieldRed:
-        highestoverallShield = red[highestShieldIndexR][0]
-
     highestEndgameBlue = 0
     highestEndgameRed = 0
     highestEndgameIndexB = 0
@@ -207,54 +195,12 @@ def populateData(blue, red):
 
     highestoverallEndgame = 0
 
-    for i in range(0,len(blue)):
-        try:
-            if int(blue[i][3]) > highestEndgameBlue:
-                highestEndgameBlue = int(blue[i][3])
-                highestEndgameIndexB = i
-        except:
-            print("Cannot parse: " + blue[i][1])
-
-    for i in range(0,len(red)):
-        try:
-            if int(red[i][3]) > highestEndgameRed:
-                highestEndgameRed = int(red[i][3])
-                highestEndgameIndexR = i
-        except:
-            print("Cannot parse: " + blue[i][1])
-
-    if highestEndgameBlue > highestEndgameRed:
-        highestoverallEndgame = blue[highestEndgameIndexB][0]
-    elif highestEndgameBlue < highestEndgameRed:
-        highestoverallEndgame = red[highestEndgameIndexR][0]
-
     highestTotalBlue = 0
     highestTotalRed = 0
     highestTotalIndexB = 0
     highestTotalIndexR = 0
 
     highestoverallTotal = 0
-
-    for i in range(0,len(blue)):
-        try:
-            if int(blue[i][7]) > highestTotalBlue:
-                highestTotalBlue = int(blue[i][7])
-                highestTotalIndexB = i
-        except:
-            print("Cannot parse: " + blue[i][1])
-
-    for i in range(0,len(red)):
-        try:
-            if int(red[i][7]) > highestTotalRed:
-                highestTotalRed = int(red[i][7])
-                highestTotalIndexR = i
-        except:
-            print("Cannot parse: " + blue[i][1])
-
-    if highestTotalBlue > highestTotalRed:
-        highestoverallTotal = blue[highestTotalIndexB][0]
-    elif highestTotalBlue < highestTotalRed:
-        highestoverallTotal = red[highestTotalIndexR][0]
 
     highestTeleopBlue = 0
     highestTeleopRed = 0
@@ -265,29 +211,83 @@ def populateData(blue, red):
 
     for i in range(0,len(blue)):
         try:
-            if int(blue[i][4]) > highestTeleopBlue:
-                highestTeleopBlue = int(blue[i][4])
+            if int(blue[i][1].replace("#", "").strip()) > highestShieldBlue:
+                highestShieldBlue = int(blue[i][1].replace("#", "").strip())
+                highestShieldIndexB = i
+        except Exception as e:
+            pass
+        try:
+            if int(blue[i][3].replace("#", "").strip()) > highestEndgameBlue:
+                highestEndgameBlue = int(blue[i][3].replace("#", "").strip())
+                highestEndgameIndexB = i
+        except Exception as e:
+            pass
+        try:
+            if int(blue[i][7].replace("#", "").strip()) > highestTotalBlue:
+                highestTotalBlue = int(blue[i][7].replace("#", "").strip())
+                highestTotalIndexB = i
+        except Exception as e:
+            pass
+        try:
+            if int(blue[i][4].replace("#", "").strip()) > highestTeleopBlue:
+                highestTeleopBlue = int(blue[i][4].replace("#", "").strip())
                 highestTeleopIndexB = i
-        except:
-            print("Cannot parse: " + blue[i][1])
+        except Exception as e:
+            pass
 
     for i in range(0,len(red)):
         try:
-            if int(red[i][4]) > highestTeleopRed:
-                highestTeleopRed = int(red[i][4])
+            if int(red[i][1].replace("#", "").strip()) > highestShieldRed:
+                highestShieldRed = int(red[i][1].replace("#", "").strip())
+                highestShieldIndexR = i
+        except Exception as e:
+            pass
+        try:
+            if int(red[i][3].replace("#", "").strip()) > highestEndgameRed:
+                highestEndgameRed = int(red[i][3].replace("#", "").strip())
+                highestEndgameIndexR = i
+        except Exception as e:
+            pass
+        try:
+            if int(red[i][7].replace("#", "").strip()) > highestTotalRed:
+                highestTotalRed = int(red[i][7].replace("#", "").strip())
+                highestTotalIndexR = i
+        except Exception as e:
+            pass
+        try:
+            if int(red[i][4].replace("#", "").strip()) > highestTeleopRed:
+                highestTeleopRed = int(red[i][4].replace("#", "").strip())
                 highestTeleopIndexR = i
-        except:
-            print("Cannot parse: " + blue[i][1])
+        except Exception as e:
+            pass
+
+    if highestShieldBlue > highestShieldRed:
+        highestoverallShield = blue[highestShieldIndexB][0]
+    elif highestShieldBlue < highestShieldRed:
+        highestoverallShield = red[highestShieldIndexR][0]
+        
+
+    if highestEndgameBlue > highestEndgameRed:
+        highestoverallEndgame = blue[highestEndgameIndexB][0]
+    elif highestEndgameBlue < highestEndgameRed:
+        highestoverallEndgame = red[highestEndgameIndexR][0]
+        
+
+    if highestTotalBlue > highestTotalRed:
+        highestoverallTotal = blue[highestTotalIndexB][0]
+    elif highestTotalBlue < highestTotalRed:
+        highestoverallTotal = red[highestTotalIndexR][0]
+        
 
     if highestTeleopBlue > highestTeleopRed:
         highestoverallTeleop = blue[highestTeleopIndexB][0]
     elif highestTeleopBlue < highestTeleopRed:
         highestoverallTeleop = red[highestTeleopIndexR][0]
 
-    print("Best shield is: " + str(highestoverallShield))
-    print("Best Endgame is: " + str(highestoverallEndgame))
-    print("Best Teleop is: " + str(highestoverallTeleop))
-    print("Match MVP is: " + str(highestoverallTotal))
+    #print("Best shield is: " + str(highestoverallShield))
+    #print("Best Endgame is: " + str(highestoverallEndgame))
+    #print("Best Teleop is: " + str(highestoverallTeleop))
+    #print("Match MVP is: " + str(highestoverallTotal))
 
     turt.backward(480*sizeX)
     turt.left(90)
@@ -304,17 +304,21 @@ def populateData(blue, red):
         elif red[i][0] == str(highestoverallTeleop):
             turt.write("Highest Teleop AVG", font=('Arial', 20, 'normal'))
         elif red[i][0] == str(highestoverallShield):
-            turt.write("Highest Shield AVG", font=('Arial', 20, 'normal'))
+            turt.write("Best Defense", font=('Arial', 20, 'normal'))
         elif red[i][0] == str(highestoverallEndgame):
             turt.write("Highest Endgame AVG", font=('Arial', 20, 'normal'))
         elif int(red[i][6].replace("%","").strip()) >= 25:
             turt.write("Disabled: " + red[i][6], font=('Arial', 20, 'normal'))
         else:
-            turt.write("Test", font=('Arial', 20, 'normal'))
+            try:
+                if int(red[i][8].replace("%","").strip()) == 0:
+                    turt.write("Has Not Scored", font=('Arial', 20, 'normal'))
+            except:
+                pass
         turt.forward(290*sizeY)
     
     turt.home()
-    turt.forward(400*sizeX)
+    turt.forward(425*sizeX)
     turt.left(90)
     turt.forward(410*sizeY)
     turt.right(180)
@@ -329,12 +333,19 @@ def populateData(blue, red):
         elif blue[i][0] == str(highestoverallTeleop):
             turt.write("Highest Teleop AVG", font=('Arial', 20, 'normal'))
         elif blue[i][0] == str(highestoverallShield):
-            turt.write("Highest Shield AVG", font=('Arial', 20, 'normal'))
+            turt.write("Best Defense", font=('Arial', 20, 'normal'))
         elif blue[i][0] == str(highestoverallEndgame):
             turt.write("Highest Endgame AVG", font=('Arial', 20, 'normal'))
         elif int(blue[i][6].replace("%","").strip()) >= 25:
             turt.write("Disabled: " + blue[i][6], font=('Arial', 20, 'normal'))
+        else:
+            try:
+                if int(blue[i][8].replace("%","").strip()) == 0:
+                    turt.write("Has Not Scored", font=('Arial', 20, 'normal'))
+            except:
+                pass
         turt.forward(290*sizeY)
+            
     
     turt.home()
 
@@ -342,15 +353,22 @@ def populateData(blue, red):
     totalblue = 0
     for i in range(0, len(blue)):
         try:
-            totalblue += int(blue[i][7])
-            totalred += int(red[i][7])
-        except:
-            print("Error while counting team: " + str(i))
+            totalblue += int(blue[i][7].replace("#", "").strip())
+        except Exception as e:
+            pass
+        try:
+            totalred += int(red[i][7].replace("#", "").strip())
+        except Exception as e:
+            pass
     
-    print(str(totalblue) + " - " + str(totalred))
+    #print(str(totalblue) + " - " + str(totalred))
 
-    # blue expected to win
-    if totalblue - 20 > totalred:
+    if totalblue == totalred:
+        turt.left(90)
+        turt.forward(210*sizeY)
+        turt.write("Expected Close Match", align="center", font=('Arial', 33, 'normal'))
+        turt.home()
+
         turt.backward(480*sizeX)
         turt.left(90)
         turt.forward(410*sizeY)
@@ -359,18 +377,11 @@ def populateData(blue, red):
         turt.right(90)
         #turt.forward(200*sizeX)
         turt.left(90)
-        turt.write("Red Expected To Win", font=('Arial', 30, 'normal'))
         turt.forward(50*sizeY)
-        turt.write(totalred, font=('Arial', 20, 'normal'))
+        turt.write("Score: " + str(totalblue), font=('Arial', 20, 'normal'))
         turt.home()
-        turt.turtlesize(5,5,4)
-        turt.fillcolor("Red")
-        
-        
 
-    # blu expected to win 
-    elif totalred - 20 > totalblue:
-        turt.forward(200*sizeX)
+        turt.forward(570*sizeX)
         turt.left(90)
         turt.forward(410*sizeY)
         turt.right(180)
@@ -378,16 +389,61 @@ def populateData(blue, red):
         turt.right(90)
         turt.forward(200*sizeX)
         turt.left(90)
+        turt.forward(50*sizeY)
+        turt.write("Score: " + str(totalred), font=('Arial', 20, 'normal'))
+        turt.home()
+
+        turt.turtlesize(5,5,4)
+        turt.fillcolor("Gray")
+        turt.left(90)
+        
+    elif totalblue - 20 > totalred:
+        turt.backward(480*sizeX)
+        turt.left(90)
+        turt.forward(435*sizeY)
+        turt.right(180)
+        turt.forward(100*sizeY)
+        turt.right(90)
+        #turt.forward(200*sizeX)
+        turt.left(90)
         turt.write("Blu Expected To Win", font=('Arial', 30, 'normal'))
         turt.forward(50*sizeY)
-        turt.write(totalblue, font=('Arial', 20, 'normal'))
+        turt.write("Score: " + str(totalblue), font=('Arial', 20, 'normal'))
         turt.home()
+
+        turt.forward(570*sizeX)
+        turt.left(90)
+        turt.forward(410*sizeY)
+        turt.right(180)
+        turt.forward(100*sizeY)
+        turt.right(90)
+        turt.forward(200*sizeX)
+        turt.left(90)
+        turt.forward(50*sizeY)
+        turt.write("Score: " + str(totalred), font=('Arial', 20, 'normal'))
+        turt.home()
+
         turt.turtlesize(5,5,4)
         turt.fillcolor("Blue")
         turt.left(180)
+        
+    elif totalred - 20 > totalblue:
+        turt.forward(250*sizeX)
+        turt.left(90)
+        turt.forward(435*sizeY)
+        turt.right(180)
+        turt.forward(100*sizeY)
+        turt.right(90)
+        turt.forward(200*sizeX)
+        turt.left(90)
+        turt.write("Red Expected To Win", font=('Arial', 30, 'normal'))
+        turt.forward(50*sizeY)
+        turt.left(90)
+        turt.forward(270*sizeX)
+        turt.write("Score: " + str(totalred), font=('Arial', 20, 'normal'))
+        turt.home()
 
-    else:
-        turt.backward(280*sizeX)
+        turt.backward(480*sizeX)
         turt.left(90)
         turt.forward(410*sizeY)
         turt.right(180)
@@ -395,8 +451,44 @@ def populateData(blue, red):
         turt.right(90)
         #turt.forward(200*sizeX)
         turt.left(90)
-        turt.write("Expected Close Match", font=('Arial', 33, 'normal'))
+        turt.forward(50*sizeY)
+        turt.write("Score: " + str(totalblue), font=('Arial', 20, 'normal'))
         turt.home()
+
+        turt.turtlesize(5,5,4)
+        turt.fillcolor("Red")
+        
+
+    else:
+        turt.left(90)
+        turt.forward(210*sizeY)
+        turt.write("Expected Close Match", align="center", font=('Arial', 33, 'normal'))
+        turt.home()
+
+        turt.backward(480*sizeX)
+        turt.left(90)
+        turt.forward(410*sizeY)
+        turt.right(180)
+        turt.forward(100*sizeY)
+        turt.right(90)
+        #turt.forward(200*sizeX)
+        turt.left(90)
+        turt.forward(50*sizeY)
+        turt.write("Score: " + str(totalblue), font=('Arial', 20, 'normal'))
+        turt.home()
+
+        turt.forward(570*sizeX)
+        turt.left(90)
+        turt.forward(410*sizeY)
+        turt.right(180)
+        turt.forward(100*sizeY)
+        turt.right(90)
+        turt.forward(200*sizeX)
+        turt.left(90)
+        turt.forward(50*sizeY)
+        turt.write("Score: " + str(totalred), font=('Arial', 20, 'normal'))
+        turt.home()
+
         turt.turtlesize(5,5,4)
         turt.fillcolor("Gray")
         turt.left(90)
@@ -437,7 +529,17 @@ def getScouting(blue, red):
     for j in range(0,len(blue)):
         for i in range(0,len(list_of_lists)): 
             if str(list_of_lists[i][0]) == blue[j]:
-                print("Match found blu adding " + list_of_lists[i][0])
+                print("=============================")
+                print("Match found blu adding: ")
+                print("Number: " + str(blue[j]))
+                print("Raptor: " + str(list_of_lists[i][10])[:2])
+                print("Shield: " + str(list_of_lists[i][11])[:2])
+                print("Auto Hang: " + str(list_of_lists[i][1])[:2])
+                print("Endgame: " + str(list_of_lists[i][2])[:2])
+                print("Teleop: " + str(list_of_lists[i][3])[:2])
+                print("Disablement: " + str(list_of_lists[i][5])[:2])
+                print("Total: " + str(list_of_lists[i][8])[:2])
+
                 newBlue.append([
                     blue[j], 
                     str(list_of_lists[i][10])[:2], # Raptor
@@ -448,7 +550,17 @@ def getScouting(blue, red):
                     str(list_of_lists[i][5])[:2], # Disablement
                     str(list_of_lists[i][8])[:2], ]) # Total points
             if str(list_of_lists[i][0]) == red[j]:
-                print("Match found red adding " + list_of_lists[i][0])
+                print("=============================")
+                print("Match found red adding: ")
+                print("Number: " + str(red[j]))
+                print("Raptor: " + str(list_of_lists[i][10])[:2])
+                print("Shield: " + str(list_of_lists[i][11])[:2])
+                print("Auto Hang: " + str(list_of_lists[i][1])[:2])
+                print("Endgame: " + str(list_of_lists[i][2])[:2])
+                print("Teleop: " + str(list_of_lists[i][3])[:2])
+                print("Disablement: " + str(list_of_lists[i][5])[:2])
+                print("Total: " + str(list_of_lists[i][8])[:2])
+
                 newRed.append([
                     red[j], 
                     str(list_of_lists[i][10])[:2], # Raptor
@@ -457,21 +569,31 @@ def getScouting(blue, red):
                     str(list_of_lists[i][2])[:2], # Endgame
                     str(list_of_lists[i][3])[:2], # Teleop
                     str(list_of_lists[i][5])[:2], # Disablement
-                    str(list_of_lists[i][6])[:2],]) # Total points
+                    str(list_of_lists[i][8])[:2],]) # Total points
 
     print(newBlue)
     print(newRed)
 
     return [newBlue, newRed]
 
-counter = 60
+counter = 30
 
 while True:
-    if counter >= 60:
+    if counter >= 30:
         counter = 0
-        #[bluename, redname, diff] = askBlueAlliance()
-        bluename = ["123", "345", "456"]
-        redname = ["567", "1234", "123"]
+        #[bluename, redname, fieldData, diff] = askBlueAlliance()
+        #if bluename == None:
+        #    print("CANNOT GET BLUE ALLIANCE DATA")
+        #    exit()
+        bluename = []
+        redname = []
+
+        fieldData = ["Qualifer " + str(random.randrange(0,99)), "12:33 PM"]
+
+        Avalnames = ['1', '2', '3', '4', '5', '6', '123', '345', '456', '567', '1234']
+        for i in range(0,3):
+            redname.append(Avalnames[random.randrange(0,len(Avalnames))])
+            bluename.append(Avalnames[random.randrange(0,len(Avalnames))])
 
 
         if True:
@@ -481,7 +603,7 @@ while True:
 
 
     drawField(counter)
-    populateData(blue, red)
+    populateData(blue, red, fieldData)
     turtle.update()
     time.sleep(1)
 
