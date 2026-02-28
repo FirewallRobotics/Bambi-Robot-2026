@@ -42,8 +42,8 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Velocity Top", 0);
     SmartDashboard.putNumber("Velocity Bottom", 0);
     SmartDashboard.putNumber("Current Limit", 0);
-    setVelocityTop = 1550;
-    setVelocityBottom = 1550;
+    setVelocityTop = 4200;
+    setVelocityBottom = 4200;
     setVelocityKicker = 3000;
     
 
