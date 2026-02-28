@@ -45,7 +45,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-        driverXbox.leftTrigger().whileTrue(new IntakeCommand(m_IntakeSubsystem));
+        driverXbox.leftTrigger().whileTrue(new IntakeCommand(m_IntakeSubsystem, m_IntakeArmSubsystem));
 
   }
 }

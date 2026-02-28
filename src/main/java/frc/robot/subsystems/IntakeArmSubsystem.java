@@ -17,6 +17,7 @@ public class IntakeArmSubsystem extends SubsystemBase{
     private final SparkFlex armMotor;
     private final SparkFlexConfig armConfig;
     private final SparkClosedLoopController armClosedLoopController;
+    
 
     private double upPosition;
     private double downPosition;
@@ -70,6 +71,22 @@ public class IntakeArmSubsystem extends SubsystemBase{
         } else{
             armClosedLoopController.setSetpoint(downPosition, ControlType.kPosition);
         }
+    }
+
+    public boolean AtAngleNeeded(boolean isGoingUp){
+        if(isGoingUp){
+            if ((upPosition - 5 < armMotor.getEncoder().getPosition()) && (armMotor.getEncoder().getPosition() < upPosition + 5)) {
+                return true;
+            }
+            return false;
+        } if (!isGoingUp) {
+            if ((downPosition - 5 < armMotor.getEncoder().getPosition()) && (armMotor.getEncoder().getPosition() < downPosition + 5)) {
+                return true;
+            }
+            return false;
+        }
+
+        return false;
     }
 
 }
