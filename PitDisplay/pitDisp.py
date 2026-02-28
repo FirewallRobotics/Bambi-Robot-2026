@@ -55,6 +55,13 @@ def askBlueAlliance():
 def askBlueAllianceMatch(MatchKey):
     global lastmatchkey, NxtBluTeamKeys, NxtRedTeamKeys
 
+    # <><><><><><> CHANGE THIS <><><><><><>
+    eventkey = "2026week0"
+    # <><><><><><> CHANGE THIS <><><><><><>
+
+    bluedata = []
+    reddata = []
+
     AuthkeyFile = open("BlueAllianceAPI.txt")
     Authkey = AuthkeyFile.read()
     AuthkeyFile.close()
@@ -70,7 +77,23 @@ def askBlueAllianceMatch(MatchKey):
     NxtBluTeamKeys = NxtBlueAliData['team_keys']
     NxtRedAliData = NxtAliData['red']
     NxtRedTeamKeys = NxtRedAliData['team_keys']
-    return [NxtBluTeamKeys, NxtRedTeamKeys, NxtName, True]
+
+    for i in range(0,len(NxtBluTeamKeys)):
+        apiURL = "https://www.thebluealliance.com/api/v3/team/" + NxtBluTeamKeys[i] + "/event/" + eventkey + "/status"
+        resp = requests.get(apiURL, headers={'X-TBA-Auth-Key': Authkey})
+        data = resp.json()
+        print(data)
+        bluedata.append(str(data["qual"]["ranking"]["rank"]))
+
+    for i in range(0,len(NxtRedTeamKeys)):
+        apiURL = "https://www.thebluealliance.com/api/v3/team/" + NxtRedTeamKeys[i] + "/event/" + eventkey + "/status"
+        resp = requests.get(apiURL, headers={'X-TBA-Auth-Key': Authkey})
+        data = resp.json()
+        print(data)
+        reddata.append(str(data["qual"]["ranking"]["rank"]))
+
+
+    return [NxtBluTeamKeys, NxtRedTeamKeys, NxtName, bluedata, reddata, True]
 
 def drawField(counter):
     global turt, sizeX, sizeY
@@ -135,7 +158,7 @@ def drawField(counter):
     
 
 
-def populateData(blue, red, fieldData):
+def populateData(blue, red, fieldData, blueData, redData):
     global turt, sizeX, sizeY
 
     if(len(blue) < 3):
@@ -147,7 +170,7 @@ def populateData(blue, red, fieldData):
         turt.write("Not enough data", align="center", font=('Arial', 40, 'normal'))
         #return
 
-    turt.forward(720*sizeX)
+    turt.forward(700*sizeX)
     turt.left(90)
     turt.forward(410*sizeY)
     turt.right(180)
@@ -156,25 +179,25 @@ def populateData(blue, red, fieldData):
     turt.forward(200*sizeX)
     turt.left(90)
     if len(blue) >= 1:
-        turt.write(blue[0][0], font=('Arial', 48, 'normal'))
+        turt.write(blue[0][0] + "(" + blueData[0] + ")", font=('Arial', 40, 'normal'))
         turt.forward(100*sizeY)
         turt.write(blue[0][1] + " - " + blue[0][2], font=('Arial', 30, 'normal'))
 
     if len(blue) >= 2:
         turt.forward(205*sizeY)
-        turt.write(blue[1][0], font=('Arial', 48, 'normal'))
+        turt.write(blue[1][0] + "(" + blueData[1] + ")", font=('Arial', 40, 'normal'))
         turt.forward(100*sizeY)
         turt.write(blue[1][1] + " - " + blue[1][2], font=('Arial', 30, 'normal'))
 
     if len(blue) >= 3:
         turt.forward(205*sizeY)
-        turt.write(blue[2][0], font=('Arial', 48, 'normal'))
+        turt.write(blue[2][0] + "(" + blueData[2] + ")", font=('Arial', 40, 'normal'))
         turt.forward(100*sizeY)
         turt.write(blue[2][1] + " - " + blue[1][2], font=('Arial', 30, 'normal'))
 
     turt.home()
 
-    turt.backward(680*sizeX)
+    turt.backward(715*sizeX)
     turt.left(90)
     turt.forward(410*sizeY)
     turt.right(180)
@@ -183,19 +206,19 @@ def populateData(blue, red, fieldData):
     #turt.forward(200*sizeX)
     turt.left(90)
     if len(red) >= 1:
-        turt.write(red[0][0], font=('Arial', 48, 'normal'))
+        turt.write(red[0][0] + "(" + redData[0] + ")", font=('Arial', 40, 'normal'))
         turt.forward(100*sizeY)
         turt.write(red[0][1] + " - " + red[0][2], font=('Arial', 30, 'normal'))
 
     if len(red) >= 2:
         turt.forward(205*sizeY)
-        turt.write(red[1][0], font=('Arial', 48, 'normal'))
+        turt.write(red[1][0] + "(" + redData[0] + ")", font=('Arial', 40, 'normal'))
         turt.forward(100*sizeY)
         turt.write(red[1][1] + " - " + red[1][2], font=('Arial', 30, 'normal'))
 
     if len(red) >= 3:
         turt.forward(205*sizeY)
-        turt.write(red[2][0], font=('Arial', 48, 'normal'))
+        turt.write(red[2][0] + "(" + redData[0] + ")", font=('Arial', 40, 'normal'))
         turt.forward(100*sizeY)
         turt.write(red[2][1] + " - " + red[1][2], font=('Arial', 30, 'normal'))
 
@@ -630,7 +653,7 @@ while True:
         bluename = []
         #fieldData = ["Qualifer " + str(random.randrange(0,99)), "12:33 PM"]
 
-        [bluename, redname, fieldData, diff] = askBlueAllianceMatch("2026week0_qm3")
+        [bluename, redname, fieldData, blueData, redData, diff] = askBlueAllianceMatch("2026week0_qm7")
 
         #Avalnames = ['1', '2', '3', '4', '5', '6', '123', '345', '456', '567', '1234']
         #for i in range(0,3):
@@ -645,7 +668,7 @@ while True:
 
 
     drawField(counter)
-    populateData(blue, red, fieldData)
+    populateData(blue, red, fieldData, blueData, redData)
     turtle.update()
     time.sleep(1)
 
