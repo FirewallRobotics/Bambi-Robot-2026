@@ -51,7 +51,9 @@ public final class Constants {
     public static final double CLIMBER_KP = 0.1; // Placeholder value, adjust as needed
     public static final double CLIMBER_KI = 0.0; // Placeholder value, adjust as needed
     public static final double CLIMBER_KD = 0.0; // Placeholder value, adjust as needed
-    public static final double CLIMBER_EXTENDED_POSITION = 100.0; // Placeholder value, adjust as needed
-    public static final double CLIMBER_RETRACTED_POSITION = 0.0; // Placeholder value, adjust as needed
-   }
+    public static final double CLIMBER_EXTENDED_POSITION =
+        100.0; // Placeholder value, adjust as needed
+    public static final double CLIMBER_RETRACTED_POSITION =
+        0.0; // Placeholder value, adjust as needed
+  }
 }

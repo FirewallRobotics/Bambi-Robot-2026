@@ -25,7 +25,7 @@ public class Robot extends TimedRobot {
       new HootAutoReplay().withTimestampReplay().withJoystickReplay();
 
   public Robot() {
-    
+
     DataLogManager.start();
 
     PortForwarder.add(5801, "172.29.0.1", 5801);

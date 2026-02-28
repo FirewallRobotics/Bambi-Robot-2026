@@ -22,7 +22,7 @@ def askBlueAlliance():
     teamkey = "frc5607"
 
     # <><><><><><> CHANGE THIS <><><><><><>
-    eventkey = ""
+    eventkey = "2026week0"
     # <><><><><><> CHANGE THIS <><><><><><>
 
     AuthkeyFile = open("BlueAllianceAPI.txt")
@@ -52,6 +52,26 @@ def askBlueAlliance():
         lastmatchkey = data['next_match_key']
     return [None, None, [None, None], False]
 
+def askBlueAllianceMatch(MatchKey):
+    global lastmatchkey, NxtBluTeamKeys, NxtRedTeamKeys
+
+    AuthkeyFile = open("BlueAllianceAPI.txt")
+    Authkey = AuthkeyFile.read()
+    AuthkeyFile.close()
+
+    lstmatch = "https://www.thebluealliance.com/api/v3/match/" + MatchKey
+    nxtmatchresp = requests.get(lstmatch, headers={'X-TBA-Auth-Key': Authkey})
+    nxtmatchresp = nxtmatchresp.json()
+    print(nxtmatchresp)
+
+    NxtName = nxtmatchresp['key']
+    NxtAliData = nxtmatchresp['alliances']
+    NxtBlueAliData = NxtAliData['blue']
+    NxtBluTeamKeys = NxtBlueAliData['team_keys']
+    NxtRedAliData = NxtAliData['red']
+    NxtRedTeamKeys = NxtRedAliData['team_keys']
+    return [NxtBluTeamKeys, NxtRedTeamKeys, NxtName, True]
+
 def drawField(counter):
     global turt, sizeX, sizeY
     turt.clear()
@@ -73,7 +93,7 @@ def drawField(counter):
     turt.up()
     turt.end_fill()
 
-    turt.fillcolor("firebrick1")
+    turt.fillcolor("DeepSkyBlue")
     turt.begin_fill()
     turt.down()
     for i in range(0,2):
@@ -88,7 +108,7 @@ def drawField(counter):
     turt.right(90)
     turt.forward(1440*sizeX)
     turt.right(90)
-    turt.fillcolor("DeepSkyBlue")
+    turt.fillcolor("firebrick1")
     turt.begin_fill()
     turt.down()
     for i in range(0,2):
@@ -118,6 +138,15 @@ def drawField(counter):
 def populateData(blue, red, fieldData):
     global turt, sizeX, sizeY
 
+    if(len(blue) < 3):
+        print("Not enough blue Data")
+        turt.write("Not enough data", align="center", font=('Arial', 40, 'normal'))
+        #return
+    elif(len(red) < 3):
+        print("Not enough red Data")
+        turt.write("Not enough data", align="center", font=('Arial', 40, 'normal'))
+        #return
+
     turt.forward(720*sizeX)
     turt.left(90)
     turt.forward(410*sizeY)
@@ -126,19 +155,22 @@ def populateData(blue, red, fieldData):
     turt.right(90)
     turt.forward(200*sizeX)
     turt.left(90)
-    turt.write(blue[0][0], font=('Arial', 48, 'normal'))
-    turt.forward(100*sizeY)
-    turt.write(blue[0][1] + " - " + blue[0][2], font=('Arial', 30, 'normal'))
+    if len(blue) >= 1:
+        turt.write(blue[0][0], font=('Arial', 48, 'normal'))
+        turt.forward(100*sizeY)
+        turt.write(blue[0][1] + " - " + blue[0][2], font=('Arial', 30, 'normal'))
 
-    turt.forward(205*sizeY)
-    turt.write(blue[1][0], font=('Arial', 48, 'normal'))
-    turt.forward(100*sizeY)
-    turt.write(blue[1][1] + " - " + blue[1][2], font=('Arial', 30, 'normal'))
+    if len(blue) >= 2:
+        turt.forward(205*sizeY)
+        turt.write(blue[1][0], font=('Arial', 48, 'normal'))
+        turt.forward(100*sizeY)
+        turt.write(blue[1][1] + " - " + blue[1][2], font=('Arial', 30, 'normal'))
 
-    turt.forward(205*sizeY)
-    turt.write(blue[2][0], font=('Arial', 48, 'normal'))
-    turt.forward(100*sizeY)
-    turt.write(blue[2][1] + " - " + blue[1][2], font=('Arial', 30, 'normal'))
+    if len(blue) >= 3:
+        turt.forward(205*sizeY)
+        turt.write(blue[2][0], font=('Arial', 48, 'normal'))
+        turt.forward(100*sizeY)
+        turt.write(blue[2][1] + " - " + blue[1][2], font=('Arial', 30, 'normal'))
 
     turt.home()
 
@@ -150,34 +182,37 @@ def populateData(blue, red, fieldData):
     turt.right(90)
     #turt.forward(200*sizeX)
     turt.left(90)
-    turt.write(red[0][0], font=('Arial', 48, 'normal'))
-    turt.forward(100*sizeY)
-    turt.write(red[0][1] + " - " + blue[0][2], font=('Arial', 30, 'normal'))
+    if len(red) >= 1:
+        turt.write(red[0][0], font=('Arial', 48, 'normal'))
+        turt.forward(100*sizeY)
+        turt.write(red[0][1] + " - " + red[0][2], font=('Arial', 30, 'normal'))
 
-    turt.forward(205*sizeY)
-    turt.write(red[1][0], font=('Arial', 48, 'normal'))
-    turt.forward(100*sizeY)
-    turt.write(red[1][1] + " - " + blue[1][2], font=('Arial', 30, 'normal'))
+    if len(red) >= 2:
+        turt.forward(205*sizeY)
+        turt.write(red[1][0], font=('Arial', 48, 'normal'))
+        turt.forward(100*sizeY)
+        turt.write(red[1][1] + " - " + red[1][2], font=('Arial', 30, 'normal'))
 
-    turt.forward(205*sizeY)
-    turt.write(red[2][0], font=('Arial', 48, 'normal'))
-    turt.forward(100*sizeY)
-    turt.write(red[2][1] + " - " + blue[1][2], font=('Arial', 30, 'normal'))
+    if len(red) >= 3:
+        turt.forward(205*sizeY)
+        turt.write(red[2][0], font=('Arial', 48, 'normal'))
+        turt.forward(100*sizeY)
+        turt.write(red[2][1] + " - " + red[1][2], font=('Arial', 30, 'normal'))
 
     turt.home()
-    turt.left(90)
-    turt.forward(303)
-    turt.write(fieldData[0], align="center",font=('Arial', 30, 'bold'))
-    turt.backward(50)
-    turt.write(fieldData[1], align="center",font=('Arial', 25, 'bold'))
-    
+    if fieldData is not None:
+        turt.left(90)
+        turt.forward(303)
+        turt.write(fieldData, align="center",font=('Arial', 30, 'bold'))
+
     # titles to be assigned:
-    # - Highest Shield > Good defense
+    # - Highest Shield > Best defense
     # - Auto Hang > Hangs In Auto
     # - Highest Endgame > Best Endgame
     # - Highest Teleop > Best Teleop
     # - High Disablement > Disabled Often
     # - Highest Total points > MVP
+    # - Total is 0 > Has Not Scored
 
     turt.home()
 
@@ -265,19 +300,19 @@ def populateData(blue, red, fieldData):
         highestoverallShield = blue[highestShieldIndexB][0]
     elif highestShieldBlue < highestShieldRed:
         highestoverallShield = red[highestShieldIndexR][0]
-        
+
 
     if highestEndgameBlue > highestEndgameRed:
         highestoverallEndgame = blue[highestEndgameIndexB][0]
     elif highestEndgameBlue < highestEndgameRed:
         highestoverallEndgame = red[highestEndgameIndexR][0]
-        
+
 
     if highestTotalBlue > highestTotalRed:
         highestoverallTotal = blue[highestTotalIndexB][0]
     elif highestTotalBlue < highestTotalRed:
         highestoverallTotal = red[highestTotalIndexR][0]
-        
+
 
     if highestTeleopBlue > highestTeleopRed:
         highestoverallTeleop = blue[highestTeleopIndexB][0]
@@ -500,6 +535,11 @@ def populateData(blue, red, fieldData):
 
 def getScouting(blue, red):
 
+    for i in range(0,len(blue)):
+        blue[i] = blue[i].replace("frc","").strip()
+    for i in range(0,len(red)):
+        red[i] = red[i].replace("frc","").strip()
+
     newBlue = []
     newRed = []
 
@@ -519,10 +559,10 @@ def getScouting(blue, red):
     worksheet = sheet.worksheet("RAPTOR & SHIELD")
 
     # Fetch the first row of data
-    teamNums = worksheet.row_values(1)
-    print(f"Eval Data types: {teamNums}")
-    teamNums = worksheet.col_values(1)
-    print(f"Eval team numbers: {teamNums}")
+    #teamNums = worksheet.row_values(1)
+    #print(f"Eval Data types: {teamNums}")
+    #teamNums = worksheet.col_values(1)
+    #print(f"Eval team numbers: {teamNums}")
 
     list_of_lists = worksheet.get_all_values()
 
@@ -585,18 +625,20 @@ while True:
         #if bluename == None:
         #    print("CANNOT GET BLUE ALLIANCE DATA")
         #    exit()
-        bluename = []
+
         redname = []
+        bluename = []
+        #fieldData = ["Qualifer " + str(random.randrange(0,99)), "12:33 PM"]
 
-        fieldData = ["Qualifer " + str(random.randrange(0,99)), "12:33 PM"]
+        [bluename, redname, fieldData, diff] = askBlueAllianceMatch("2026week0_qm3")
 
-        Avalnames = ['1', '2', '3', '4', '5', '6', '123', '345', '456', '567', '1234']
-        for i in range(0,3):
-            redname.append(Avalnames[random.randrange(0,len(Avalnames))])
-            bluename.append(Avalnames[random.randrange(0,len(Avalnames))])
+        #Avalnames = ['1', '2', '3', '4', '5', '6', '123', '345', '456', '567', '1234']
+        #for i in range(0,3):
+        #    redname.append(Avalnames[random.randrange(0,len(Avalnames))])
+        #    bluename.append(Avalnames[random.randrange(0,len(Avalnames))])
 
 
-        if True:
+        if diff:
             [blue, red] = getScouting(bluename, redname)
     else:
         counter += 1

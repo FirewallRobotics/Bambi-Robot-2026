@@ -57,7 +57,7 @@ public class RobotContainer {
   public final CommandXboxController joystick = new CommandXboxController(0);
 
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    public final ClimberSubsystem climberSubsystem;
+  public final ClimberSubsystem climberSubsystem;
 
   public final IntakeSubsystem intakeSubsystem;
   public final DriveAssistanceSubsystem driveAssistanceSubsystem;
@@ -94,7 +94,9 @@ public class RobotContainer {
         .whileTrue(drivetrain.applyRequest(() -> idle).ignoringDisable(true));
 
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    joystick.b().whileTrue(driveAssistanceSubsystem.vibrateIfFaceingHUBDiscriptive(joystick).repeatedly());
+    joystick
+        .b()
+        .whileTrue(driveAssistanceSubsystem.vibrateIfFaceingHUBDiscriptive(joystick).repeatedly());
     joystick
         .b()
         .whileTrue(
