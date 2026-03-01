@@ -6,8 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.Shoot;
+import frc.robot.subsystems.ShooterSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -19,14 +20,15 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final CommandXboxController driverXbox = new CommandXboxController(0);
+  public final ShooterSubsystem shooterSubsystem;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     DriverStation.silenceJoystickConnectionWarning(true);
+    shooterSubsystem = new ShooterSubsystem();
     configureBindings();
   }
-
 
   public void Periodic() {}
 
@@ -40,7 +42,6 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-
-
+    driverXbox.rightTrigger().whileTrue(new Shoot(shooterSubsystem));
   }
 }
