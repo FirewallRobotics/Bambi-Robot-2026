@@ -63,7 +63,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 1.0,
-      "rotationDegrees": -90.0
+      "rotationDegrees": -110.0
     },
     {
       "waypointRelativePos": 2,
@@ -90,7 +90,7 @@
     {
       "name": "Intake",
       "waypointRelativePos": 0,
-      "endWaypointRelativePos": 1.0,
+      "endWaypointRelativePos": 1.6744186046511635,
       "command": {
         "type": "named",
         "data": {
@@ -127,7 +127,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": -110.0
   },
   "useDefaultConstraints": true
 }
