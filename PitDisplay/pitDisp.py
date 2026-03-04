@@ -365,11 +365,11 @@ def populateData(blue, red, fieldData, blueData, redData):
             turt.write("Best Defense", font=('Arial', 20, 'normal'))
         elif red[i][0] == str(highestoverallEndgame):
             turt.write("Highest Endgame AVG", font=('Arial', 20, 'normal'))
-        elif int(red[i][6].replace("%","").strip()) >= 25:
+        elif int(red[i][6].replace("%","").replace(".","").strip()) >= 25:
             turt.write("Disabled: " + red[i][6], font=('Arial', 20, 'normal'))
         else:
             try:
-                if int(red[i][8].replace("%","").strip()) == 0:
+                if int(red[i][8].replace("%","").replace(".","").strip()) == 0:
                     turt.write("Has Not Scored", font=('Arial', 20, 'normal'))
             except:
                 pass
@@ -394,11 +394,11 @@ def populateData(blue, red, fieldData, blueData, redData):
             turt.write("Best Defense", font=('Arial', 20, 'normal'))
         elif blue[i][0] == str(highestoverallEndgame):
             turt.write("Highest Endgame AVG", font=('Arial', 20, 'normal'))
-        elif int(blue[i][6].replace("%","").strip()) >= 25:
+        elif int(blue[i][6].replace("%","").replace(".","").strip()) >= 25:
             turt.write("Disabled: " + blue[i][6], font=('Arial', 20, 'normal'))
         else:
             try:
-                if int(blue[i][8].replace("%","").strip()) == 0:
+                if int(blue[i][8].replace("%","").replace(".","").strip()) == 0:
                     turt.write("Has Not Scored", font=('Arial', 20, 'normal'))
             except:
                 pass
