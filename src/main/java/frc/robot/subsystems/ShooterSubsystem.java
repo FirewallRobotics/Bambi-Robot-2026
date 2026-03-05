@@ -1,9 +1,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.FeedbackSensor;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
@@ -38,24 +38,25 @@ public class ShooterSubsystem {
     bottomPorClosedLoopController = shooterBottomPortMotor.getClosedLoopController();
 
     tPortConfig
-      .closedLoop
-      .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-      // Set PID values for position control. We don't need to pass a closed loop
-      // slot, as it will default to slot 0.
-      .p(0)
-      .i(0)
-      .d(0)
-      .outputRange(-1, 1);
+        .closedLoop
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        // Set PID values for position control. We don't need to pass a closed loop
+        // slot, as it will default to slot 0.
+        .p(0.0000035)
+        .i(0.1)
+        .d(0)
+        //daniel's fault
+        .outputRange(-1, 1);
     bPortConfig
-      .closedLoop
-      .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-      // Set PID values for position control. We don't need to pass a closed loop
-      // slot, as it will default to slot 0.
-      .p(0)
-      .i(0)
-      .d(0)
-      .outputRange(-1, 1);
-    
+        .closedLoop
+        .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+        // Set PID values for position control. We don't need to pass a closed loop
+        // slot, as it will default to slot 0.
+        .p(0.5)
+        .i(0)
+        .d(0)
+        .outputRange(-1, 1);
+
     tStarboardConfig.follow(1, true);
     shooterTopPortMotor.configure(
         tPortConfig,
@@ -70,14 +71,14 @@ public class ShooterSubsystem {
         com.revrobotics.ResetMode.kNoResetSafeParameters,
         com.revrobotics.PersistMode.kPersistParameters);
     kickerPortMotor.configure(
-        kickerPortConfig, 
+        kickerPortConfig,
         com.revrobotics.ResetMode.kNoResetSafeParameters,
         com.revrobotics.PersistMode.kPersistParameters);
   }
 
   public void Shoot() {
-    //shooterTopPortMotor.set(-0.3);
-    topPortClosedLoopController.setSetPoint(2000, ControlType.kVelocity);
+    // shooterTopPortMotor.set(-0.3);
+    topPortClosedLoopController.setSetpoint(-2000, ControlType.kVelocity);
     // shooterBottomPortMotor.set(0.3);
   }
 
