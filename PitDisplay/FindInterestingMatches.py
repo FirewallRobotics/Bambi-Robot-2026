@@ -9,7 +9,7 @@ w = open("BlueAllianceAPI.txt", 'r')
 Authkey = w.read()
 w.close()
 
-eventkey = "2026nccab"
+eventkey = "2026ncwak"
 
 print("Getting all matches")
 apiURL = "https://www.thebluealliance.com/api/v3/event/" + eventkey + "/matches"

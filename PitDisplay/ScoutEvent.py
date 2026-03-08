@@ -39,6 +39,15 @@ for i in range(0,len(data)):
             print("Bad match data :(")
         continue
 
+    # IMPORTANT: Makes us not scout matches
+    #if data[i]['match_number'] <= 23:
+    #    print("Already Scouted match: " + str(data[i]['match_number']))
+    #    continue
+
+    if data[i]['comp_level'] != "sf" and data[i]['comp_level'] != "f":
+        print("Already Scouted match: " + str(data[i]['match_number']))
+        continue
+
     # loop through all blue alliances we are given
     for j in range(0,len(data[i]['alliances']['blue']['team_keys'])):
 
@@ -221,7 +230,15 @@ for i in range(0,len(teamnumbers)):
             pass
 
     print("Sending Match Data To Google Sheets")
-    worksheet.insert_row(output, inputCol)
+    try:
+        worksheet.insert_row(output, inputCol)
+    except Exception as e:
+        print(str(e))
+        print("Waiting abit")
+        print(str(100*((i+1)/len(teamnumbers)))[:4] + "% Done | " + str(i+1) + "/" + str(len(teamnumbers)))
+        time.sleep(5)
+        continue
+
     #exit()
 
     print("Waiting abit")
