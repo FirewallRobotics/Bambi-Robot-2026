@@ -33,10 +33,9 @@ public class Robot extends TimedRobot {
 
     m_robotContainer = new RobotContainer();
 
-    m_chooser.setDefaultOption("Shoot In Circle (Primary scorer, Start on Right)", "Grab N Go");
-    m_chooser.addOption("Show Off, Around the world", "Show Off");
-    m_chooser.addOption("Just Empty and Climb (Start on Left)", "Lets Hang");
-    m_chooser.addOption("Move Forward (Debug)", "Just Forward");
+    m_chooser.setDefaultOption("Power Play", "Right Auto");
+    m_chooser.addOption("Firewall Fake", "Shorty");
+    m_chooser.addOption("Hail Mary", "Left Auto");
     SmartDashboard.putData("Auto Chooser", m_chooser);
 
     m_robotContainer.getLogger().initSwervePublisher(m_robotContainer);

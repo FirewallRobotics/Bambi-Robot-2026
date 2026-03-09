@@ -7,19 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Move from start"
+            "pathName": "Zoom Zoom Middle"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Cross-Out High Bump"
+            "pathName": "Race For Depot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Scatter"
+            "pathName": "Intake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Run For Ramp"
           }
         }
       ]

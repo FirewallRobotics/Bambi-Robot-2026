@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Move from start"
+            "pathName": "Backup"
           }
         },
         {
@@ -19,13 +19,25 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 5.0
+            "waitTime": 8.0
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "NoShoot"
+            "name": "StopShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Climb"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Climb"
           }
         }
       ]

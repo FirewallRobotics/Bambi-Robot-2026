@@ -7,7 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Move from start"
+            "pathName": "Other Zoom Zoom"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Over Da Ramp"
           }
         },
         {
@@ -19,31 +25,25 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 3.0
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "NoShoot"
+            "name": "StopShoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of Cross-Out High Bump"
+            "pathName": "Intake Air"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Intake Half Field"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "MoonWalk"
+            "pathName": "Backity Back"
           }
         },
         {
@@ -55,13 +55,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 6.0
+            "waitTime": 3.0
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "NoShoot"
+            "name": "StopShoot"
           }
         }
       ]
