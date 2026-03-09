@@ -69,6 +69,8 @@ public class ShooterSubsystem extends SubsystemBase {
     robotY = 0;
     setVelocityTop = 1550;
     setVelocityBottom = 1550;
+    setVelocityTop = 4200;
+    setVelocityBottom = 4200;
     setVelocityKicker = 3000;
     
 
