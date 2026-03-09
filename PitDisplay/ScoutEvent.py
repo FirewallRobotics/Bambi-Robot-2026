@@ -24,6 +24,11 @@ apiURL = "https://www.thebluealliance.com/api/v3/event/" + eventkey + "/matches"
 resp = requests.get(apiURL, headers={'X-TBA-Auth-Key': Authkey})
 data = resp.json()
 
+print("Getting all matches")
+apiURL = "https://www.thebluealliance.com/api/v3/event/" + eventkey
+resp = requests.get(apiURL, headers={'X-TBA-Auth-Key': Authkey})
+EventName = resp.json()['name']
+
 #print(data)
 
 #exit()
@@ -189,7 +194,7 @@ for i in range(0,len(teamnumbers)):
         typematch[i], # Match Type
         match_number[i], # Match Number
         "", # Did not compete: Click the button below if the robot did not make it onto the field. Otherwise, just click "Next".
-        "", # Competition
+        EventName, # Competition
         "", # Unique Match Id
         "", # Unique Match ID 2.0
         color, # Which color alliance is your robot on?
