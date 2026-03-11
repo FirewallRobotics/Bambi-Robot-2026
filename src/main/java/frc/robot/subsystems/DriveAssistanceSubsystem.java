@@ -55,5 +55,4 @@ public class DriveAssistanceSubsystem extends SubsystemBase {
               joystick.setRumble(RumbleType.kBothRumble, 0);
             });
   }
-
 }

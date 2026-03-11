@@ -14,47 +14,46 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class AlignWithClimberCommand extends Command {
 
-    CommandSwerveDrivetrain drivetrain;
+  CommandSwerveDrivetrain drivetrain;
 
-    Pose2d endPose;
+  Pose2d endPose;
 
-    SequentialCommandGroup commandGroup;
+  SequentialCommandGroup commandGroup;
 
-    SwerveRequest.ApplyRobotSpeeds face =
-      new SwerveRequest.ApplyRobotSpeeds();
+  SwerveRequest.ApplyRobotSpeeds face = new SwerveRequest.ApplyRobotSpeeds();
 
+  public AlignWithClimberCommand(CommandSwerveDrivetrain drivetrain) {
+    this.drivetrain = drivetrain;
+    endPose = Constants.DriverAssistanceConstants.endPose;
+  }
 
+  @Override
+  public void initialize() {
 
-    public AlignWithClimberCommand(CommandSwerveDrivetrain drivetrain){
-        this.drivetrain = drivetrain;
-        endPose = Constants.DriverAssistanceConstants.endPose;
+    Pose2d waypoint;
+
+    if (DriverStation.getAlliance().get().equals(Alliance.Blue)) {
+      waypoint = new Pose2d(endPose.getX() + 1, endPose.getY(), endPose.getRotation());
+    } else {
+      waypoint = new Pose2d(endPose.getX() - 1, endPose.getY(), endPose.getRotation());
     }
 
-    @Override
-    public void initialize() {
+    commandGroup =
+        new SequentialCommandGroup(
+            drivetrain.driveToPose(waypoint),
+            new ClimbLevel1Command(), // Extend climber
+            new ParallelDeadlineGroup(
+                new WaitCommand(1), drivetrain.applyRequest(() -> face)), // move forward
+            new UnClimbCommand()); // Retract climber
 
-        Pose2d waypoint;
+    CommandScheduler.getInstance().schedule(commandGroup);
+  }
 
-        if(DriverStation.getAlliance().get().equals(Alliance.Blue)){
-            waypoint = new Pose2d(endPose.getX()+1, endPose.getY(), endPose.getRotation());
-        }
-        else{
-            waypoint = new Pose2d(endPose.getX()-1, endPose.getY(), endPose.getRotation());
-        }
-
-        commandGroup = new SequentialCommandGroup(drivetrain.driveToPose(waypoint),
-        new ClimbLevel1Command(), // Extend climber
-        new ParallelDeadlineGroup(new WaitCommand(1), drivetrain.applyRequest(() -> face)), // move forward
-        new UnClimbCommand()); // Retract climber
-
-        CommandScheduler.getInstance().schedule(commandGroup);
+  @Override
+  public boolean isFinished() {
+    if (commandGroup != null) {
+      return commandGroup.isFinished();
     }
-
-    @Override
-    public boolean isFinished() {
-        if(commandGroup != null){
-            return commandGroup.isFinished();
-        }
-        return false;
-    }
+    return false;
+  }
 }
