@@ -4,6 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -30,6 +35,17 @@ public final class Constants {
   public static class DriverAssistanceConstants {
     public static final double minDistFeet = 9;
     public static final double maxDistFeet = 13;
+    public static Pose2d endPose;
+
+    public DriverAssistanceConstants(){
+      if(DriverStation.getAlliance().isPresent()){
+        if(DriverStation.getAlliance().get().equals(Alliance.Blue)){
+          endPose = new Pose2d(0.9, 4.7, new Rotation2d(Math.toRadians(180)));
+        }else{
+          endPose = new Pose2d(15.63, 5.31, new Rotation2d(Math.toRadians(0)));
+        }
+      }
+    }
   }
 
   public static class ArmConstants {
