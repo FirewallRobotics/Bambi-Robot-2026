@@ -33,9 +33,9 @@ public class Robot extends TimedRobot {
 
     m_robotContainer = new RobotContainer();
 
-    m_chooser.setDefaultOption("Power Play", "Right Auto");
+    m_chooser.setDefaultOption("Power Play", "Left Auto");
     m_chooser.addOption("Firewall Fake", "Shorty");
-    m_chooser.addOption("Hail Mary", "Left Auto");
+    m_chooser.addOption("Hail Mary", "Right Auto");
     SmartDashboard.putData("Auto Chooser", m_chooser);
 
     m_robotContainer.getLogger().initSwervePublisher(m_robotContainer);
