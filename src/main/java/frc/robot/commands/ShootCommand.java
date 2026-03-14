@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class ShootCommand extends Command {
-<<<<<<< HEAD
   private ShooterSubsystem m_ShooterSubsystem;
   private double previousRPM;
 
@@ -41,7 +40,4 @@ public class ShootCommand extends Command {
   public boolean isFinished() {
     return false;
   }
-=======
-  // TODO: make this; should shoot fuel
->>>>>>> 38945d14b5a7513796bbb71667b5f5196efa6d27
 }

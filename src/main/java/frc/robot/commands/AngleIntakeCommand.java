@@ -1,16 +1,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class AngleIntakeCommand extends Command {
 
-  private final IntakeSubsystem m_IntakeSubsystem;
-  private Double sppd;
+  private final IntakeArmSubsystem intakeArmSubsystem;
+  private boolean goingDown;
 
-  public AngleIntakeCommand(IntakeSubsystem i_Subsystem, Double speed) {
-    m_IntakeSubsystem = i_Subsystem;
-    sppd = speed;
+  public AngleIntakeCommand(IntakeArmSubsystem i_Subsystem, boolean goingDown) {
+    intakeArmSubsystem = i_Subsystem;
+    this.goingDown = goingDown;
   }
 
   @Override
@@ -18,12 +19,12 @@ public class AngleIntakeCommand extends Command {
 
   @Override
   public void execute() {
-    m_IntakeSubsystem.angleArm(sppd);
+    intakeArmSubsystem.AngleArm(goingDown);
   }
 
   @Override
   public void end(boolean interupted) {
-    m_IntakeSubsystem.angleArm(0.0);
+    intakeArmSubsystem.StopAngle();
   }
 
   @Override

@@ -59,25 +59,17 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-<<<<<<< HEAD
-    
-=======
     m_autonomousCommand = m_robotContainer.getAutonomousCommand(m_chooser.getSelected());
 
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(m_autonomousCommand);
     }
->>>>>>> 38945d14b5a7513796bbb71667b5f5196efa6d27
   }
 
   @Override
   public void autonomousPeriodic() {}
 
   @Override
-<<<<<<< HEAD
-  public void teleopInit() {
-    
-=======
   public void autonomousExit() {}
 
   @Override
@@ -85,7 +77,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().cancel(m_autonomousCommand);
     }
->>>>>>> 38945d14b5a7513796bbb71667b5f5196efa6d27
   }
 
   @Override
@@ -96,11 +87,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-<<<<<<< HEAD
-    
-    // Cancels all running commands at the start of test mode.
-=======
->>>>>>> 38945d14b5a7513796bbb71667b5f5196efa6d27
     CommandScheduler.getInstance().cancelAll();
   }
 
