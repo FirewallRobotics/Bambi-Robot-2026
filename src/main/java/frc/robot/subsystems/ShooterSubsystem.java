@@ -61,14 +61,12 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Current Limit", 0);
 
 
-    RPM_AT_8FT = 1600;
+    RPM_AT_8FT = 4200;
     RANGE_AT_1500 = 8;
-    RPM_PER_FOOT = 50;
+    RPM_PER_FOOT = 100;
 
     robotX = 0;
     robotY = 0;
-    setVelocityTop = 1550;
-    setVelocityBottom = 1550;
     setVelocityTop = 4200;
     setVelocityBottom = 4200;
     setVelocityKicker = 3000;
