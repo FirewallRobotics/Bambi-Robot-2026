@@ -48,6 +48,10 @@ public class IntakeArmSubsystem extends SubsystemBase{
             .kG(0)
             .kCos(0)
             .kCosRatio(0);
+
+        armMotor.configure(armConfig,
+            com.revrobotics.ResetMode.kNoResetSafeParameters,
+            com.revrobotics.PersistMode.kPersistParameters);
         
 
     }

@@ -1,14 +1,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 public class ShootCommand extends Command {
   private ShooterSubsystem m_ShooterSubsystem;
+  private AgitatorSubsystem m_AgitatorSubsystem;
   private double previousRPM;
 
-  public ShootCommand(ShooterSubsystem s_Subsystem) {
+  public ShootCommand(ShooterSubsystem s_Subsystem, AgitatorSubsystem a_AgitatorSubsystem) {
     m_ShooterSubsystem = s_Subsystem;
+    m_AgitatorSubsystem = a_AgitatorSubsystem;
     previousRPM = 0;
   }
 
@@ -24,6 +27,7 @@ public class ShootCommand extends Command {
       if ((m_ShooterSubsystem.GetWantedVelocity() - 70) < m_ShooterSubsystem.GetRPM()
           && m_ShooterSubsystem.GetRPM() < (m_ShooterSubsystem.GetWantedVelocity() + 20)) {
         m_ShooterSubsystem.KickBalls();
+        m_AgitatorSubsystem.StartAgitator();
       }
     }
 
@@ -33,6 +37,7 @@ public class ShootCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     m_ShooterSubsystem.StopShoot();
+    m_AgitatorSubsystem.StopAgitator();
     previousRPM = 0;
   }
 

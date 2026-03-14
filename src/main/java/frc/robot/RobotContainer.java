@@ -31,6 +31,7 @@ import frc.robot.commands.HonkCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.DriveAssistanceSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -45,8 +46,7 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final CommandXboxController driverXbox = new CommandXboxController(0);
-  final static IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
-  final static IntakeArmSubsystem m_IntakeArmSubsystem = new IntakeArmSubsystem();
+  
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
@@ -68,10 +68,12 @@ public class RobotContainer {
 
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-  public final IntakeSubsystem intakeSubsystem;
-  public final DriveAssistanceSubsystem driveAssistanceSubsystem;
-  public final VisionSubsystem visionSubsystem;
-  public final ShooterSubsystem shooterSubsystem;
+  private final IntakeSubsystem intakeSubsystem;
+  private final DriveAssistanceSubsystem driveAssistanceSubsystem;
+  private final VisionSubsystem visionSubsystem;
+  private final ShooterSubsystem shooterSubsystem;
+  private final IntakeArmSubsystem armSubsystem;
+  private final AgitatorSubsystem agitatorSubsystem;
 
   public RobotContainer() {
     // Configure the trigger bindings
@@ -84,10 +86,12 @@ public class RobotContainer {
     driveAssistanceSubsystem = new DriveAssistanceSubsystem(drivetrain, this);
     visionSubsystem = new VisionSubsystem(this);
     shooterSubsystem = new ShooterSubsystem();
+    armSubsystem = new IntakeArmSubsystem();
+    agitatorSubsystem = new AgitatorSubsystem();
 
     NamedCommands.registerCommand("Honk", new HonkCommand("la-cucaracha.chrp"));
-    NamedCommands.registerCommand("Shoot", new ShootCommand(shooterSubsystem));
-    NamedCommands.registerCommand("Intake", new IntakeCommand(intakeSubsystem));
+    NamedCommands.registerCommand("Shoot", new ShootCommand(shooterSubsystem, agitatorSubsystem));
+    NamedCommands.registerCommand("Intake", new IntakeCommand(intakeSubsystem, agitatorSubsystem));
     NamedCommands.registerCommand("Climb", new ClimbLevel1Command());
 
     configureBindings();
@@ -128,9 +132,10 @@ public class RobotContainer {
     joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
     drivetrain.registerTelemetry(logger::telemeterize);
-    joystick.leftTrigger().whileTrue(new IntakeCommand(m_IntakeSubsystem));
-    joystick.povLeft().whileTrue(new AngleArmCommand(m_IntakeArmSubsystem, false));
-    joystick.povRight().whileTrue(new AngleArmCommand(m_IntakeArmSubsystem, true));
+    joystick.leftTrigger().whileTrue(new IntakeCommand(intakeSubsystem, agitatorSubsystem));
+    joystick.rightTrigger().whileTrue(new ShootCommand(shooterSubsystem, agitatorSubsystem));
+    joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
+    joystick.povRight().whileTrue(new AngleArmCommand(armSubsystem, true));
   }
 
   public void periodic() {
