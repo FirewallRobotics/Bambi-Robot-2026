@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -111,16 +112,7 @@ public class RobotContainer {
         .whileTrue(drivetrain.applyRequest(() -> idle).ignoringDisable(true));
 
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    joystick
-        .b()
-        .whileTrue(driveAssistanceSubsystem.vibrateIfFaceingHUBDiscriptive(joystick).repeatedly());
-    joystick
-        .b()
-        .whileTrue(
-            drivetrain.applyRequest(
-                () ->
-                    face.withTargetDirection(
-                        new Rotation2d(VisionSubsystem.getAngleToHUB(drivetrain)))));
+    
 
     // Run SysId routines when holding back/start and X/Y.
     // Note that each routine should be run exactly once in a single log.
@@ -133,10 +125,34 @@ public class RobotContainer {
     joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
     drivetrain.registerTelemetry(logger::telemeterize);
-    joystick.leftTrigger().whileTrue(new IntakeCommand(intakeSubsystem, agitatorSubsystem));
-    joystick.rightTrigger().whileTrue(new ShootCommand(shooterSubsystem, agitatorSubsystem));
-    joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
-    joystick.povRight().whileTrue(new AngleArmCommand(armSubsystem, true));
+    
+    joystick.rightBumper().whileTrue(new ShootCommand(shooterSubsystem, agitatorSubsystem));
+    joystick.leftBumper().whileTrue(new AngleArmCommand(armSubsystem, false));
+    
+    secondDriver.y().whileTrue(new AngleArmCommand(armSubsystem, false));
+    secondDriver.x().whileTrue(new AngleArmCommand(armSubsystem, true));
+    secondDriver.a().whileTrue(new IntakeCommand(intakeSubsystem, agitatorSubsystem));
+    secondDriver.povRight().whileTrue(
+        new ParallelCommandGroup(
+            driveAssistanceSubsystem.vibrateIfFaceingHUBDiscriptive(joystick).repeatedly(),
+            drivetrain.applyRequest(
+                () ->
+                    face.withTargetDirection(
+                        new Rotation2d(VisionSubsystem.getAngleToHUB(drivetrain)))),
+            new ShootCommand(shooterSubsystem, agitatorSubsystem)
+        )
+    );
+
+    // joystick
+    //     .b()
+    //     .whileTrue(driveAssistanceSubsystem.vibrateIfFaceingHUBDiscriptive(joystick).repeatedly());
+    // joystick
+    //     .b()
+    //     .whileTrue(
+    //         drivetrain.applyRequest(
+    //             () ->
+    //                 face.withTargetDirection(
+    //                     new Rotation2d(VisionSubsystem.getAngleToHUB(drivetrain)))));
   }
 
   public void periodic() {
