@@ -1,5 +1,15 @@
 package frc.robot.subsystems;
 
+import java.rmi.server.RMIClassLoader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.ejml.equation.IntegerSequence.Range;
+
+import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -30,6 +40,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private double setVelocityTop;
   private double setVelocityBottom;
+  private final double RPM_AT_8FT;
+  private final double RANGE_AT_1500;
+  private final double RPM_PER_FOOT;
+
+  private final double robotX;
+  private final double robotY;
+  
   private double setVelocityKicker;
 
   private final SparkFlex kickMotor;
@@ -42,6 +59,14 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Velocity Top", 0);
     SmartDashboard.putNumber("Velocity Bottom", 0);
     SmartDashboard.putNumber("Current Limit", 0);
+
+
+    RPM_AT_8FT = 4200;
+    RANGE_AT_1500 = 8;
+    RPM_PER_FOOT = 100;
+
+    robotX = 0;
+    robotY = 0;
     setVelocityTop = 4200;
     setVelocityBottom = 4200;
     setVelocityKicker = 3000;
@@ -154,9 +179,12 @@ public class ShooterSubsystem extends SubsystemBase {
   // Shoot balls. None adjustable velocity
   public void Shoot() {
 
-    
-    tShootClosedLoopController.setSetpoint(setVelocityTop, ControlType.kVelocity);
-    bSparkClosedLoopController.setSetpoint(setVelocityBottom, ControlType.kVelocity);
+    // shootMotorBottom.set(-1);
+    //shootMotorTop.set(1);
+    //We need Feet per second, the x ft per second, the y fet per second, flight time, and min and max
+    double target = rpmToHitTarget(robotX, robotY, MetersToFeet(6.4), MetersToFeet(6), getXvPerFt(RPM_PER_FOOT, false), getXvPerFt(RPM_PER_FOOT, true), RPM_PER_FOOT, RPM_AT_8FT, RANGE_AT_1500);
+    tShootClosedLoopController.setSetpoint(target, ControlType.kVelocity);
+    bSparkClosedLoopController.setSetpoint(target, ControlType.kVelocity);
     
   }
 
@@ -183,5 +211,37 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double GetWantedVelocity() {
     return setVelocityTop;
+  }
+
+  public double rpmToHitTarget(double robotXFT, double robotYFT, double targetXFT, double targetYFT, double vxFtPerSec, double vyFTPerSec, double flightTimeSec, double minRpm, double maxRpm){
+    double dx = targetXFT - robotXFT;
+    double dy = targetYFT - robotYFT;
+    double distanceFt = Math.hypot(dx, dy);
+
+    if(distanceFt < 1e-6){
+      //This is when we are smack up against the hub
+      return Math.max(minRpm, Math.min(maxRpm, RPM_AT_8FT));
+    }
+    double ux = dx / distanceFt;
+    double uy = dy / distanceFt;
+
+    double vParallel = vxFtPerSec * ux + vyFTPerSec * uy;
+    double stationaryEquivalentRangeFt = distanceFt - vParallel * flightTimeSec;
+
+    double rpmToHitTarget = RPM_AT_8FT + RPM_PER_FOOT * (stationaryEquivalentRangeFt - RANGE_AT_1500);
+
+    return Math.max(minRpm, Math.min(maxRpm, rpmToHitTarget));
+  }
+
+  private double MetersToFeet(double meters){
+    return meters * 3.2808399;
+  }
+
+  private double getXvPerFt(double vel, boolean GettingVy){
+    if(GettingVy){
+      return Math.cos(160) * vel;
+    }
+
+    return Math.sin(160) * vel;
   }
 }
