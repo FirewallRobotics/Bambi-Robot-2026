@@ -85,7 +85,7 @@ public class RobotContainer {
     intakeSubsystem = new IntakeSubsystem();
     driveAssistanceSubsystem = new DriveAssistanceSubsystem(drivetrain, this);
     visionSubsystem = new VisionSubsystem(this);
-    shooterSubsystem = new ShooterSubsystem();
+    shooterSubsystem = new ShooterSubsystem(drivetrain);
     armSubsystem = new IntakeArmSubsystem();
     agitatorSubsystem = new AgitatorSubsystem();
 
@@ -102,6 +102,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     DriveFieldOriented();
+
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.

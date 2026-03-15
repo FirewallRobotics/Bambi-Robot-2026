@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import org.ejml.equation.IntegerSequence.Range;
 
+import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -17,9 +18,14 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
+
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.Kinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterSubsystemConstants;
+import frc.robot.generated.TunerConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -53,13 +59,17 @@ public class ShooterSubsystem extends SubsystemBase {
   private final SparkFlexConfig kickConfig;
   private final SparkClosedLoopController kickClosedLoopController;
 
+  private final CommandSwerveDrivetrain ourDriveTrain;
+  private final SwerveDriveKinematics m_Kinematics;
 
-  public ShooterSubsystem() {
+  public ShooterSubsystem(CommandSwerveDrivetrain ourDriveTrain) {
 
     SmartDashboard.putNumber("Velocity Top", 0);
     SmartDashboard.putNumber("Velocity Bottom", 0);
     SmartDashboard.putNumber("Current Limit", 0);
 
+    this.ourDriveTrain = ourDriveTrain;
+    m_Kinematics = new SwerveDriveKinematics(ourDriveTrain.getModuleLocations());
 
     RPM_AT_8FT = 4200;
     RANGE_AT_1500 = 8;
@@ -179,10 +189,11 @@ public class ShooterSubsystem extends SubsystemBase {
   // Shoot balls. None adjustable velocity
   public void Shoot() {
 
+    ChassisSpeeds speeds = m_Kinematics.toChassisSpeeds(ourDriveTrain.getModuleStates());
     // shootMotorBottom.set(-1);
     //shootMotorTop.set(1);
     //We need Feet per second, the x ft per second, the y fet per second, flight time, and min and max
-    double target = rpmToHitTarget(robotX, robotY, MetersToFeet(6.4), MetersToFeet(6), getXvPerFt(RPM_PER_FOOT, false), getXvPerFt(RPM_PER_FOOT, true), RPM_PER_FOOT, RPM_AT_8FT, RANGE_AT_1500);
+    double target = rpmToHitTarget(robotX, robotY, MetersToFeet(6.4), MetersToFeet(6), speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, RPM_PER_FOOT, RPM_AT_8FT, RANGE_AT_1500);
     tShootClosedLoopController.setSetpoint(target, ControlType.kVelocity);
     bSparkClosedLoopController.setSetpoint(target, ControlType.kVelocity);
     
@@ -213,10 +224,13 @@ public class ShooterSubsystem extends SubsystemBase {
     return setVelocityTop;
   }
 
-  public double rpmToHitTarget(double robotXFT, double robotYFT, double targetXFT, double targetYFT, double vxFtPerSec, double vyFTPerSec, double flightTimeSec, double minRpm, double maxRpm){
+  public double rpmToHitTarget(double robotXFT, double robotYFT, double targetXFT, double targetYFT, double vxMPerSec, double vyMPerSec, double flightTimeSec, double minRpm, double maxRpm){
     double dx = targetXFT - robotXFT;
     double dy = targetYFT - robotYFT;
     double distanceFt = Math.hypot(dx, dy);
+
+    double vxFtPerSec = MetersToFeet(vxMPerSec);
+    double vyFTPerSec = MetersToFeet(vyMPerSec);
 
     if(distanceFt < 1e-6){
       //This is when we are smack up against the hub
