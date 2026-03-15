@@ -47,7 +47,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private double setVelocityTop;
   private double setVelocityBottom;
   private final double RPM_AT_8FT;
-  private final double RANGE_AT_1500;
+  private final double RANGE_AT_4100;
   private final double RPM_PER_FOOT;
 
   private final double robotX;
@@ -71,12 +71,12 @@ public class ShooterSubsystem extends SubsystemBase {
     this.ourDriveTrain = ourDriveTrain;
     m_Kinematics = new SwerveDriveKinematics(ourDriveTrain.getModuleLocations());
 
-    RPM_AT_8FT = 4200;
-    RANGE_AT_1500 = 8;
+    RPM_AT_8FT = 4100;
+    RANGE_AT_4100 = 8;
     RPM_PER_FOOT = 100;
 
-    robotX = 0;
-    robotY = 0;
+    robotX = VisionSubsystem.getRobotPoseInFieldSpace().getX();
+    robotY = VisionSubsystem.getRobotPoseInFieldSpace().getY();
     setVelocityTop = 4200;
     setVelocityBottom = 4200;
     setVelocityTop = 4100;
@@ -192,7 +192,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // shootMotorBottom.set(-1);
     //shootMotorTop.set(1);
     //We need Feet per second, the x ft per second, the y fet per second, flight time, and min and max
-    double target = rpmToHitTarget(robotX, robotY, MetersToFeet(6.4), MetersToFeet(6), speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, RPM_PER_FOOT, RPM_AT_8FT, RANGE_AT_1500);
+    double target = rpmToHitTarget(robotX, robotY, MetersToFeet(6.4), MetersToFeet(6), speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, RPM_PER_FOOT, RPM_AT_8FT, RANGE_AT_4100);
     tShootClosedLoopController.setSetpoint(target, ControlType.kVelocity);
     bSparkClosedLoopController.setSetpoint(target, ControlType.kVelocity);
     
@@ -238,7 +238,7 @@ public class ShooterSubsystem extends SubsystemBase {
     double vParallel = vxFtPerSec * ux + vyFTPerSec * uy;
     double stationaryEquivalentRangeFt = distanceFt - vParallel * flightTimeSec;
 
-    double rpmToHitTarget = RPM_AT_8FT + RPM_PER_FOOT * (stationaryEquivalentRangeFt - RANGE_AT_1500);
+    double rpmToHitTarget = RPM_AT_8FT + RPM_PER_FOOT * (stationaryEquivalentRangeFt - RANGE_AT_4100);
 
     return Math.max(minRpm, Math.min(maxRpm, rpmToHitTarget));
   }
