@@ -51,7 +51,7 @@ public class ShooterSubsystem extends SubsystemBase {
     shootMotorBottom = new SparkFlex(15, MotorType.kBrushless);
     shootFollowTop = new SparkFlex(14, MotorType.kBrushless);
     shootFollowBottom = new SparkFlex(16, MotorType.kBrushless);
-    kickMotor = new SparkFlex(12, MotorType.kBrushless);
+    kickMotor = new SparkFlex(35, MotorType.kBrushless);
 
     bFollowerConfig = new SparkFlexConfig();
     tFollowerConfig = new SparkFlexConfig();
