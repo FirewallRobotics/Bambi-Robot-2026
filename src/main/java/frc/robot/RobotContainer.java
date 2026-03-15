@@ -42,7 +42,8 @@ public class RobotContainer {
           .in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  final CommandXboxController driverXbox = new CommandXboxController(0);
+  
+  final CommandXboxController secondDriver = new CommandXboxController(1);
 
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final SwerveRequest.FieldCentric drive =
