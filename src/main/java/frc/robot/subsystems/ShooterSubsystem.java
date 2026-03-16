@@ -41,15 +41,15 @@ public class ShooterSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Velocity Top", 0);
     SmartDashboard.putNumber("Velocity Bottom", 0);
     SmartDashboard.putNumber("Current Limit", 0);
-    setVelocityTop = 4200;
-    setVelocityBottom = 4200;
+    setVelocityTop = 4100;
+    setVelocityBottom = 4100;
     setVelocityKicker = 3000;
 
     shootMotorTop = new SparkFlex(13, MotorType.kBrushless);
     shootMotorBottom = new SparkFlex(15, MotorType.kBrushless);
     shootFollowTop = new SparkFlex(14, MotorType.kBrushless);
     shootFollowBottom = new SparkFlex(16, MotorType.kBrushless);
-    kickMotor = new SparkFlex(35, MotorType.kBrushless);
+    kickMotor = new SparkFlex(31, MotorType.kBrushless);
 
     bFollowerConfig = new SparkFlexConfig();
     tFollowerConfig = new SparkFlexConfig();
