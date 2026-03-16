@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
@@ -63,6 +64,7 @@ public class RobotContainer {
   }
 
   public final CommandXboxController joystick = new CommandXboxController(0);
+  public final CommandXboxController secondDriver = new CommandXboxController(1);
 
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
@@ -132,12 +134,27 @@ public class RobotContainer {
     joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
     drivetrain.registerTelemetry(logger::telemeterize);
-    joystick.leftTrigger().whileTrue(new SequentialCommandGroup(
+    
+    joystick.rightBumper().whileTrue(new ShootCommand(shooterSubsystem, agitatorSubsystem));
+    joystick.leftBumper().onTrue(new AngleArmCommand(armSubsystem, true));
+    //joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
+    
+
+    secondDriver.x().whileTrue(new SequentialCommandGroup(
       new AngleArmCommand(armSubsystem, false), 
       new IntakeCommand(intakeSubsystem, agitatorSubsystem)));
-    joystick.rightTrigger().whileTrue(new ShootCommand(shooterSubsystem, agitatorSubsystem));
-    //joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
-    joystick.leftTrigger().whileFalse(new AngleArmCommand(armSubsystem, true));
+    secondDriver.x().whileFalse(new AngleArmCommand(armSubsystem, true));
+
+    secondDriver.povRight().whileTrue(
+        new ParallelCommandGroup(
+            drivetrain.applyRequest(
+                () ->
+                    face.withTargetDirection(
+                        new Rotation2d(VisionSubsystem.getAngleToHUB(drivetrain)))),
+            new ShootCommand(shooterSubsystem, agitatorSubsystem)
+        )
+    );
+    
   }
 
   public void periodic() {
