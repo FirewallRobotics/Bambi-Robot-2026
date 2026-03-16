@@ -134,27 +134,28 @@ public class RobotContainer {
     joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
     drivetrain.registerTelemetry(logger::telemeterize);
-    
+
     joystick.rightBumper().whileTrue(new ShootCommand(shooterSubsystem, agitatorSubsystem));
     joystick.leftBumper().onTrue(new AngleArmCommand(armSubsystem, true));
-    //joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
-    
+    // joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
 
-    secondDriver.x().whileTrue(new SequentialCommandGroup(
-      new AngleArmCommand(armSubsystem, false), 
-      new IntakeCommand(intakeSubsystem, agitatorSubsystem)));
+    secondDriver
+        .x()
+        .whileTrue(
+            new SequentialCommandGroup(
+                new AngleArmCommand(armSubsystem, false),
+                new IntakeCommand(intakeSubsystem, agitatorSubsystem)));
     secondDriver.x().whileFalse(new AngleArmCommand(armSubsystem, true));
 
-    secondDriver.povRight().whileTrue(
-        new ParallelCommandGroup(
-            drivetrain.applyRequest(
-                () ->
-                    face.withTargetDirection(
-                        new Rotation2d(VisionSubsystem.getAngleToHUB(drivetrain)))),
-            new ShootCommand(shooterSubsystem, agitatorSubsystem)
-        )
-    );
-    
+    secondDriver
+        .povRight()
+        .whileTrue(
+            new ParallelCommandGroup(
+                drivetrain.applyRequest(
+                    () ->
+                        face.withTargetDirection(
+                            new Rotation2d(VisionSubsystem.getAngleToHUB(drivetrain)))),
+                new ShootCommand(shooterSubsystem, agitatorSubsystem)));
   }
 
   public void periodic() {
