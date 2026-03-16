@@ -1,5 +1,8 @@
 package frc.robot.commands;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeArmSubsystem;
 
@@ -16,6 +19,16 @@ public class AngleArmCommand extends Command {
   public void initialize() {
     m_IntakeArmSubsystem.SetAngle(goingDown);
   }
+
+  @Override
+  public boolean isFinished(){
+    if(m_IntakeArmSubsystem.isAtSetpoint(goingDown)){
+      return true;
+    }
+    return false;
+  }
+
+
 
   //@Override
   //public void end(boolean inter){

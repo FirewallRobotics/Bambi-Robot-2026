@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -131,10 +132,12 @@ public class RobotContainer {
     joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
     drivetrain.registerTelemetry(logger::telemeterize);
-    joystick.leftTrigger().whileTrue(new IntakeCommand(intakeSubsystem, agitatorSubsystem));
+    joystick.leftTrigger().whileTrue(new SequentialCommandGroup(
+      new AngleArmCommand(armSubsystem, false), 
+      new IntakeCommand(intakeSubsystem, agitatorSubsystem)));
     joystick.rightTrigger().whileTrue(new ShootCommand(shooterSubsystem, agitatorSubsystem));
-    joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
-    joystick.povRight().whileTrue(new AngleArmCommand(armSubsystem, true));
+    //joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
+    joystick.leftTrigger().whileFalse(new AngleArmCommand(armSubsystem, true));
   }
 
   public void periodic() {

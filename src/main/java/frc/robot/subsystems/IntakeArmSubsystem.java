@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -68,6 +71,19 @@ public class IntakeArmSubsystem extends SubsystemBase {
         armConfig,
         com.revrobotics.ResetMode.kNoResetSafeParameters,
         com.revrobotics.PersistMode.kPersistParameters);
+  }
+
+  public boolean isAtSetpoint(boolean goingdown){
+    if (goingdown && armMotor.getEncoder().getPosition() >= upPosition){
+      //Logger.getGlobal().log(Level.INFO, "Is at up setpoint");
+      return true;
+    }
+    else if (!goingdown && armMotor.getEncoder().getPosition() <= downPosition + 0.05){
+      //Logger.getGlobal().log(Level.INFO, "Is at down setpoint");
+      return true;
+    }
+    return false;
+    
   }
 
   public void AngleArm(boolean goingDown) {
