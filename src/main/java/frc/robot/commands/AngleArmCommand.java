@@ -15,6 +15,10 @@ public class AngleArmCommand extends Command {
   @Override
   public void initialize() {
     m_IntakeArmSubsystem.SetAngle(goingDown);
-    ;
   }
+
+  //@Override
+  //public void end(boolean inter){
+  //  m_IntakeArmSubsystem.StopAngle();
+  //}
 }
