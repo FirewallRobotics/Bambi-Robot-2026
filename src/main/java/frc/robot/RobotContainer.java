@@ -82,6 +82,7 @@ public class RobotContainer {
 
     face.HeadingController = new PhoenixPIDController(2, 0, 0);
     face.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
+    face.HeadingController.enableContinuousInput(-1,1);
 
     intakeSubsystem = new IntakeSubsystem();
     driveAssistanceSubsystem = new DriveAssistanceSubsystem(drivetrain, this);
@@ -161,8 +162,8 @@ public class RobotContainer {
   }
 
   public void periodic() {
-    face.VelocityX = -joystick.getLeftY() * MaxSpeed;
-    face.VelocityY = -joystick.getLeftX() * MaxSpeed;
+    face.VelocityX = joystick.getLeftY() * MaxSpeed;
+    face.VelocityY = joystick.getLeftX() * MaxSpeed;
   }
 
   public void DriveFieldOriented() {
