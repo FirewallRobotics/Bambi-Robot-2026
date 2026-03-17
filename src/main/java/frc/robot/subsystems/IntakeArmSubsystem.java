@@ -1,8 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -44,8 +41,8 @@ public class IntakeArmSubsystem extends SubsystemBase {
 
     armConfig.smartCurrentLimit(40);
 
-    //armConfig.absoluteEncoder.positionConversionFactor(0.0725);
-    //armConfig.absoluteEncoder.zeroOffset(0.275);
+    // armConfig.absoluteEncoder.positionConversionFactor(0.0725);
+    // armConfig.absoluteEncoder.zeroOffset(0.275);
 
     armConfig
         .closedLoop
@@ -62,10 +59,10 @@ public class IntakeArmSubsystem extends SubsystemBase {
         .d(0, ClosedLoopSlot.kSlot1)
         .outputRange(-1, 1, ClosedLoopSlot.kSlot1)
         .feedForward
-      //  .kG(0)
-        //.kS((0.36-0.35)/2)
-        .kCos(0.35+((0.45-0.35)/2));
-        //.kCosRatio(1);
+        //  .kG(0)
+        // .kS((0.36-0.35)/2)
+        .kCos(0.35 + ((0.45 - 0.35) / 2));
+    // .kCosRatio(1);
 
     armMotor.configure(
         armConfig,
@@ -73,17 +70,15 @@ public class IntakeArmSubsystem extends SubsystemBase {
         com.revrobotics.PersistMode.kPersistParameters);
   }
 
-  public boolean isAtSetpoint(boolean goingdown){
-    if (goingdown && armMotor.getEncoder().getPosition() >= upPosition){
-      //Logger.getGlobal().log(Level.INFO, "Is at up setpoint");
+  public boolean isAtSetpoint(boolean goingUp) {
+    if (goingUp && armMotor.getEncoder().getPosition() >= upPosition) {
+      // Logger.getGlobal().log(Level.INFO, "Is at up setpoint");
       return true;
-    }
-    else if (!goingdown && armMotor.getEncoder().getPosition() <= downPosition + 0.05){
-      //Logger.getGlobal().log(Level.INFO, "Is at down setpoint");
+    } else if (!goingUp && armMotor.getEncoder().getPosition() <= downPosition + 0.05) {
+      // Logger.getGlobal().log(Level.INFO, "Is at down setpoint");
       return true;
     }
     return false;
-    
   }
 
   public void AngleArm(boolean goingDown) {

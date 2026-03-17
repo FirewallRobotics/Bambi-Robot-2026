@@ -22,8 +22,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.AlignWithClimberCommand;
+import frc.robot.commands.AngleAndRunIntakeCommand;
 import frc.robot.commands.AngleArmCommand;
-import frc.robot.commands.ClimbLevel1Command;
 import frc.robot.commands.HonkCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShootCommand;
@@ -91,8 +92,9 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("Honk", new HonkCommand("la-cucaracha.chrp"));
     NamedCommands.registerCommand("Shoot", new ShootCommand(shooterSubsystem, agitatorSubsystem));
-    NamedCommands.registerCommand("Intake", new IntakeCommand(intakeSubsystem, agitatorSubsystem));
-    NamedCommands.registerCommand("Climb", new ClimbLevel1Command());
+    NamedCommands.registerCommand(
+        "Intake", new AngleAndRunIntakeCommand(armSubsystem, intakeSubsystem, agitatorSubsystem));
+    NamedCommands.registerCommand("Climb", new AlignWithClimberCommand(drivetrain));
 
     configureBindings();
 
