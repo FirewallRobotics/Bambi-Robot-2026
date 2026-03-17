@@ -50,8 +50,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private final double RANGE_AT_4100;
   private final double RPM_PER_FOOT;
 
-  private final double robotX;
-  private final double robotY;
   
   private double setVelocityKicker;
 
@@ -75,8 +73,7 @@ public class ShooterSubsystem extends SubsystemBase {
     RANGE_AT_4100 = 8;
     RPM_PER_FOOT = 100;
 
-    robotX = VisionSubsystem.getRobotPoseInFieldSpace().getX();
-    robotY = VisionSubsystem.getRobotPoseInFieldSpace().getY();
+    
     setVelocityTop = 4200;
     setVelocityBottom = 4200;
     setVelocityTop = 4100;
@@ -187,6 +184,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
   // Shoot balls. None adjustable velocity
   public void Shoot() {
+    double robotX = VisionSubsystem.getRobotPoseInFieldSpace().getX();
+    double robotY = VisionSubsystem.getRobotPoseInFieldSpace().getY();
 
     ChassisSpeeds speeds = m_Kinematics.toChassisSpeeds(ourDriveTrain.getModuleStates());
     // shootMotorBottom.set(-1);
@@ -221,6 +220,8 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double rpmToHitTarget(double robotXFT, double robotYFT, double targetXFT, double targetYFT, double vxMPerSec, double vyMPerSec, double flightTimeSec, double minRpm, double maxRpm){
+    
+    
     double dx = targetXFT - robotXFT;
     double dy = targetYFT - robotYFT;
     double distanceFt = Math.hypot(dx, dy);
