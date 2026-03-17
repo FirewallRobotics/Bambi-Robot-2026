@@ -27,7 +27,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
     armConfig = new SparkFlexConfig();
     armClosedLoopController = armMotor.getClosedLoopController();
     upPosition = 0.18;
-    downPosition = 0;
+    downPosition = -0.04;
 
     followerMotor = new SparkFlex(18, MotorType.kBrushless);
     FollowerarmConfig = new SparkFlexConfig();
@@ -49,7 +49,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control. We don't need to pass a closed loop
         // slot, as it will default to slot 0.
-        .p(0.9)
+        .p(1)
         .i(0)
         .d(0)
         .outputRange(-1, 1)
@@ -74,7 +74,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
     if (goingUp && armMotor.getEncoder().getPosition() >= upPosition) {
       // Logger.getGlobal().log(Level.INFO, "Is at up setpoint");
       return true;
-    } else if (!goingUp && armMotor.getEncoder().getPosition() <= downPosition + 0.05) {
+    } else if (!goingUp && armMotor.getEncoder().getPosition() <= 0.05) {
       // Logger.getGlobal().log(Level.INFO, "Is at down setpoint");
       return true;
     }

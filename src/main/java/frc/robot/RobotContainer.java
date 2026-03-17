@@ -147,7 +147,7 @@ public class RobotContainer {
         .whileTrue(
             new SequentialCommandGroup(
                 new AngleArmCommand(armSubsystem, false),
-                new IntakeCommand(intakeSubsystem, agitatorSubsystem)));
+                new IntakeCommand(intakeSubsystem, agitatorSubsystem, armSubsystem)));
     secondDriver.x().whileFalse(new AngleArmCommand(armSubsystem, true));
 
     secondDriver
