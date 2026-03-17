@@ -80,14 +80,14 @@ public class RobotContainer {
     // Configure the trigger bindings
     // DriverStation.silenceJoystickConnectionWarning(true);
 
-    face.HeadingController = new PhoenixPIDController(2, 0, 0);
+    face.HeadingController = new PhoenixPIDController(6, 0, 0);
     face.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
     face.HeadingController.enableContinuousInput(-1,1);
 
     intakeSubsystem = new IntakeSubsystem();
     driveAssistanceSubsystem = new DriveAssistanceSubsystem(drivetrain, this);
     visionSubsystem = new VisionSubsystem(this);
-    shooterSubsystem = new ShooterSubsystem();
+    shooterSubsystem = new ShooterSubsystem(drivetrain);
     armSubsystem = new IntakeArmSubsystem();
     agitatorSubsystem = new AgitatorSubsystem();
 
@@ -153,12 +153,7 @@ public class RobotContainer {
     secondDriver
         .povRight()
         .whileTrue(
-            new ParallelCommandGroup(
-                drivetrain.applyRequest(
-                    () ->
-                        face.withTargetDirection(
-                            new Rotation2d(VisionSubsystem.getAngleToHUB(drivetrain)))),
-                new ShootCommand(shooterSubsystem, agitatorSubsystem)));
+            new ShootCommand(shooterSubsystem, agitatorSubsystem));
   }
 
   public void periodic() {

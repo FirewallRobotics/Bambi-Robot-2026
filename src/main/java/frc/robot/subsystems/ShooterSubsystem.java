@@ -1,5 +1,10 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Meter;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -7,9 +12,14 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
+
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.ShooterSubsystemConstants;
+import frc.robot.Constants.VisionSubsystemConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -28,21 +38,34 @@ public class ShooterSubsystem extends SubsystemBase {
   private SparkClosedLoopController tShootClosedLoopController;
   private SparkClosedLoopController bSparkClosedLoopController;
 
-  private double setVelocityTop;
-  private double setVelocityBottom;
+  private double wantedVelocity;
+  private final double RPM_AT_8FT;
+  private final double RPM_PER_FOOT;
+
+  
   private double setVelocityKicker;
 
   private final SparkFlex kickMotor;
   private final SparkFlexConfig kickConfig;
   private final SparkClosedLoopController kickClosedLoopController;
 
-  public ShooterSubsystem() {
+  private final CommandSwerveDrivetrain ourDriveTrain;
+  private final SwerveDriveKinematics m_Kinematics;
+
+  public ShooterSubsystem(CommandSwerveDrivetrain ourDriveTrain) {
 
     SmartDashboard.putNumber("Velocity Top", 0);
     SmartDashboard.putNumber("Velocity Bottom", 0);
     SmartDashboard.putNumber("Current Limit", 0);
-    setVelocityTop = 4100;
-    setVelocityBottom = 4100;
+
+    this.ourDriveTrain = ourDriveTrain;
+    m_Kinematics = new SwerveDriveKinematics(ourDriveTrain.getModuleLocations());
+
+    RPM_AT_8FT = 4100;
+    RPM_PER_FOOT = 300;
+
+    
+    wantedVelocity = 4100;
     setVelocityKicker = 3000;
 
     shootMotorTop = new SparkFlex(13, MotorType.kBrushless);
@@ -149,9 +172,21 @@ public class ShooterSubsystem extends SubsystemBase {
 
   // Shoot balls. None adjustable velocity
   public void Shoot() {
+    double robotX = ourDriveTrain.getState().Pose.getX();
+    double robotY = ourDriveTrain.getState().Pose.getY();
+    double[] robotPose = {MetersToFeet(robotX), MetersToFeet(robotY)};
+    double[] targetPose = {MetersToFeet(VisionSubsystemConstants.RedHUBCenter[0]), MetersToFeet(VisionSubsystemConstants.RedHUBCenter[1])};
 
-    tShootClosedLoopController.setSetpoint(setVelocityTop, ControlType.kVelocity);
-    bSparkClosedLoopController.setSetpoint(setVelocityBottom, ControlType.kVelocity);
+    //Logger.getGlobal().log(Level.INFO, "Distance: " + rpmToHitTarget(robotPose, targetPose));
+
+    //ChassisSpeeds speeds = m_Kinematics.toChassisSpeeds(ourDriveTrain.getModuleStates());
+    // shootMotorBottom.set(-1);
+    //shootMotorTop.set(1);
+    //We need Feet per second, the x ft per second, the y fet per second, flight time, and min and max
+    double target = rpmToHitTarget(robotPose, targetPose);
+    tShootClosedLoopController.setSetpoint(target, ControlType.kVelocity);
+    bSparkClosedLoopController.setSetpoint(target, ControlType.kVelocity);
+    
   }
 
   // Used to kick the balls up from the storage up into the shooter
@@ -173,6 +208,76 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double GetWantedVelocity() {
-    return setVelocityTop;
+    return wantedVelocity;
   }
+
+  private double rpmToHitTarget(double[] robotPoseFt, double[] targetPoseFt){
+    
+    double dx = robotPoseFt[0] - targetPoseFt[0];
+    double dy = robotPoseFt[1] - targetPoseFt[1];
+    double distanceFt = Math.hypot(dx, dy);
+
+    double rmpToHit = RPM_AT_8FT + ((distanceFt - 8) * RPM_PER_FOOT);
+
+    //Logger.getGlobal().log(Level.INFO, "distance: " + distanceFt);
+    
+    if (wantedVelocity != rmpToHit) {
+      wantedVelocity = rmpToHit;
+    }
+
+    return rmpToHit;
+  }
+
+  // public double rpmToHitTarget(double robotXM, double robotYM, double targetXM, double targetYM, double vxMPerSec, double vyMPerSec, double flightTimeSec, double minRpm, double maxRpm){
+    
+  //   double robotXFT = MetersToFeet(robotXM);
+  //   double robotYFT = MetersToFeet(robotYM);
+
+  //   double targetXFT = MetersToFeet(targetXM);
+  //   double targetYFT = MetersToFeet(targetYM);
+    
+  //   double dx = targetXFT - robotXFT;
+  //   double dy = targetYFT - robotYFT;
+  //   //Logger.getGlobal().log(Level.INFO, "target feet x: " + targetXFT);
+  //   //Logger.getGlobal().log(Level.INFO, "target feet y: " + targetYFT);
+  //   //Logger.getGlobal().log(Level.INFO, "robot feet x: " + robotXFT);
+  //   //Logger.getGlobal().log(Level.INFO, "robot feet y: " + robotYFT);
+  //   double distanceFt = Math.hypot(dx, dy);
+
+  //   double vxFtPerSec = MetersToFeet(vxMPerSec);
+  //   double vyFTPerSec = MetersToFeet(vyMPerSec);
+
+  //   if(distanceFt < 1e-6){
+  //     //This is when we are smack up against the hub
+  //     return Math.max(minRpm, Math.min(maxRpm, RPM_AT_8FT));
+  //   }
+  //   double ux = dx / distanceFt;
+  //   double uy = dy / distanceFt;
+
+  //   //double vParallel = vxFtPerSec * ux + vyFTPerSec * uy;
+  //   double stationaryEquivalentRangeFt = distanceFt;
+
+  //   double rpmToHitTarget = RPM_AT_8FT + RPM_PER_FOOT * (stationaryEquivalentRangeFt - RANGE_AT_4100);
+
+  //   //Logger.getGlobal().log(Level.INFO, "feet: " + distanceFt);
+  //   //Logger.getGlobal().log(Level.INFO, "velocity: " + Math.max(minRpm, Math.min(maxRpm, rpmToHitTarget)));
+
+  //   return Math.max(minRpm, Math.min(maxRpm, rpmToHitTarget));
+  // }
+
+  private double MetersToFeet(double meters){
+    return meters * 3.2808399;
+  }
+
+  // private double getXvPerFt(double vel, boolean GettingVy){
+  //   if(GettingVy){
+  //     return Math.cos(160) * vel;
+  //   }
+
+  //   return Math.sin(160) * vel;
+  // }
+
+  // private double squared(double a){
+  //   return a * a;
+  // }
 }

@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 public class ShootCommand extends Command {
   private ShooterSubsystem m_ShooterSubsystem;
@@ -18,6 +19,7 @@ public class ShootCommand extends Command {
   @Override
   public void execute() {
 
+    
     m_ShooterSubsystem.Shoot();
 
     double nowRPM = m_ShooterSubsystem.GetRPM();
