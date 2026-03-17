@@ -82,12 +82,12 @@ public class IntakeArmSubsystem extends SubsystemBase {
   }
 
   public void AngleArm(boolean goingDown) {
-    // if(goingDown){
-    //   armMotor.set(-0.1);
-    // } else{
-    //  armMotor.set(0.1);
-    // }
-    armMotor.setVoltage(SmartDashboard.getNumber("Hold Voltage", 0));
+     if(goingDown){
+       armMotor.set(-0.1);
+     } else{
+      armMotor.set(0.1);
+     }
+    //armMotor.setVoltage(SmartDashboard.getNumber("Hold Voltage", 0));
   }
 
   public void StopAngle() {

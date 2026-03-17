@@ -98,7 +98,7 @@ public class RobotContainer {
 
     configureBindings();
 
-    SmartDashboard.putNumber("Hold Voltage", 0);
+    //SmartDashboard.putNumber("Hold Voltage", 0);
 
     // Warmup PathPlanner to avoid Java pauses
     CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
