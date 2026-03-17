@@ -80,7 +80,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     // DriverStation.silenceJoystickConnectionWarning(true);
 
-    face.HeadingController = new PhoenixPIDController(2, 0, 0);
+    face.HeadingController = new PhoenixPIDController(6, 0, 0);
     face.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
     face.HeadingController.enableContinuousInput(-1,1);
 
