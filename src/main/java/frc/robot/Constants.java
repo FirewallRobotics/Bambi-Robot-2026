@@ -58,4 +58,19 @@ public final class Constants {
     public static final double kVVoltSecondPerRad = 1.5928;
     public static final double kAVoltSecondSquaredPerRad = 0.030171;
   }
+
+  // 0.0007
+  // 0.0000005
+  public static class ShooterSubsystemConstants {
+    public static final double shootPTop = 0.0004;
+    public static final double shootPBot = 0.0004;
+    public static final double shootITop = 0.0000009;
+    public static final double shootIBot = 0.0000009;
+  }
+
+  public static class IntakeSubsystemConstants {
+    public static final double intakeVelocity = 5000;
+    public static final double intakeP = 0.0003;
+    public static final double intakeI = 0.000001;
+  }
 }

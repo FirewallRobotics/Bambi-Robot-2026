@@ -16,17 +16,23 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.commands.ClimbLevel1Command;
+import frc.robot.commands.AlignWithClimberCommand;
+import frc.robot.commands.AngleAndRunIntakeCommand;
+import frc.robot.commands.AngleArmCommand;
 import frc.robot.commands.HonkCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.DriveAssistanceSubsystem;
+import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 public class RobotContainer {
@@ -35,6 +41,9 @@ public class RobotContainer {
   private double MaxAngularRate =
       RotationsPerSecond.of(0.75)
           .in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+
+  // Replace with CommandPS4Controller or CommandJoystick if needed
+  final CommandXboxController driverXbox = new CommandXboxController(0);
 
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final SwerveRequest.FieldCentric drive =
@@ -54,28 +63,41 @@ public class RobotContainer {
   }
 
   public final CommandXboxController joystick = new CommandXboxController(0);
+  public final CommandXboxController secondDriver = new CommandXboxController(1);
 
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-  public final IntakeSubsystem intakeSubsystem;
-  public final DriveAssistanceSubsystem driveAssistanceSubsystem;
-  public final VisionSubsystem visionSubsystem;
+  private final IntakeSubsystem intakeSubsystem;
+  private final DriveAssistanceSubsystem driveAssistanceSubsystem;
+  private final VisionSubsystem visionSubsystem;
+  private final ShooterSubsystem shooterSubsystem;
+  private final IntakeArmSubsystem armSubsystem;
+  private final AgitatorSubsystem agitatorSubsystem;
 
   public RobotContainer() {
+    // Configure the trigger bindings
+    // DriverStation.silenceJoystickConnectionWarning(true);
 
-    face.HeadingController = new PhoenixPIDController(2, 0, 0);
+    face.HeadingController = new PhoenixPIDController(6, 0, 0);
     face.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
+    face.HeadingController.enableContinuousInput(-1, 1);
 
     intakeSubsystem = new IntakeSubsystem();
     driveAssistanceSubsystem = new DriveAssistanceSubsystem(drivetrain, this);
     visionSubsystem = new VisionSubsystem(this);
+    shooterSubsystem = new ShooterSubsystem(drivetrain);
+    armSubsystem = new IntakeArmSubsystem();
+    agitatorSubsystem = new AgitatorSubsystem();
 
     NamedCommands.registerCommand("Honk", new HonkCommand("la-cucaracha.chrp"));
-    NamedCommands.registerCommand("Shoot", new ShootCommand());
-    NamedCommands.registerCommand("Intake", new IntakeCommand(intakeSubsystem));
-    NamedCommands.registerCommand("Climb", new ClimbLevel1Command());
+    NamedCommands.registerCommand("Shoot", new ShootCommand(shooterSubsystem, agitatorSubsystem));
+    NamedCommands.registerCommand(
+        "Intake", new AngleAndRunIntakeCommand(armSubsystem, intakeSubsystem, agitatorSubsystem));
+    NamedCommands.registerCommand("Climb", new AlignWithClimberCommand(drivetrain));
 
     configureBindings();
+
+    // SmartDashboard.putNumber("Hold Voltage", 0);
 
     // Warmup PathPlanner to avoid Java pauses
     CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
@@ -113,11 +135,25 @@ public class RobotContainer {
     joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
     drivetrain.registerTelemetry(logger::telemeterize);
+
+    joystick.rightBumper().whileTrue(new ShootCommand(shooterSubsystem, agitatorSubsystem));
+    joystick.leftBumper().onTrue(new AngleArmCommand(armSubsystem, true));
+    // joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
+
+    secondDriver
+        .x()
+        .whileTrue(
+            new SequentialCommandGroup(
+                new AngleArmCommand(armSubsystem, false),
+                new IntakeCommand(intakeSubsystem, agitatorSubsystem, armSubsystem)));
+    secondDriver.x().whileFalse(new AngleArmCommand(armSubsystem, true));
+
+    secondDriver.povRight().whileTrue(new ShootCommand(shooterSubsystem, agitatorSubsystem));
   }
 
   public void periodic() {
-    face.VelocityX = -joystick.getLeftY() * MaxSpeed;
-    face.VelocityY = -joystick.getLeftX() * MaxSpeed;
+    face.VelocityX = joystick.getLeftY() * MaxSpeed;
+    face.VelocityY = joystick.getLeftX() * MaxSpeed;
   }
 
   public void DriveFieldOriented() {
