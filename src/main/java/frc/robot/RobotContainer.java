@@ -27,6 +27,7 @@ import frc.robot.commands.AngleAndRunIntakeCommand;
 import frc.robot.commands.AngleArmCommand;
 import frc.robot.commands.HonkCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.ManualKicker;
 import frc.robot.commands.ShootCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AgitatorSubsystem;
@@ -34,6 +35,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.DriveAssistanceSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.KickerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
@@ -75,6 +77,7 @@ public class RobotContainer {
   private final ShooterSubsystem shooterSubsystem;
   private final IntakeArmSubsystem armSubsystem;
   private final AgitatorSubsystem agitatorSubsystem;
+  private final KickerSubsystem kickerSubsystem;
 
   public RobotContainer() {
     // Configure the trigger bindings
@@ -90,9 +93,10 @@ public class RobotContainer {
     shooterSubsystem = new ShooterSubsystem(drivetrain);
     armSubsystem = new IntakeArmSubsystem();
     agitatorSubsystem = new AgitatorSubsystem();
+    kickerSubsystem = new KickerSubsystem();
 
     NamedCommands.registerCommand("Honk", new HonkCommand("la-cucaracha.chrp"));
-    NamedCommands.registerCommand("Shoot", new ShootCommand(shooterSubsystem, agitatorSubsystem));
+    NamedCommands.registerCommand("Shoot", new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, false));
     NamedCommands.registerCommand(
         "Intake", new AngleAndRunIntakeCommand(armSubsystem, intakeSubsystem, agitatorSubsystem));
     NamedCommands.registerCommand("Climb", new AlignWithClimberCommand(drivetrain));
@@ -138,9 +142,10 @@ public class RobotContainer {
 
     drivetrain.registerTelemetry(logger::telemeterize);
 
-    joystick.rightBumper().whileTrue(new ShootCommand(shooterSubsystem, agitatorSubsystem));
-    joystick.leftBumper().onTrue(new AngleArmCommand(armSubsystem, true));
+    joystick.rightBumper().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, true));
+    joystick.leftBumper().whileTrue(new AngleArmCommand(armSubsystem, true));
     // joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
+
 
     secondDriver
         .x()
@@ -153,7 +158,11 @@ public class RobotContainer {
     secondDriver
         .povRight()
         .whileTrue(
-            new ShootCommand(shooterSubsystem, agitatorSubsystem));
+            new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, false));
+    
+    secondDriver.povLeft().whileTrue(
+        new ManualKicker(kickerSubsystem)
+    );
   }
 
   public void periodic() {
