@@ -10,7 +10,8 @@ public class IntakeCommand extends Command {
   private final AgitatorSubsystem m_AgitatorSubsystem;
   private final IntakeArmSubsystem m_IntakeArmSubsystem;
 
-  public IntakeCommand(IntakeSubsystem i_Subsystem, AgitatorSubsystem a_Subsystem, IntakeArmSubsystem armSubsystem) {
+  public IntakeCommand(
+      IntakeSubsystem i_Subsystem, AgitatorSubsystem a_Subsystem, IntakeArmSubsystem armSubsystem) {
     m_IntakeSubsystem = i_Subsystem;
     m_AgitatorSubsystem = a_Subsystem;
     m_IntakeArmSubsystem = armSubsystem;
@@ -25,7 +26,6 @@ public class IntakeCommand extends Command {
     if (!m_IntakeArmSubsystem.isAtSetpoint(false)) {
       m_IntakeArmSubsystem.AngleArm(false);
     }
-    
   }
 
   @Override

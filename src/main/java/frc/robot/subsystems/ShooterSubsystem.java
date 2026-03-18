@@ -1,10 +1,5 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Meter;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -12,12 +7,9 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
-
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.ShooterSubsystemConstants;
 import frc.robot.Constants.VisionSubsystemConstants;
 
@@ -61,7 +53,6 @@ public class ShooterSubsystem extends SubsystemBase {
     RPM_AT_8FT = 4100;
     RPM_PER_FOOT = 300;
     rpmManual = 3500;
-    
     wantedVelocity = 4100;
     
 
@@ -190,16 +181,16 @@ public class ShooterSubsystem extends SubsystemBase {
     return wantedVelocity;
   }
 
-  private double rpmToHitTarget(double[] robotPoseFt, double[] targetPoseFt){
-    
+  private double rpmToHitTarget(double[] robotPoseFt, double[] targetPoseFt) {
+
     double dx = robotPoseFt[0] - targetPoseFt[0];
     double dy = robotPoseFt[1] - targetPoseFt[1];
     double distanceFt = Math.hypot(dx, dy);
 
     double rmpToHit = RPM_AT_8FT + ((distanceFt - 8) * RPM_PER_FOOT);
 
-    //Logger.getGlobal().log(Level.INFO, "distance: " + distanceFt);
-    
+    // Logger.getGlobal().log(Level.INFO, "distance: " + distanceFt);
+
     if (wantedVelocity != rmpToHit) {
       wantedVelocity = rmpToHit;
     }
@@ -207,14 +198,15 @@ public class ShooterSubsystem extends SubsystemBase {
     return rmpToHit;
   }
 
-  // public double rpmToHitTarget(double robotXM, double robotYM, double targetXM, double targetYM, double vxMPerSec, double vyMPerSec, double flightTimeSec, double minRpm, double maxRpm){
-    
+  // public double rpmToHitTarget(double robotXM, double robotYM, double targetXM, double targetYM,
+  // double vxMPerSec, double vyMPerSec, double flightTimeSec, double minRpm, double maxRpm){
+
   //   double robotXFT = MetersToFeet(robotXM);
   //   double robotYFT = MetersToFeet(robotYM);
 
   //   double targetXFT = MetersToFeet(targetXM);
   //   double targetYFT = MetersToFeet(targetYM);
-    
+
   //   double dx = targetXFT - robotXFT;
   //   double dy = targetYFT - robotYFT;
   //   //Logger.getGlobal().log(Level.INFO, "target feet x: " + targetXFT);
@@ -236,15 +228,17 @@ public class ShooterSubsystem extends SubsystemBase {
   //   //double vParallel = vxFtPerSec * ux + vyFTPerSec * uy;
   //   double stationaryEquivalentRangeFt = distanceFt;
 
-  //   double rpmToHitTarget = RPM_AT_8FT + RPM_PER_FOOT * (stationaryEquivalentRangeFt - RANGE_AT_4100);
+  //   double rpmToHitTarget = RPM_AT_8FT + RPM_PER_FOOT * (stationaryEquivalentRangeFt -
+  // RANGE_AT_4100);
 
   //   //Logger.getGlobal().log(Level.INFO, "feet: " + distanceFt);
-  //   //Logger.getGlobal().log(Level.INFO, "velocity: " + Math.max(minRpm, Math.min(maxRpm, rpmToHitTarget)));
+  //   //Logger.getGlobal().log(Level.INFO, "velocity: " + Math.max(minRpm, Math.min(maxRpm,
+  // rpmToHitTarget)));
 
   //   return Math.max(minRpm, Math.min(maxRpm, rpmToHitTarget));
   // }
 
-  private double MetersToFeet(double meters){
+  private double MetersToFeet(double meters) {
     return meters * 3.2808399;
   }
 

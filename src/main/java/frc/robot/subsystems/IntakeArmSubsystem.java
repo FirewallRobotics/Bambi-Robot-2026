@@ -9,7 +9,6 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeArmSubsystem extends SubsystemBase {
@@ -82,12 +81,12 @@ public class IntakeArmSubsystem extends SubsystemBase {
   }
 
   public void AngleArm(boolean goingDown) {
-     if(goingDown){
-       armMotor.set(-0.1);
-     } else{
+    if (goingDown) {
+      armMotor.set(-0.1);
+    } else {
       armMotor.set(0.1);
-     }
-    //armMotor.setVoltage(SmartDashboard.getNumber("Hold Voltage", 0));
+    }
+    // armMotor.setVoltage(SmartDashboard.getNumber("Hold Voltage", 0));
   }
 
   public void StopAngle() {
