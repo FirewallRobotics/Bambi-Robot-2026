@@ -14,10 +14,8 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
@@ -82,7 +80,7 @@ public class RobotContainer {
 
     face.HeadingController = new PhoenixPIDController(6, 0, 0);
     face.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
-    face.HeadingController.enableContinuousInput(-1,1);
+    face.HeadingController.enableContinuousInput(-1, 1);
 
     intakeSubsystem = new IntakeSubsystem();
     driveAssistanceSubsystem = new DriveAssistanceSubsystem(drivetrain, this);
@@ -99,7 +97,7 @@ public class RobotContainer {
 
     configureBindings();
 
-    //SmartDashboard.putNumber("Hold Voltage", 0);
+    // SmartDashboard.putNumber("Hold Voltage", 0);
 
     // Warmup PathPlanner to avoid Java pauses
     CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
@@ -150,10 +148,7 @@ public class RobotContainer {
                 new IntakeCommand(intakeSubsystem, agitatorSubsystem, armSubsystem)));
     secondDriver.x().whileFalse(new AngleArmCommand(armSubsystem, true));
 
-    secondDriver
-        .povRight()
-        .whileTrue(
-            new ShootCommand(shooterSubsystem, agitatorSubsystem));
+    secondDriver.povRight().whileTrue(new ShootCommand(shooterSubsystem, agitatorSubsystem));
   }
 
   public void periodic() {

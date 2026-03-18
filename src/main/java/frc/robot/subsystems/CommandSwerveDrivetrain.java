@@ -357,8 +357,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     return super.samplePoseAt(Utils.fpgaToCurrentTime(timestampSeconds));
   }
 
-  
-  public SwerveModuleState[] getModuleStates(){
+  public SwerveModuleState[] getModuleStates() {
     return getState().ModuleStates;
   }
 }
