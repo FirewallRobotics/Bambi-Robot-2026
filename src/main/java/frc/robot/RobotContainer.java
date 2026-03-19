@@ -148,8 +148,8 @@ public class RobotContainer {
     // set the bindings for the primary driver
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
     joystick
-        .b()
-        .whileTrue(driveAssistanceSubsystem.vibrateIfFaceingHUBDiscriptive(joystick).repeatedly());
+        .rightTrigger()
+        .whileTrue(driveAssistanceSubsystem.vibrateIfFaceingHUBDiscriptive(joystick));
     joystick
         .rightTrigger()
         .whileTrue(
