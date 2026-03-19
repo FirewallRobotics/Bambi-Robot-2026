@@ -121,7 +121,7 @@ public class RobotContainer {
         .b()
         .whileTrue(driveAssistanceSubsystem.vibrateIfFaceingHUBDiscriptive(joystick).repeatedly());
     joystick
-        .b()
+        .rightTrigger()
         .whileTrue(
             drivetrain.applyRequest(
                 () ->
@@ -146,19 +146,19 @@ public class RobotContainer {
 
 
     secondDriver
-        .x()
+        .povLeft()
         .whileTrue(
             new SequentialCommandGroup(
                 new AngleArmCommand(armSubsystem, false),
                 new IntakeCommand(intakeSubsystem, agitatorSubsystem, armSubsystem)));
-    secondDriver.x().whileFalse(new AngleArmCommand(armSubsystem, true));
+    secondDriver.povLeft().whileFalse(new AngleArmCommand(armSubsystem, true));
 
     secondDriver
-        .povRight()
+        .b()
         .whileTrue(
             new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, false));
     
-    secondDriver.povLeft().whileTrue(
+    secondDriver.povUp().whileTrue(
         new ManualKicker(kickerSubsystem)
     );
   }

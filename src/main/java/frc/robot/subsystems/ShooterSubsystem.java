@@ -8,8 +8,10 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.ShooterSubsystemConstants;
 import frc.robot.Constants.VisionSubsystemConstants;
 
@@ -146,8 +148,25 @@ public class ShooterSubsystem extends SubsystemBase {
       double robotX = ourDriveTrain.getState().Pose.getX();
       double robotY = ourDriveTrain.getState().Pose.getY();
       double[] robotPose = {MetersToFeet(robotX), MetersToFeet(robotY)};
-      double[] targetPose = {MetersToFeet(VisionSubsystemConstants.RedHUBCenter[0]), MetersToFeet(VisionSubsystemConstants.RedHUBCenter[1])};
+      
+      
+      
+      double[] targetPose = new double[2];
 
+      if (DriverStation.getAlliance().isPresent()) {
+
+      // if so then branch for those 2 alliances
+      // does atan of HUB.y - Robot.y / HUB.x - Robot.x and returns the resulting angle in degrees
+        switch (DriverStation.getAlliance().get()) {
+          case Blue:
+             targetPose[0] = MetersToFeet(VisionSubsystemConstants.BlueHUBCenter[0]);
+             targetPose[1] = MetersToFeet(VisionSubsystemConstants.BlueHUBCenter[1]);
+          
+         case Red:
+            targetPose[0] = MetersToFeet(VisionSubsystemConstants.RedHUBCenter[0]);
+             targetPose[1] = MetersToFeet(VisionSubsystemConstants.RedHUBCenter[1]);
+        }
+      }
       //Logger.getGlobal().log(Level.INFO, "Distance: " + rpmToHitTarget(robotPose, targetPose));
 
       //ChassisSpeeds speeds = m_Kinematics.toChassisSpeeds(ourDriveTrain.getModuleStates());

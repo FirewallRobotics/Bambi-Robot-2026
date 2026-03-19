@@ -69,7 +69,7 @@ public final class Constants {
   }
 
   public static class IntakeSubsystemConstants {
-    public static final double intakeVelocity = 5000;
+    public static final double intakeVelocity = 3000;
     public static final double intakeP = 0.0003;
     public static final double intakeI = 0.000001;
   }
