@@ -185,3 +185,6 @@ compile_commands.json
 
 # Eclipse generated file for annotation processors
 .factorypath
+PitDisplay/BlueAllianceAPI.txt
+PitDisplay/credentials.json
+PitDisplay/creds2.json

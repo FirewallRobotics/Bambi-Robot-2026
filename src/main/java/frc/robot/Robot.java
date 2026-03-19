@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.ctre.phoenix6.HootAutoReplay;
 import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,36 +14,53 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends TimedRobot {
+
+  /** The command that is run during the auto period */
   private Command m_autonomousCommand;
 
+  /** The single universal instance of robot container */
   private final RobotContainer m_robotContainer;
 
+  /** Auto chooser. Sent to driver dashboard so they can pick an auto to run */
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   /* log and replay timestamp and joystick data */
   private final HootAutoReplay m_timeAndJoystickReplay =
       new HootAutoReplay().withTimestampReplay().withJoystickReplay();
 
+  // Instantiate the robot
   public Robot() {
 
+    // start data logging
+    DataLogManager.start();
+
+    // port forward the second Limelight
     PortForwarder.add(5801, "172.29.0.1", 5801);
     PortForwarder.add(5800, "172.29.0.1", 5800);
 
+    // Create robot container
     m_robotContainer = new RobotContainer();
 
-    m_chooser.setDefaultOption("Shoot In Circle (Primary scorer, Start on Right)", "Grab N Go");
-    m_chooser.addOption("Shoot, Empty depot, climb (Start on Left)", "Home Cycle");
-    m_chooser.addOption("Just Empty and Climb (Start on Left)", "Lets Hang");
-    m_chooser.addOption("Move Forward (Debug)", "Just Forward");
+    // Add the autos we have and send it to smartdashboard
+    m_chooser.setDefaultOption("Power Play", "Left Auto");
+    m_chooser.addOption("Firewall Fake", "Shorty");
+    m_chooser.addOption("Hail Mary", "Right Auto");
     SmartDashboard.putData("Auto Chooser", m_chooser);
 
+    // starts the datalogging for the drivetrain
     m_robotContainer.getLogger().initSwervePublisher(m_robotContainer);
   }
 
   @Override
   public void robotPeriodic() {
+
+    // periodically log joystick and timing data
     m_timeAndJoystickReplay.update();
+
+    // run any commands in line to be executed
     CommandScheduler.getInstance().run();
+
+    // run robotContainers periodic
     m_robotContainer.periodic();
   }
 
@@ -57,8 +75,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    // get the auto command to be run
     m_autonomousCommand = m_robotContainer.getAutonomousCommand(m_chooser.getSelected());
 
+    // if that command exists schedule it to be executed
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(m_autonomousCommand);
     }
@@ -72,6 +92,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    // if the auto command exists and teleop starts then cancel it
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().cancel(m_autonomousCommand);
     }
@@ -85,6 +106,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+    // during test mode reset everytime we enable
     CommandScheduler.getInstance().cancelAll();
   }
 
