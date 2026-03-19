@@ -31,5 +31,6 @@ public class IntakeCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     m_IntakeSubsystem.StopIntake();
+    m_AgitatorSubsystem.StopAgitator();
   }
 }
