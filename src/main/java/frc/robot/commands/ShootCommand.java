@@ -12,7 +12,11 @@ public class ShootCommand extends Command {
   private double previousRPM;
   private final boolean manualShoot;
 
-  public ShootCommand(ShooterSubsystem s_Subsystem, KickerSubsystem kickerSubsystem, AgitatorSubsystem a_AgitatorSubsystem, boolean manualShoot) {
+  public ShootCommand(
+      ShooterSubsystem s_Subsystem,
+      KickerSubsystem kickerSubsystem,
+      AgitatorSubsystem a_AgitatorSubsystem,
+      boolean manualShoot) {
     m_ShooterSubsystem = s_Subsystem;
     m_AgitatorSubsystem = a_AgitatorSubsystem;
     m_KickerSubsystem = kickerSubsystem;
@@ -23,7 +27,6 @@ public class ShootCommand extends Command {
   @Override
   public void execute() {
 
-    
     m_ShooterSubsystem.Shoot(manualShoot);
 
     double nowRPM = m_ShooterSubsystem.GetRPM();
@@ -31,7 +34,8 @@ public class ShootCommand extends Command {
 
     if (Math.abs(rpmRampUp) < 50) {
       if ((m_ShooterSubsystem.GetWantedVelocity(manualShoot) - 70) < m_ShooterSubsystem.GetRPM()
-          && m_ShooterSubsystem.GetRPM() < (m_ShooterSubsystem.GetWantedVelocity(manualShoot) + 20)) {
+          && m_ShooterSubsystem.GetRPM()
+              < (m_ShooterSubsystem.GetWantedVelocity(manualShoot) + 20)) {
         m_KickerSubsystem.KickBalls();
         m_AgitatorSubsystem.StartAgitator();
       }

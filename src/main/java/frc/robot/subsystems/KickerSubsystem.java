@@ -7,26 +7,25 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class KickerSubsystem extends SubsystemBase {
-    private final SparkFlex kickerMotor;
+  private final SparkFlex kickerMotor;
 
-    private double setVelocityKicker;
+  private double setVelocityKicker;
 
   private final SparkFlexConfig kickConfig;
   private final SparkClosedLoopController kickClosedLoopController;
 
-    public KickerSubsystem(){
-        kickerMotor = new SparkFlex(31, MotorType.kBrushless);
-        setVelocityKicker = 3000;
+  public KickerSubsystem() {
+    kickerMotor = new SparkFlex(31, MotorType.kBrushless);
+    setVelocityKicker = 3000;
 
-        kickConfig = new SparkFlexConfig();
-        kickClosedLoopController = kickerMotor.getClosedLoopController();
-        kickConfig.smartCurrentLimit(40);
+    kickConfig = new SparkFlexConfig();
+    kickClosedLoopController = kickerMotor.getClosedLoopController();
+    kickConfig.smartCurrentLimit(40);
 
-        kickConfig
+    kickConfig
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control. We don't need to pass a closed loop
@@ -46,20 +45,20 @@ public class KickerSubsystem extends SubsystemBase {
         // kV is now in Volts, so we multiply by the nominal voltage (12V)
         .kV(12.0 / 5767, ClosedLoopSlot.kSlot1);
 
-        kickerMotor.configure(
+    kickerMotor.configure(
         kickConfig,
         com.revrobotics.ResetMode.kNoResetSafeParameters,
         com.revrobotics.PersistMode.kPersistParameters);
-    }
+  }
 
-    // Used to kick the balls up from the storage up into the shooter
+  // Used to kick the balls up from the storage up into the shooter
   public void KickBalls() {
     // kickMotor.set(1);
     // commented to add when we know kicker runs
     kickClosedLoopController.setSetpoint(setVelocityKicker, ControlType.kVelocity);
   }
 
-  public void stopKicker(){
+  public void stopKicker() {
     kickerMotor.setVoltage(0);
   }
 }

@@ -94,7 +94,8 @@ public class RobotContainer {
     kickerSubsystem = new KickerSubsystem();
 
     NamedCommands.registerCommand("Honk", new HonkCommand("la-cucaracha.chrp"));
-    NamedCommands.registerCommand("Shoot", new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, false));
+    NamedCommands.registerCommand(
+        "Shoot", new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, false));
     NamedCommands.registerCommand(
         "Intake", new AngleAndRunIntakeCommand(armSubsystem, intakeSubsystem, agitatorSubsystem));
     NamedCommands.registerCommand("Climb", new AlignWithClimberCommand(drivetrain));
@@ -140,10 +141,11 @@ public class RobotContainer {
 
     drivetrain.registerTelemetry(logger::telemeterize);
 
-    joystick.rightBumper().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, true));
+    joystick
+        .rightBumper()
+        .whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, true));
     joystick.leftBumper().whileTrue(new AngleArmCommand(armSubsystem, true));
     // joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
-
 
     secondDriver
         .povLeft()
@@ -155,12 +157,9 @@ public class RobotContainer {
 
     secondDriver
         .b()
-        .whileTrue(
-            new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, false));
-    
-    secondDriver.povUp().whileTrue(
-        new ManualKicker(kickerSubsystem)
-    );
+        .whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, false));
+
+    secondDriver.povUp().whileTrue(new ManualKicker(kickerSubsystem));
   }
 
   public void periodic() {

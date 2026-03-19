@@ -11,7 +11,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.ShooterSubsystemConstants;
 import frc.robot.Constants.VisionSubsystemConstants;
 
@@ -37,9 +36,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private final double RPM_PER_FOOT;
   private final double rpmManual;
 
-  
-  
-
   private final CommandSwerveDrivetrain ourDriveTrain;
   private final SwerveDriveKinematics m_Kinematics;
 
@@ -56,30 +52,25 @@ public class ShooterSubsystem extends SubsystemBase {
     RPM_PER_FOOT = 300;
     rpmManual = 3500;
     wantedVelocity = 4100;
-    
 
     shootMotorTop = new SparkFlex(13, MotorType.kBrushless);
     shootMotorBottom = new SparkFlex(15, MotorType.kBrushless);
     shootFollowTop = new SparkFlex(14, MotorType.kBrushless);
     shootFollowBottom = new SparkFlex(16, MotorType.kBrushless);
-    
 
     bFollowerConfig = new SparkFlexConfig();
     tFollowerConfig = new SparkFlexConfig();
     tShootConfig = new SparkFlexConfig();
     bShootConfig = new SparkFlexConfig();
     // commented to add when we know kicker runs
-    
 
     tShootClosedLoopController = shootMotorTop.getClosedLoopController();
     bSparkClosedLoopController = shootMotorBottom.getClosedLoopController();
     // commented to add when we know kicker runs
-    
 
     tShootConfig.smartCurrentLimit(40);
     bShootConfig.smartCurrentLimit(40);
     // commented to add when we know kicker runs
-    
 
     // This might cause issues
     // tShootConfig.encoder.positionConversionFactor(1);
@@ -124,7 +115,6 @@ public class ShooterSubsystem extends SubsystemBase {
     // commented to add when we know kicker runs
     // 0.00039
     // 0.0000016
-    
 
     shootMotorTop.configure(
         tShootConfig,
@@ -136,7 +126,7 @@ public class ShooterSubsystem extends SubsystemBase {
         com.revrobotics.PersistMode.kPersistParameters);
 
     // commented to add when we know kicker runs
-    
+
   }
 
   // Shoot balls. None adjustable velocity
@@ -144,49 +134,44 @@ public class ShooterSubsystem extends SubsystemBase {
     if (manual) {
       tShootClosedLoopController.setSetpoint(rpmManual, ControlType.kVelocity);
       bSparkClosedLoopController.setSetpoint(rpmManual, ControlType.kVelocity);
-    } else{
+    } else {
       double robotX = ourDriveTrain.getState().Pose.getX();
       double robotY = ourDriveTrain.getState().Pose.getY();
       double[] robotPose = {MetersToFeet(robotX), MetersToFeet(robotY)};
-      
-      
-      
+
       double[] targetPose = new double[2];
 
       if (DriverStation.getAlliance().isPresent()) {
 
-      // if so then branch for those 2 alliances
-      // does atan of HUB.y - Robot.y / HUB.x - Robot.x and returns the resulting angle in degrees
+        // if so then branch for those 2 alliances
+        // does atan of HUB.y - Robot.y / HUB.x - Robot.x and returns the resulting angle in degrees
         switch (DriverStation.getAlliance().get()) {
           case Blue:
-             targetPose[0] = MetersToFeet(VisionSubsystemConstants.BlueHUBCenter[0]);
-             targetPose[1] = MetersToFeet(VisionSubsystemConstants.BlueHUBCenter[1]);
-          
-         case Red:
+            targetPose[0] = MetersToFeet(VisionSubsystemConstants.BlueHUBCenter[0]);
+            targetPose[1] = MetersToFeet(VisionSubsystemConstants.BlueHUBCenter[1]);
+
+          case Red:
             targetPose[0] = MetersToFeet(VisionSubsystemConstants.RedHUBCenter[0]);
-             targetPose[1] = MetersToFeet(VisionSubsystemConstants.RedHUBCenter[1]);
+            targetPose[1] = MetersToFeet(VisionSubsystemConstants.RedHUBCenter[1]);
         }
       }
-      //Logger.getGlobal().log(Level.INFO, "Distance: " + rpmToHitTarget(robotPose, targetPose));
+      // Logger.getGlobal().log(Level.INFO, "Distance: " + rpmToHitTarget(robotPose, targetPose));
 
-      //ChassisSpeeds speeds = m_Kinematics.toChassisSpeeds(ourDriveTrain.getModuleStates());
+      // ChassisSpeeds speeds = m_Kinematics.toChassisSpeeds(ourDriveTrain.getModuleStates());
       // shootMotorBottom.set(-1);
-      //shootMotorTop.set(1);
-      //We need Feet per second, the x ft per second, the y fet per second, flight time, and min and max
+      // shootMotorTop.set(1);
+      // We need Feet per second, the x ft per second, the y fet per second, flight time, and min
+      // and max
       double target = rpmToHitTarget(robotPose, targetPose);
       tShootClosedLoopController.setSetpoint(target, ControlType.kVelocity);
       bSparkClosedLoopController.setSetpoint(target, ControlType.kVelocity);
     }
-    
-    
   }
-
 
   public void StopShoot() {
 
     shootMotorTop.setVoltage(0);
     shootMotorBottom.setVoltage(0);
-    
   }
 
   public double GetRPM() {

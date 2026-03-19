@@ -5,19 +5,19 @@ import frc.robot.subsystems.KickerSubsystem;
 
 public class ManualKicker extends Command {
 
-    private final KickerSubsystem m_KickerSubsystem;
+  private final KickerSubsystem m_KickerSubsystem;
 
-    public ManualKicker(KickerSubsystem kickerSubsystem){
-        m_KickerSubsystem = kickerSubsystem;
-    }
+  public ManualKicker(KickerSubsystem kickerSubsystem) {
+    m_KickerSubsystem = kickerSubsystem;
+  }
 
-    @Override
-    public void initialize() {
-        m_KickerSubsystem.KickBalls();
-    }
+  @Override
+  public void initialize() {
+    m_KickerSubsystem.KickBalls();
+  }
 
-    @Override
-    public void end(boolean interrupted) {
-        m_KickerSubsystem.stopKicker();
-    }
+  @Override
+  public void end(boolean interrupted) {
+    m_KickerSubsystem.stopKicker();
+  }
 }
