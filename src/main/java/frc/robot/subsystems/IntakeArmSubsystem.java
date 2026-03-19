@@ -14,17 +14,22 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class IntakeArmSubsystem extends SubsystemBase {
   /** The primary arm motor */
   private final SparkFlex armMotor;
+
   /** The follower arm motor */
   private final SparkFlex followerMotor;
+
   /** The config of the primary arm motor */
   private final SparkFlexConfig armConfig;
+
   /** The config for the follower arm motor */
   private final SparkFlexConfig FollowerarmConfig;
+
   /** The PIDF controller of the primary arm motor (the follower doesn't use PIDedo) */
   private final SparkClosedLoopController armClosedLoopController;
 
   /** The raised position of the arm */
   private double upPosition;
+
   /** The lowered position of the arm (with a little extra to keep it down) */
   private double downPosition;
 
@@ -34,7 +39,8 @@ public class IntakeArmSubsystem extends SubsystemBase {
     armConfig = new SparkFlexConfig();
     armClosedLoopController = armMotor.getClosedLoopController();
 
-    // define the raised and lowered position (we give the lowered abit of extra so it pushes into the bumpers and gets a better angle)
+    // define the raised and lowered position (we give the lowered abit of extra so it pushes into
+    // the bumpers and gets a better angle)
     upPosition = 0.18;
     downPosition = -0.04;
 
@@ -55,7 +61,8 @@ public class IntakeArmSubsystem extends SubsystemBase {
     // set the current limit on the primary
     armConfig.smartCurrentLimit(40);
 
-    // we don't have a abs encoder :( but I did calcuate the settings for the encoder and stored them like this
+    // we don't have a abs encoder :( but I did calcuate the settings for the encoder and stored
+    // them like this
     // armConfig.absoluteEncoder.positionConversionFactor(0.0725);
     // armConfig.absoluteEncoder.zeroOffset(0.275);
 
@@ -93,7 +100,8 @@ public class IntakeArmSubsystem extends SubsystemBase {
       // Logger.getGlobal().log(Level.INFO, "Is at up setpoint");
       return true;
 
-    // because the bottom position is offset into the bumper we have an arbitrary position to allow it to find a setpoint
+      // because the bottom position is offset into the bumper we have an arbitrary position to
+      // allow it to find a setpoint
     } else if (!goingUp && armMotor.getEncoder().getPosition() <= 0.05) {
       // Logger.getGlobal().log(Level.INFO, "Is at down setpoint");
       return true;

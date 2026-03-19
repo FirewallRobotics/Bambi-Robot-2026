@@ -74,31 +74,40 @@ public class RobotContainer {
 
   /** Object that allows for binding to the primary drivers xbox controller */
   public final CommandXboxController joystick = new CommandXboxController(0);
+
   /** Object that allows for binding to the secondary drivers xbox controller */
   public final CommandXboxController secondDriver = new CommandXboxController(1);
 
   /** The only instance of the subsystem that controls the drivetrain */
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
   /** The only instance of the subsystem that controls the sucking part of the intake */
   private final IntakeSubsystem intakeSubsystem;
-  /** Subsystem for assisting the drivers*/
+
+  /** Subsystem for assisting the drivers */
   private final DriveAssistanceSubsystem driveAssistanceSubsystem;
+
   /** The only instance of the Subsystem that talks to the Limelights/vision system */
   @SuppressWarnings("unused")
   private final VisionSubsystem visionSubsystem;
+
   /** The only instance of the subsystem that controls the shooting mechanism */
   private final ShooterSubsystem shooterSubsystem;
+
   /** The only instance of the subsystem that controls the intake arm */
   private final IntakeArmSubsystem armSubsystem;
+
   /** The only instance of the subsystem that controls the storage agitator belts */
   private final AgitatorSubsystem agitatorSubsystem;
+
   /** The only instance of the subsystem that controls the lifting mechanism on the shooter */
   private final KickerSubsystem kickerSubsystem;
 
   public RobotContainer() {
 
     // setup the HUB facing command
-    // This was initally in driver assistance subsystem but for whatever reason it only seemed to work here ¯\_(ツ)_/¯
+    // This was initally in driver assistance subsystem but for whatever reason it only seemed to
+    // work here ¯\_(ツ)_/¯
     // Setup the PID for rotating
     face.HeadingController = new PhoenixPIDController(6, 0, 0);
     // The angle given by vision subsystem points positive X
@@ -199,7 +208,10 @@ public class RobotContainer {
     face.VelocityY = joystick.getLeftX() * MaxSpeed;
   }
 
-  /** sets the default command for the drivetrain to drive in field orientation. This allows the robot to move*/
+  /**
+   * sets the default command for the drivetrain to drive in field orientation. This allows the
+   * robot to move
+   */
   public void DriveFieldOriented() {
 
     // Note that X is defined as forward according to WPILib convention,

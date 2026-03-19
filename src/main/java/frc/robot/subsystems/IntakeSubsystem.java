@@ -13,8 +13,10 @@ public class IntakeSubsystem {
 
   /** The primary intake motor */
   private final SparkFlex intakeMotor;
+
   /** The primary motor configuration */
   private final SparkFlexConfig intakeMotorConfig;
+
   /** The primary motor PIDF controller */
   private final SparkClosedLoopController intakeClosedLoop;
 
