@@ -10,6 +10,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveRequest.ForwardPerspectiveValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
+import com.pathplanner.lib.auto.AutoBuilderException;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -38,53 +39,75 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 public class RobotContainer {
+
+  /** The maximum lateral (X, Y) speed of the robot */
   private double MaxSpeed =
       1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+
+  /** The maximum rotational speed of the robot */
   private double MaxAngularRate =
       RotationsPerSecond.of(0.75)
           .in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  final CommandXboxController driverXbox = new CommandXboxController(0);
-
-  /* Setting up bindings for necessary control of the swerve drive platform */
+  /** The main drive request that moves the robot in field orientation */
   private final SwerveRequest.FieldCentric drive =
       new SwerveRequest.FieldCentric()
           .withDeadband(MaxSpeed * 0.1)
           .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
           .withDriveRequestType(
               DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+
+  /** The command for braking the drivetrain */
   private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+
+  /** The command for facing towards the HUB */
   private final SwerveRequest.FieldCentricFacingAngle face =
       new SwerveRequest.FieldCentricFacingAngle();
 
+  /** Creates the telemetry subsystem for the drivetrain (Auto created by CTRE) */
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
+  /** getter for the drivetrain's telemetry subsystem */
   public Telemetry getLogger() {
     return logger;
   }
 
+  /** Object that allows for binding to the primary drivers xbox controller */
   public final CommandXboxController joystick = new CommandXboxController(0);
+  /** Object that allows for binding to the secondary drivers xbox controller */
   public final CommandXboxController secondDriver = new CommandXboxController(1);
 
+  /** The only instance of the subsystem that controls the drivetrain */
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-
+  /** The only instance of the subsystem that controls the sucking part of the intake */
   private final IntakeSubsystem intakeSubsystem;
+  /** Subsystem for assisting the drivers*/
   private final DriveAssistanceSubsystem driveAssistanceSubsystem;
+  /** The only instance of the Subsystem that talks to the Limelights/vision system */
+  @SuppressWarnings("unused")
   private final VisionSubsystem visionSubsystem;
+  /** The only instance of the subsystem that controls the shooting mechanism */
   private final ShooterSubsystem shooterSubsystem;
+  /** The only instance of the subsystem that controls the intake arm */
   private final IntakeArmSubsystem armSubsystem;
+  /** The only instance of the subsystem that controls the storage agitator belts */
   private final AgitatorSubsystem agitatorSubsystem;
+  /** The only instance of the subsystem that controls the lifting mechanism on the shooter */
   private final KickerSubsystem kickerSubsystem;
 
   public RobotContainer() {
-    // Configure the trigger bindings
-    // DriverStation.silenceJoystickConnectionWarning(true);
 
+    // setup the HUB facing command
+    // This was initally in driver assistance subsystem but for whatever reason it only seemed to work here ¯\_(ツ)_/¯
+    // Setup the PID for rotating
     face.HeadingController = new PhoenixPIDController(6, 0, 0);
+    // The angle given by vision subsystem points positive X
     face.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
+    // This allows for the robot to rotate around smoothly
+    // without this line the robot will do a full turn to follow a point passing over 360 degrees
     face.HeadingController.enableContinuousInput(-1, 1);
 
+    // create the subsystems
     intakeSubsystem = new IntakeSubsystem();
     driveAssistanceSubsystem = new DriveAssistanceSubsystem(drivetrain, this);
     visionSubsystem = new VisionSubsystem(this);
@@ -93,6 +116,7 @@ public class RobotContainer {
     agitatorSubsystem = new AgitatorSubsystem();
     kickerSubsystem = new KickerSubsystem();
 
+    // create the commands for use in pathplanner
     NamedCommands.registerCommand("Honk", new HonkCommand("la-cucaracha.chrp"));
     NamedCommands.registerCommand(
         "Shoot", new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, false));
@@ -100,8 +124,10 @@ public class RobotContainer {
         "Intake", new AngleAndRunIntakeCommand(armSubsystem, intakeSubsystem, agitatorSubsystem));
     NamedCommands.registerCommand("Climb", new AlignWithClimberCommand(drivetrain));
 
+    // configure the controller bindings
     configureBindings();
 
+    // debug for the intake arm
     // SmartDashboard.putNumber("Hold Voltage", 0);
 
     // Warmup PathPlanner to avoid Java pauses
@@ -109,6 +135,8 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+    // setup the default command for driving field oriented
+    // acts as a quick off switch for the drivetrain
     DriveFieldOriented();
 
     // Idle while the robot is disabled. This ensures the configured
@@ -117,6 +145,7 @@ public class RobotContainer {
     RobotModeTriggers.disabled()
         .whileTrue(drivetrain.applyRequest(() -> idle).ignoringDisable(true));
 
+    // set the bindings for the primary driver
     joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
     joystick
         .b()
@@ -139,6 +168,7 @@ public class RobotContainer {
     // Reset the field-centric heading on left bumper press.
     joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
+    // register the telemetry (Auto generated)
     drivetrain.registerTelemetry(logger::telemeterize);
 
     joystick
@@ -147,6 +177,7 @@ public class RobotContainer {
     joystick.leftBumper().whileTrue(new AngleArmCommand(armSubsystem, true));
     // joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
 
+    // configure the second drivers controller
     secondDriver
         .povLeft()
         .whileTrue(
@@ -163,10 +194,12 @@ public class RobotContainer {
   }
 
   public void periodic() {
+    // periodically update the position of the joysticks so that they control the facing
     face.VelocityX = joystick.getLeftY() * MaxSpeed;
     face.VelocityY = joystick.getLeftX() * MaxSpeed;
   }
 
+  /** sets the default command for the drivetrain to drive in field orientation. This allows the robot to move*/
   public void DriveFieldOriented() {
 
     // Note that X is defined as forward according to WPILib convention,
@@ -186,6 +219,13 @@ public class RobotContainer {
             ));
   }
 
+  /**
+   * Constructs a new PathPlannerAuto command.
+   *
+   * @param autoName the name of the autonomous routine to load and run
+   * @throws AutoBuilderException if AutoBuilder is not configured before attempting to load the
+   *     autonomous routine (which is the job of CommandSwerveDrivetrain)
+   */
   public Command getAutonomousCommand(String name) {
     return new PathPlannerAuto(name);
   }

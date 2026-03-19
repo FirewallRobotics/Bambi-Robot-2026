@@ -11,15 +11,23 @@ import frc.robot.Constants.IntakeSubsystemConstants;
 
 public class IntakeSubsystem {
 
+  /** The primary intake motor */
   private final SparkFlex intakeMotor;
+  /** The primary motor configuration */
   private final SparkFlexConfig intakeMotorConfig;
+  /** The primary motor PIDF controller */
   private final SparkClosedLoopController intakeClosedLoop;
 
+  // NOTE: The follower is defined in the physical motor and will not be defined here
+
   public IntakeSubsystem() {
+    // get the controller with ID 41
     intakeMotor = new SparkFlex(41, MotorType.kBrushless);
+    // create the config and PID objects to be changed
     intakeMotorConfig = new SparkFlexConfig();
     intakeClosedLoop = intakeMotor.getClosedLoopController();
 
+    // set the current limit. Less is better but we need this to punch
     intakeMotorConfig.smartCurrentLimit(40);
 
     intakeMotorConfig
@@ -40,16 +48,19 @@ public class IntakeSubsystem {
         // kV is now in Volts, so we multiply by the nominal voltage (12V)
         .kV(12.0 / 5767, ClosedLoopSlot.kSlot1);
 
+    // lastly configure the primary motor
     intakeMotor.configure(
         intakeMotorConfig,
         com.revrobotics.ResetMode.kNoResetSafeParameters,
         com.revrobotics.PersistMode.kPersistParameters);
   }
 
+  /** Makes the intake run at {@link IntakeSubsystemConstants#intakeVelocity} RPM */
   public void StartIntake() {
     intakeClosedLoop.setSetpoint(IntakeSubsystemConstants.intakeVelocity, ControlType.kVelocity);
   }
 
+  /** Makes the intake stop moving by setting the output voltage to 0 */
   public void StopIntake() {
     intakeMotor.setVoltage(0);
   }
