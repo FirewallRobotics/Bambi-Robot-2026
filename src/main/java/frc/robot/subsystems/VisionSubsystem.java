@@ -80,7 +80,7 @@ public class VisionSubsystem extends SubsystemBase {
           name[j], Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
       // get the latest results from the limelight
-      LimelightResults results = LimelightHelpers.getLatestResults(name[0]);
+      LimelightResults results = LimelightHelpers.getLatestResults(name[j]);
 
       // if the limelights intel is bad return null
       if (!results.valid) {
@@ -185,7 +185,7 @@ public class VisionSubsystem extends SubsystemBase {
             name[j], Constants.VisionSubsystemConstants.ApriltagsPipeline);
 
         // get the position of the robot on the field in [X, Y]
-        double[] botPose = LimelightHelpers.getBotPose(name[0]);
+        double[] botPose = LimelightHelpers.getBotPose(name[j]);
 
         // make sure the given position is valid
         if (botPose.length != 0) {
