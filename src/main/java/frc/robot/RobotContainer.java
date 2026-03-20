@@ -43,7 +43,7 @@ import frc.robot.subsystems.VisionSubsystem;
 public class RobotContainer {
 
   /** The maximum lateral (X, Y) speed of the robot */
-  private double MaxSpeed = Units.feetToMeters(16); // kSpeedAt12Volts desired top speed
+  private double MaxSpeed = Units.feetToMeters(12); // kSpeedAt12Volts desired top speed
 
   /** The maximum rotational speed of the robot */
   private double MaxAngularRate =
