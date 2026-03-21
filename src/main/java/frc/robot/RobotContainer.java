@@ -28,6 +28,7 @@ import frc.robot.commands.AngleArmCommand;
 import frc.robot.commands.HonkCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ManualKicker;
+import frc.robot.commands.PumpIntakeCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AgitatorSubsystem;
@@ -194,6 +195,7 @@ public class RobotContainer {
                 new AngleArmCommand(armSubsystem, false),
                 new IntakeCommand(intakeSubsystem, agitatorSubsystem, armSubsystem)));
     secondDriver.povLeft().whileFalse(new AngleArmCommand(armSubsystem, true));
+    secondDriver.povRight().whileTrue(new PumpIntakeCommand(armSubsystem));
 
     secondDriver
         .b()

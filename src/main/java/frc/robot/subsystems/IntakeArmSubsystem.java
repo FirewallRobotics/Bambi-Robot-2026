@@ -109,6 +109,10 @@ public class IntakeArmSubsystem extends SubsystemBase {
     return false;
   }
 
+  public boolean isAtSetpoint(double setpoint){
+    return Math.abs(armMotor.getEncoder().getPosition() - setpoint) < 0.02;
+  }
+
   /** Manually angles the intake arm without PID */
   public void AngleArm(boolean goingDown) {
     if (goingDown) {
@@ -117,6 +121,11 @@ public class IntakeArmSubsystem extends SubsystemBase {
       armMotor.set(0.1);
     }
     // armMotor.setVoltage(SmartDashboard.getNumber("Hold Voltage", 0));
+  }
+
+  /** Angles the Intake arm to a custom position */
+  public void AngleArmToSetpoint(double setpoint){
+    armClosedLoopController.setSetpoint(setpoint, ControlType.kPosition);
   }
 
   /** stops the intake arm by settings its output voltage to 0 */
