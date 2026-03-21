@@ -7,7 +7,7 @@ public class PumpIntakeCommand extends Command {
 
   IntakeArmSubsystem intakeArmSubsystem;
   double topsetpoint = 0.25;
-  double bottomsetpoint = 0.18;
+  double bottomsetpoint = 0.12;
   boolean GotoTop;
 
   public PumpIntakeCommand(IntakeArmSubsystem intakeArmSubsystem) {

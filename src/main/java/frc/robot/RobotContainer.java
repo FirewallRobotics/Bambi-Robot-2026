@@ -203,7 +203,10 @@ public class RobotContainer {
 
     secondDriver
         .b()
-        .whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, false));
+        .whileTrue(
+            new ParallelCommandGroup(
+                new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, false),
+                new PumpIntakeCommand(armSubsystem)));
 
     secondDriver.povUp().whileTrue(new ManualKicker(kickerSubsystem));
   }
