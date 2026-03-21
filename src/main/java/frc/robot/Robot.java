@@ -43,6 +43,7 @@ public class Robot extends TimedRobot {
 
     // Add the autos we have and send it to smartdashboard
     m_chooser.setDefaultOption("Power Play", "Left Auto");
+    m_chooser.addOption("Power Play V2", "Copy of Left Auto");
     m_chooser.addOption("Firewall Fake", "Shorty");
     m_chooser.addOption("Hail Mary", "Right Auto");
     SmartDashboard.putData("Auto Chooser", m_chooser);
