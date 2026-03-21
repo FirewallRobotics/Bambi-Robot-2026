@@ -31,9 +31,9 @@ public class KickerSubsystem extends SubsystemBase {
         // Set PID values for position control. We don't need to pass a closed loop
         // slot, as it will default to slot 0.
         // 0.00039
-        .p(0.00034)
-        // 0.000002
-        .i(0.0000009)
+        .p(0.00032)
+        // 0.000009
+        .i(0.00000085)
         .d(0)
         .outputRange(-1, 1)
         // Set PID values for velocity control in slot 1
