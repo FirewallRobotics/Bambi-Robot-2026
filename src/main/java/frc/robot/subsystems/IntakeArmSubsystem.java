@@ -109,7 +109,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
     return false;
   }
 
-  public boolean isAtSetpoint(double setpoint){
+  public boolean isAtSetpoint(double setpoint) {
     return Math.abs(armMotor.getEncoder().getPosition() - setpoint) < 0.02;
   }
 
@@ -124,7 +124,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
   }
 
   /** Angles the Intake arm to a custom position */
-  public void AngleArmToSetpoint(double setpoint){
+  public void AngleArmToSetpoint(double setpoint) {
     armClosedLoopController.setSetpoint(setpoint, ControlType.kPosition);
   }
 
