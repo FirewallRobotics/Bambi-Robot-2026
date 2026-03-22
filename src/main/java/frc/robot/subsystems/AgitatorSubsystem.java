@@ -7,6 +7,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class AgitatorSubsystem extends SubsystemBase {
@@ -41,6 +42,12 @@ public class AgitatorSubsystem extends SubsystemBase {
         com.revrobotics.ResetMode.kNoResetSafeParameters,
         com.revrobotics.PersistMode.kPersistParameters);
     velocity = 1000;
+  }
+
+  public void execute() {
+    if (agitatorMotor != null) {
+      SmartDashboard.putNumber("AgitatorRPM", agitatorMotor.getEncoder().getVelocity());
+    }
   }
 
   public void StartAgitator() {

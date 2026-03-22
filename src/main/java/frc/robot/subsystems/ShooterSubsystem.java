@@ -14,8 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterSubsystemConstants;
 import frc.robot.Constants.VisionSubsystemConstants;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -137,7 +135,7 @@ public class ShooterSubsystem extends SubsystemBase {
     if (manual) {
       tShootClosedLoopController.setSetpoint(rpmManual, ControlType.kVelocity);
       bSparkClosedLoopController.setSetpoint(rpmManual, ControlType.kVelocity);
-      Logger.getGlobal().log(Level.INFO, "Velocity set: " + rpmManual);
+      SmartDashboard.putNumber("Shooter Velocity Setpoint", rpmManual);
     } else {
       double robotX = ourDriveTrain.getState().Pose.getX();
       double robotY = ourDriveTrain.getState().Pose.getY();
@@ -165,12 +163,12 @@ public class ShooterSubsystem extends SubsystemBase {
           robotPose[1] = MetersToFeet(robotY);
         }
 
-        Logger.getGlobal()
-            .log(Level.INFO, "robot x : " + robotPose[0] + " robot y : " + robotPose[1]);
-        Logger.getGlobal()
-            .log(Level.INFO, "target x: " + targetPose[0] + "target y : " + targetPose[1]);
+        // Logger.getGlobal()
+        //    .log(Level.INFO, "robot x : " + robotPose[0] + " robot y : " + robotPose[1]);
+        // Logger.getGlobal()
+        //    .log(Level.INFO, "target x: " + targetPose[0] + "target y : " + targetPose[1]);
         double target = rpmToHitTarget(robotPose, targetPose);
-        Logger.getGlobal().log(Level.INFO, "Velocity set: " + target);
+        SmartDashboard.putNumber("Shooter Velocity Setpoint", target);
         tShootClosedLoopController.setSetpoint(target, ControlType.kVelocity);
         bSparkClosedLoopController.setSetpoint(target, ControlType.kVelocity);
 
@@ -197,6 +195,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void StopShoot() {
 
+    SmartDashboard.putNumber("Shooter Velocity Setpoint", 0);
     shootMotorTop.setVoltage(0);
     shootMotorBottom.setVoltage(0);
   }
@@ -219,7 +218,7 @@ public class ShooterSubsystem extends SubsystemBase {
     double dy = robotPoseFt[1] - targetPoseFt[1];
     double distanceFt = Math.hypot(dx, dy);
 
-    Logger.getGlobal().log(Level.INFO, "distance: " + distanceFt);
+    SmartDashboard.putNumber("Shooter Distance To HUB", distanceFt);
 
     double rmpToHit = RPM_AT_8FT + ((distanceFt - 8) * RPM_PER_FOOT);
 

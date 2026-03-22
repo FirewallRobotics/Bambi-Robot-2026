@@ -7,6 +7,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class KickerSubsystem extends SubsystemBase {
@@ -49,6 +50,12 @@ public class KickerSubsystem extends SubsystemBase {
         kickConfig,
         com.revrobotics.ResetMode.kNoResetSafeParameters,
         com.revrobotics.PersistMode.kPersistParameters);
+  }
+
+  public void execute() {
+    if (kickerMotor != null) {
+      SmartDashboard.putNumber("KickerRPM", kickerMotor.getEncoder().getVelocity());
+    }
   }
 
   // Used to kick the balls up from the storage up into the shooter
