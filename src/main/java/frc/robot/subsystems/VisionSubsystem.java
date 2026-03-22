@@ -235,8 +235,7 @@ public class VisionSubsystem extends SubsystemBase {
 
       // if so then branch for those 2 alliances
       // does atan of HUB.y - Robot.y / HUB.x - Robot.x and returns the resulting angle in degrees
-      switch (DriverStation.getAlliance().get()) {
-        case Blue:
+      if(DriverStation.getAlliance().get().equals(Alliance.Blue)) {
           Xangle =
               Math.atan2(
                   Constants.VisionSubsystemConstants.BlueHUBCenter[1] - currentPose2d.getY(),
@@ -244,8 +243,8 @@ public class VisionSubsystem extends SubsystemBase {
 
           SmartDashboard.putNumber("AngleToHUB", Xangle);
           return Xangle;
-        case Red:
-          Xangle =
+      }else if(DriverStation.getAlliance().get().equals(Alliance.Red)){
+        Xangle =
               Math.atan2(
                   Constants.VisionSubsystemConstants.RedHUBCenter[1] - currentPose2d.getY(),
                   Constants.VisionSubsystemConstants.RedHUBCenter[0] - currentPose2d.getX());
