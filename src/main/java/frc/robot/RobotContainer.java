@@ -199,7 +199,7 @@ public class RobotContainer {
         .b()
         .whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, false));
 
-    secondDriver.povUp().whileTrue(new ManualKicker(kickerSubsystem));
+    secondDriver.y().whileTrue(new ManualKicker(kickerSubsystem));
   }
 
   public void periodic() {
