@@ -202,7 +202,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double GetRPM() {
-    return shootFollowTop.getEncoder().getVelocity();
+    return shootMotorBottom.getEncoder().getVelocity();
   }
 
   public double GetWantedVelocity(boolean isManual) {
