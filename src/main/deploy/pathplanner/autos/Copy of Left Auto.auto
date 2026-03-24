@@ -48,7 +48,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 7.0
+                  "waitTime": 6.0
                 }
               },
               {
@@ -58,12 +58,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Race For Middle"
           }
         }
       ]
