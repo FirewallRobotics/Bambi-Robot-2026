@@ -15,6 +15,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -41,8 +42,7 @@ import frc.robot.subsystems.VisionSubsystem;
 public class RobotContainer {
 
   /** The maximum lateral (X, Y) speed of the robot */
-  private double MaxSpeed =
-      1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+  private double MaxSpeed = Units.feetToMeters(12); // kSpeedAt12Volts desired top speed
 
   /** The maximum rotational speed of the robot */
   private double MaxAngularRate =
@@ -199,7 +199,7 @@ public class RobotContainer {
         .b()
         .whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, false));
 
-    secondDriver.povUp().whileTrue(new ManualKicker(kickerSubsystem));
+    secondDriver.y().whileTrue(new ManualKicker(kickerSubsystem));
   }
 
   public void periodic() {

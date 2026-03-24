@@ -9,10 +9,13 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterSubsystemConstants;
 import frc.robot.Constants.VisionSubsystemConstants;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -134,37 +137,61 @@ public class ShooterSubsystem extends SubsystemBase {
     if (manual) {
       tShootClosedLoopController.setSetpoint(rpmManual, ControlType.kVelocity);
       bSparkClosedLoopController.setSetpoint(rpmManual, ControlType.kVelocity);
+      Logger.getGlobal().log(Level.INFO, "Velocity set: " + rpmManual);
     } else {
       double robotX = ourDriveTrain.getState().Pose.getX();
       double robotY = ourDriveTrain.getState().Pose.getY();
-      double[] robotPose = {MetersToFeet(robotX), MetersToFeet(robotY)};
-
+      double[] robotPose = new double[2];
       double[] targetPose = new double[2];
+      // double[] targetPose = {MetersToFeet(VisionSubsystemConstants.RedHUBCenter[0]),
+      // MetersToFeet(VisionSubsystemConstants.RedHUBCenter[1])};
 
       if (DriverStation.getAlliance().isPresent()) {
 
         // if so then branch for those 2 alliances
         // does atan of HUB.y - Robot.y / HUB.x - Robot.x and returns the resulting angle in degrees
-        switch (DriverStation.getAlliance().get()) {
-          case Blue:
-            targetPose[0] = MetersToFeet(VisionSubsystemConstants.BlueHUBCenter[0]);
-            targetPose[1] = MetersToFeet(VisionSubsystemConstants.BlueHUBCenter[1]);
 
-          case Red:
-            targetPose[0] = MetersToFeet(VisionSubsystemConstants.RedHUBCenter[0]);
-            targetPose[1] = MetersToFeet(VisionSubsystemConstants.RedHUBCenter[1]);
+        if (DriverStation.getAlliance().get().equals(Alliance.Blue)) {
+          targetPose[0] = 15.092;
+          targetPose[1] = 13.255;
+
+          robotPose[0] = MetersToFeet(robotX);
+          robotPose[1] = MetersToFeet(robotY);
+        } else if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
+          targetPose[0] = MetersToFeet(VisionSubsystemConstants.RedHUBCenter[0]);
+          targetPose[1] = MetersToFeet(VisionSubsystemConstants.RedHUBCenter[1]);
+
+          robotPose[0] = MetersToFeet(robotX);
+          robotPose[1] = MetersToFeet(robotY);
         }
-      }
-      // Logger.getGlobal().log(Level.INFO, "Distance: " + rpmToHitTarget(robotPose, targetPose));
 
-      // ChassisSpeeds speeds = m_Kinematics.toChassisSpeeds(ourDriveTrain.getModuleStates());
-      // shootMotorBottom.set(-1);
-      // shootMotorTop.set(1);
-      // We need Feet per second, the x ft per second, the y fet per second, flight time, and min
-      // and max
-      double target = rpmToHitTarget(robotPose, targetPose);
-      tShootClosedLoopController.setSetpoint(target, ControlType.kVelocity);
-      bSparkClosedLoopController.setSetpoint(target, ControlType.kVelocity);
+        Logger.getGlobal()
+            .log(Level.INFO, "robot x : " + robotPose[0] + " robot y : " + robotPose[1]);
+        Logger.getGlobal()
+            .log(Level.INFO, "target x: " + targetPose[0] + "target y : " + targetPose[1]);
+        double target = rpmToHitTarget(robotPose, targetPose);
+        Logger.getGlobal().log(Level.INFO, "Velocity set: " + target);
+        tShootClosedLoopController.setSetpoint(target, ControlType.kVelocity);
+        bSparkClosedLoopController.setSetpoint(target, ControlType.kVelocity);
+
+        //   switch (DriverStation.getAlliance().get()) {
+        //     case Blue:
+        //       targetPose[0] = 15.092;
+        //       targetPose[1] = 13.255;
+
+        //       robotPose[0] = MetersToFeet(robotX);
+        //       robotPose[1] = MetersToFeet(robotY);
+
+        //     case Red:
+        //       targetPose[0] = MetersToFeet(VisionSubsystemConstants.RedHUBCenter[0]);
+        //       targetPose[1] = MetersToFeet(VisionSubsystemConstants.RedHUBCenter[1]);
+
+        //       robotPose[0] = MetersToFeet(robotX);
+        //       robotPose[1] = MetersToFeet(robotY);
+        //   }
+        // }
+
+      }
     }
   }
 
@@ -180,6 +207,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double GetWantedVelocity(boolean isManual) {
     if (isManual) {
+
       return rpmManual;
     }
     return wantedVelocity;
@@ -191,9 +219,9 @@ public class ShooterSubsystem extends SubsystemBase {
     double dy = robotPoseFt[1] - targetPoseFt[1];
     double distanceFt = Math.hypot(dx, dy);
 
-    double rmpToHit = RPM_AT_8FT + ((distanceFt - 8) * RPM_PER_FOOT);
+    Logger.getGlobal().log(Level.INFO, "distance: " + distanceFt);
 
-    // Logger.getGlobal().log(Level.INFO, "distance: " + distanceFt);
+    double rmpToHit = RPM_AT_8FT + ((distanceFt - 8) * RPM_PER_FOOT);
 
     if (wantedVelocity != rmpToHit) {
       wantedVelocity = rmpToHit;
@@ -202,59 +230,7 @@ public class ShooterSubsystem extends SubsystemBase {
     return rmpToHit;
   }
 
-  // public double rpmToHitTarget(double robotXM, double robotYM, double targetXM, double targetYM,
-  // double vxMPerSec, double vyMPerSec, double flightTimeSec, double minRpm, double maxRpm){
-
-  //   double robotXFT = MetersToFeet(robotXM);
-  //   double robotYFT = MetersToFeet(robotYM);
-
-  //   double targetXFT = MetersToFeet(targetXM);
-  //   double targetYFT = MetersToFeet(targetYM);
-
-  //   double dx = targetXFT - robotXFT;
-  //   double dy = targetYFT - robotYFT;
-  //   //Logger.getGlobal().log(Level.INFO, "target feet x: " + targetXFT);
-  //   //Logger.getGlobal().log(Level.INFO, "target feet y: " + targetYFT);
-  //   //Logger.getGlobal().log(Level.INFO, "robot feet x: " + robotXFT);
-  //   //Logger.getGlobal().log(Level.INFO, "robot feet y: " + robotYFT);
-  //   double distanceFt = Math.hypot(dx, dy);
-
-  //   double vxFtPerSec = MetersToFeet(vxMPerSec);
-  //   double vyFTPerSec = MetersToFeet(vyMPerSec);
-
-  //   if(distanceFt < 1e-6){
-  //     //This is when we are smack up against the hub
-  //     return Math.max(minRpm, Math.min(maxRpm, RPM_AT_8FT));
-  //   }
-  //   double ux = dx / distanceFt;
-  //   double uy = dy / distanceFt;
-
-  //   //double vParallel = vxFtPerSec * ux + vyFTPerSec * uy;
-  //   double stationaryEquivalentRangeFt = distanceFt;
-
-  //   double rpmToHitTarget = RPM_AT_8FT + RPM_PER_FOOT * (stationaryEquivalentRangeFt -
-  // RANGE_AT_4100);
-
-  //   //Logger.getGlobal().log(Level.INFO, "feet: " + distanceFt);
-  //   //Logger.getGlobal().log(Level.INFO, "velocity: " + Math.max(minRpm, Math.min(maxRpm,
-  // rpmToHitTarget)));
-
-  //   return Math.max(minRpm, Math.min(maxRpm, rpmToHitTarget));
-  // }
-
   private double MetersToFeet(double meters) {
     return meters * 3.2808399;
   }
-
-  // private double getXvPerFt(double vel, boolean GettingVy){
-  //   if(GettingVy){
-  //     return Math.cos(160) * vel;
-  //   }
-
-  //   return Math.sin(160) * vel;
-  // }
-
-  // private double squared(double a){
-  //   return a * a;
-  // }
 }
