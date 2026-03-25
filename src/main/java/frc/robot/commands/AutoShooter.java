@@ -8,18 +8,15 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class AutoShooter extends Command {
     //Meant to be the shooter for autonmous peroid
     private final ShooterSubsystem m_ShooterSubsystem;
-    private final AgitatorSubsystem m_AgitatorSubsystem;
     private final KickerSubsystem m_KickerSubsystem;
     private double previousRPM;
     private final boolean goingBack;
 
     public AutoShooter(
         ShooterSubsystem shooterSubsystem,
-        AgitatorSubsystem agitatorSubsystem,
         KickerSubsystem kickerSubsystem,
         boolean goingBack) {
         m_ShooterSubsystem = shooterSubsystem;
-        m_AgitatorSubsystem = agitatorSubsystem;
         m_KickerSubsystem = kickerSubsystem;
         previousRPM = 0;
         this.goingBack = goingBack;
@@ -36,7 +33,6 @@ public class AutoShooter extends Command {
         if ((m_ShooterSubsystem.GetAutoVelocity() - 70) < m_ShooterSubsystem.GetRPM()
             && m_ShooterSubsystem.GetRPM() < (m_ShooterSubsystem.GetAutoVelocity() + 20)) {
             m_KickerSubsystem.KickBalls();
-            m_AgitatorSubsystem.StartAgitator();
         }
         }
 
@@ -46,5 +42,6 @@ public class AutoShooter extends Command {
     @Override
     public void end(boolean interrupted) {
         m_ShooterSubsystem.StopShoot();
+        m_KickerSubsystem.stopKicker();
     }
 }
