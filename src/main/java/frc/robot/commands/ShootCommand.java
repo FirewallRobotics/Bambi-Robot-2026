@@ -1,13 +1,11 @@
 package frc.robot.commands;
 
-import java.lang.ProcessHandle.Info;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.KickerSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ShootCommand extends Command {
   private ShooterSubsystem m_ShooterSubsystem;
