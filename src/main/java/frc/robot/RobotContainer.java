@@ -184,6 +184,13 @@ public class RobotContainer {
         .rightBumper()
         .whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, true));
     joystick.leftBumper().whileTrue(new AngleArmCommand(armSubsystem, true));
+    joystick
+        .leftBumper()
+        .whileTrue(
+            new SequentialCommandGroup(
+                new AngleArmCommand(armSubsystem, false),
+                new IntakeCommand(intakeSubsystem, agitatorSubsystem, armSubsystem)));
+    joystick.leftBumper().whileFalse(new AngleArmCommand(armSubsystem, true));
     // joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
 
     // configure the second drivers controller

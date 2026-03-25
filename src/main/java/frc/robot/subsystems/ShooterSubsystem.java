@@ -56,7 +56,9 @@ public class ShooterSubsystem extends SubsystemBase {
     rpmManual = 3500;
     wantedVelocity = 4100;
 
+    //13 master 14 follower
     shootMotorTop = new SparkFlex(13, MotorType.kBrushless);
+    //15 master 16 follower
     shootMotorBottom = new SparkFlex(15, MotorType.kBrushless);
     shootFollowTop = new SparkFlex(14, MotorType.kBrushless);
     shootFollowBottom = new SparkFlex(16, MotorType.kBrushless);
@@ -137,8 +139,10 @@ public class ShooterSubsystem extends SubsystemBase {
     if (manual) {
       tShootClosedLoopController.setSetpoint(rpmManual, ControlType.kVelocity);
       bSparkClosedLoopController.setSetpoint(rpmManual, ControlType.kVelocity);
-      Logger.getGlobal().log(Level.INFO, "Velocity set: " + rpmManual);
+      //Logger.getGlobal().log(Level.INFO, "Velocity set: " + rpmManual);
     } else {
+      Logger.getGlobal().log(Level.INFO, "I'm using the formula!");
+
       double robotX = ourDriveTrain.getState().Pose.getX();
       double robotY = ourDriveTrain.getState().Pose.getY();
       double[] robotPose = new double[2];
@@ -165,31 +169,16 @@ public class ShooterSubsystem extends SubsystemBase {
           robotPose[1] = MetersToFeet(robotY);
         }
 
-        Logger.getGlobal()
-            .log(Level.INFO, "robot x : " + robotPose[0] + " robot y : " + robotPose[1]);
-        Logger.getGlobal()
-            .log(Level.INFO, "target x: " + targetPose[0] + "target y : " + targetPose[1]);
+        //Commented for the sake of the logs... Kept because stuff goes stupid.
+        // Logger.getGlobal()
+        //     .log(Level.INFO, "robot x : " + robotPose[0] + " robot y : " + robotPose[1]);
+        // Logger.getGlobal()
+        //     .log(Level.INFO, "target x: " + targetPose[0] + "target y : " + targetPose[1]);
         double target = rpmToHitTarget(robotPose, targetPose);
         Logger.getGlobal().log(Level.INFO, "Velocity set: " + target);
         tShootClosedLoopController.setSetpoint(target, ControlType.kVelocity);
         bSparkClosedLoopController.setSetpoint(target, ControlType.kVelocity);
 
-        //   switch (DriverStation.getAlliance().get()) {
-        //     case Blue:
-        //       targetPose[0] = 15.092;
-        //       targetPose[1] = 13.255;
-
-        //       robotPose[0] = MetersToFeet(robotX);
-        //       robotPose[1] = MetersToFeet(robotY);
-
-        //     case Red:
-        //       targetPose[0] = MetersToFeet(VisionSubsystemConstants.RedHUBCenter[0]);
-        //       targetPose[1] = MetersToFeet(VisionSubsystemConstants.RedHUBCenter[1]);
-
-        //       robotPose[0] = MetersToFeet(robotX);
-        //       robotPose[1] = MetersToFeet(robotY);
-        //   }
-        // }
 
       }
     }

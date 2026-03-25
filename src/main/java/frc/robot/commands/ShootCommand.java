@@ -1,5 +1,9 @@
 package frc.robot.commands;
 
+import java.lang.ProcessHandle.Info;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.KickerSubsystem;
@@ -46,6 +50,7 @@ public class ShootCommand extends Command {
 
   @Override
   public void end(boolean interrupted) {
+    Logger.getGlobal().log(Level.INFO, "Stopped shooting");
     m_ShooterSubsystem.StopShoot();
     m_AgitatorSubsystem.StopAgitator();
     m_KickerSubsystem.stopKicker();
@@ -54,6 +59,7 @@ public class ShootCommand extends Command {
 
   @Override
   public boolean isFinished() {
+
     return false;
   }
 }
