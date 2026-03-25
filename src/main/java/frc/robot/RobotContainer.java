@@ -98,7 +98,6 @@ public class RobotContainer {
   private final IntakeArmSubsystem armSubsystem;
 
   /** The only instance of the subsystem that controls the storage agitator belts */
-  private final AgitatorSubsystem agitatorSubsystem;
 
   /** The only instance of the subsystem that controls the lifting mechanism on the shooter */
   private final KickerSubsystem kickerSubsystem;
@@ -122,7 +121,6 @@ public class RobotContainer {
     visionSubsystem = new VisionSubsystem(this);
     shooterSubsystem = new ShooterSubsystem(drivetrain);
     armSubsystem = new IntakeArmSubsystem();
-    agitatorSubsystem = new AgitatorSubsystem();
     kickerSubsystem = new KickerSubsystem();
 
     // create the commands for use in pathplanner
@@ -130,7 +128,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Shoot", new ShootCommand(shooterSubsystem, kickerSubsystem, false));
     NamedCommands.registerCommand(
-        "Intake", new AngleAndRunIntakeCommand(armSubsystem, intakeSubsystem, agitatorSubsystem));
+        "Intake", new AngleAndRunIntakeCommand(armSubsystem, intakeSubsystem));
     NamedCommands.registerCommand("Climb", new AlignWithClimberCommand(drivetrain));
 
     // configure the controller bindings
