@@ -38,6 +38,12 @@ public final class Constants {
     public static final double maxDistFeet = 13;
     public static Pose2d endPose;
 
+    public static Pose2d StaticPositionLeft =
+        new Pose2d(2.279, 6.430, new Rotation2d(Math.toRadians(-45.93)));
+    public static Pose2d StaticPositionRight =
+        new Pose2d(2.099, 1.457, new Rotation2d(Math.toRadians(45)));
+    ;
+
     public DriverAssistanceConstants() {
       if (DriverStation.getAlliance().isPresent()) {
         if (DriverStation.getAlliance().get().equals(Alliance.Blue)) {

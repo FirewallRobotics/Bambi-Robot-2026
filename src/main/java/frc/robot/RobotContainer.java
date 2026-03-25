@@ -28,6 +28,7 @@ import frc.robot.commands.AngleArmCommand;
 import frc.robot.commands.HonkCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ManualKicker;
+import frc.robot.commands.MoveToStaticPositionCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.AgitatorSubsystem;
@@ -179,6 +180,7 @@ public class RobotContainer {
 
     // register the telemetry (Auto generated)
     drivetrain.registerTelemetry(logger::telemeterize);
+    joystick.b().whileTrue(new MoveToStaticPositionCommand(drivetrain));
 
     joystick
         .rightBumper()
