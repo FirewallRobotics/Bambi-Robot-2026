@@ -19,7 +19,7 @@ public class KickerSubsystem extends SubsystemBase {
 
   public KickerSubsystem() {
     kickerMotor = new SparkFlex(31, MotorType.kBrushless);
-    setVelocityKicker = 3000;
+    setVelocityKicker = 4500;
 
     kickConfig = new SparkFlexConfig();
     kickClosedLoopController = kickerMotor.getClosedLoopController();
