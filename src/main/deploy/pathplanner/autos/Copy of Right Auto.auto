@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Zoom Zoom Empty"
+            "pathName": "Copy of Other Zoom Zoom"
           }
         },
         {
@@ -17,7 +17,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.0
+                  "waitTime": 4.5
                 }
               },
               {
@@ -32,13 +32,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Zoom Zoom Part2"
+            "pathName": "Other Zoom Zoom part2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Race For Shoot"
+            "pathName": "Over Da Ramp"
           }
         },
         {
@@ -48,7 +48,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 6.0
+                  "waitTime": 4.5
                 }
               },
               {
