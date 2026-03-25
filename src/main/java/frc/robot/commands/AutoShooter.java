@@ -9,7 +9,6 @@ public class AutoShooter extends Command {
     //Meant to be the shooter for autonmous peroid
     private final ShooterSubsystem m_ShooterSubsystem;
     private final KickerSubsystem m_KickerSubsystem;
-    private double previousRPM;
     private final boolean goingBack;
 
     public AutoShooter(
@@ -18,7 +17,6 @@ public class AutoShooter extends Command {
         boolean goingBack) {
         m_ShooterSubsystem = shooterSubsystem;
         m_KickerSubsystem = kickerSubsystem;
-        previousRPM = 0;
         this.goingBack = goingBack;
     }
 
@@ -26,17 +24,13 @@ public class AutoShooter extends Command {
     public void execute() {
         m_ShooterSubsystem.AutonomousShooter(goingBack);
 
-        double nowRPM = m_ShooterSubsystem.GetRPM();
-        double rpmRampUp = nowRPM - previousRPM;
 
-        if (Math.abs(rpmRampUp) < 50) {
         if ((m_ShooterSubsystem.GetAutoVelocity() - 70) < m_ShooterSubsystem.GetRPM()
             && m_ShooterSubsystem.GetRPM() < (m_ShooterSubsystem.GetAutoVelocity() + 20)) {
             m_KickerSubsystem.KickBalls();
         }
-        }
+        
 
-        previousRPM = nowRPM;
     }
 
     @Override
