@@ -46,6 +46,7 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("Power Play V2", "Copy of Left Auto");
     m_chooser.addOption("Firewall Fake", "Shorty");
     m_chooser.addOption("Hail Mary", "Right Auto");
+    m_chooser.addOption("High Roller", "Copy of Right Auto");
     SmartDashboard.putData("Auto Chooser", m_chooser);
 
     // starts the datalogging for the drivetrain
