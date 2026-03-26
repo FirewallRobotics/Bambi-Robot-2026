@@ -23,7 +23,7 @@ public final class Constants {
 
     public static final int ApriltagsPipeline = 0;
 
-    public static final double[] BlueHUBCenter = {4.06, 4.04};
+    public static final double[] BlueHUBCenter = {4.6, 4.04};
     public static final double[] RedHUBCenter = {11.9, 4.04};
     public static final double[] BlueShooterHUBCenters = {11.9, 4.04};
 
