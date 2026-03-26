@@ -25,8 +25,8 @@ public class AutoShooter extends Command {
         m_ShooterSubsystem.AutonomousShooter(goingBack);
 
 
-        if ((m_ShooterSubsystem.GetAutoVelocity() - 70) < m_ShooterSubsystem.GetRPM()
-            && m_ShooterSubsystem.GetRPM() < (m_ShooterSubsystem.GetAutoVelocity() + 20)) {
+        if ((m_ShooterSubsystem.GetAutoVelocity() - 500) < m_ShooterSubsystem.GetRPM()
+            && m_ShooterSubsystem.GetRPM() < (m_ShooterSubsystem.GetAutoVelocity() + 100)) {
             m_KickerSubsystem.KickBalls();
         }
         

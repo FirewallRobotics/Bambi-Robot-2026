@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 6.555277976452466,
-        "y": 5.416820188710387
+        "x": 0.5448991696322663,
+        "y": 5.1
       },
       "prevControl": {
-        "x": 5.753834010935225,
-        "y": 5.690483981813836
+        "x": 1.5777817319098464,
+        "y": 5.030225385527876
       },
       "nextControl": null,
       "isLocked": false,
@@ -43,7 +43,7 @@
       },
       "rotationOffset": 0.0,
       "minWaypointRelativePos": 0.25,
-      "maxWaypointRelativePos": 0.75,
+      "maxWaypointRelativePos": 1.0,
       "name": "Point Towards Zone"
     }
   ],
