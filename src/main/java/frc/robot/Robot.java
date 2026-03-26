@@ -42,8 +42,8 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
 
     // Add the autos we have and send it to smartdashboard
-    m_chooser.setDefaultOption("Power Play", "Left Auto Old");
-    m_chooser.addOption("Power Play V2", "Copy of Left Auto");
+    m_chooser.setDefaultOption("Power Play", "Copy of Left Auto");
+    m_chooser.addOption("Emergency Power Play", "Left Auto Old");
     m_chooser.addOption("Firewall Fake", "Shorty");
     m_chooser.addOption("Hail Mary", "Copy of Right Auto");
     SmartDashboard.putData("Auto Chooser", m_chooser);
