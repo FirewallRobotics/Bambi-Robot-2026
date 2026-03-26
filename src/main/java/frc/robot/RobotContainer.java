@@ -30,7 +30,6 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ManualKicker;
 import frc.robot.commands.ShootCommand;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.DriveAssistanceSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
@@ -97,8 +96,6 @@ public class RobotContainer {
   /** The only instance of the subsystem that controls the intake arm */
   private final IntakeArmSubsystem armSubsystem;
 
-  /** The only instance of the subsystem that controls the storage agitator belts */
-  private final AgitatorSubsystem agitatorSubsystem;
 
   /** The only instance of the subsystem that controls the lifting mechanism on the shooter */
   private final KickerSubsystem kickerSubsystem;
@@ -122,15 +119,14 @@ public class RobotContainer {
     visionSubsystem = new VisionSubsystem(this);
     shooterSubsystem = new ShooterSubsystem(drivetrain);
     armSubsystem = new IntakeArmSubsystem();
-    agitatorSubsystem = new AgitatorSubsystem();
     kickerSubsystem = new KickerSubsystem();
 
     // create the commands for use in pathplanner
     NamedCommands.registerCommand("Honk", new HonkCommand("la-cucaracha.chrp"));
     NamedCommands.registerCommand(
-        "Shoot", new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, false));
+        "Shoot", new ShootCommand(shooterSubsystem, kickerSubsystem, false));
     NamedCommands.registerCommand(
-        "Intake", new AngleAndRunIntakeCommand(armSubsystem, intakeSubsystem, agitatorSubsystem));
+        "Intake", new AngleAndRunIntakeCommand(armSubsystem, intakeSubsystem));
     NamedCommands.registerCommand("Climb", new AlignWithClimberCommand(drivetrain));
 
     // configure the controller bindings
@@ -182,7 +178,7 @@ public class RobotContainer {
 
     joystick
         .rightBumper()
-        .whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, true));
+        .whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, true));
     joystick.leftBumper().whileTrue(new AngleArmCommand(armSubsystem, true));
     // joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
 
@@ -192,12 +188,12 @@ public class RobotContainer {
         .whileTrue(
             new SequentialCommandGroup(
                 new AngleArmCommand(armSubsystem, false),
-                new IntakeCommand(intakeSubsystem, agitatorSubsystem, armSubsystem)));
+                new IntakeCommand(intakeSubsystem, armSubsystem)));
     secondDriver.povLeft().whileFalse(new AngleArmCommand(armSubsystem, true));
 
     secondDriver
         .b()
-        .whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, false));
+        .whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, false));
 
     secondDriver.y().whileTrue(new ManualKicker(kickerSubsystem));
   }
