@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3936619718309866,
-        "y": 5.152781690140846
+        "x": 4.018437500000001,
+        "y": 5.628114224137931
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.5448991696322663,
-        "y": 5.1
+        "x": 5.699515086206897,
+        "y": 5.413092672413793
       },
       "prevControl": {
-        "x": 1.5777817319098464,
-        "y": 5.030225385527876
+        "x": 4.8980711206896554,
+        "y": 5.686756465517242
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,38 +30,27 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.4489925986842103,
+      "waypointRelativePos": 0.5613207547169812,
       "rotationDegrees": -45.0
     }
   ],
   "constraintZones": [],
-  "pointTowardsZones": [
-    {
-      "fieldPosition": {
-        "x": 4.6,
-        "y": 4.04
-      },
-      "rotationOffset": 0.0,
-      "minWaypointRelativePos": 0.25,
-      "maxWaypointRelativePos": 1.0,
-      "name": "Point Towards Zone"
-    }
-  ],
+  "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Shoot",
+      "name": "Intake",
       "waypointRelativePos": 0,
       "endWaypointRelativePos": 1.0,
       "command": {
         "type": "named",
         "data": {
-          "name": "Shoot"
+          "name": "Intake"
         }
       }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 0.5,
+    "maxVelocity": 3.6,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 800.0,
     "maxAngularAcceleration": 700.0,
@@ -76,7 +65,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -35.50001049241232
+    "rotation": -35.500010492412315
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
