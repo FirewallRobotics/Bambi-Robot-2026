@@ -9,8 +9,7 @@ public class AngleAndRunIntakeCommand extends Command {
   private final IntakeArmSubsystem m_IntakeArmSubsystem;
   private final IntakeSubsystem m_IntakeSubsystem;
 
-  public AngleAndRunIntakeCommand(
-      IntakeArmSubsystem ia_Subsystem, IntakeSubsystem i_Subsystem) {
+  public AngleAndRunIntakeCommand(IntakeArmSubsystem ia_Subsystem, IntakeSubsystem i_Subsystem) {
     m_IntakeArmSubsystem = ia_Subsystem;
     m_IntakeSubsystem = i_Subsystem;
   }

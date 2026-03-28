@@ -11,9 +11,7 @@ public class ShootCommand extends Command {
   private final boolean manualShoot;
 
   public ShootCommand(
-      ShooterSubsystem s_Subsystem,
-      KickerSubsystem kickerSubsystem,
-      boolean manualShoot) {
+      ShooterSubsystem s_Subsystem, KickerSubsystem kickerSubsystem, boolean manualShoot) {
     m_ShooterSubsystem = s_Subsystem;
     m_KickerSubsystem = kickerSubsystem;
     previousRPM = 0;

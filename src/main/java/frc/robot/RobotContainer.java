@@ -96,7 +96,6 @@ public class RobotContainer {
   /** The only instance of the subsystem that controls the intake arm */
   private final IntakeArmSubsystem armSubsystem;
 
-
   /** The only instance of the subsystem that controls the lifting mechanism on the shooter */
   private final KickerSubsystem kickerSubsystem;
 
@@ -176,9 +175,7 @@ public class RobotContainer {
     // register the telemetry (Auto generated)
     drivetrain.registerTelemetry(logger::telemeterize);
 
-    joystick
-        .rightBumper()
-        .whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, true));
+    joystick.rightBumper().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, true));
     joystick.leftBumper().whileTrue(new AngleArmCommand(armSubsystem, true));
     // joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
 
@@ -191,9 +188,7 @@ public class RobotContainer {
                 new IntakeCommand(intakeSubsystem, armSubsystem)));
     secondDriver.povLeft().whileFalse(new AngleArmCommand(armSubsystem, true));
 
-    secondDriver
-        .b()
-        .whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, false));
+    secondDriver.b().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, false));
 
     secondDriver.y().whileTrue(new ManualKicker(kickerSubsystem));
   }

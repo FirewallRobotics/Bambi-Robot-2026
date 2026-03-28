@@ -8,8 +8,7 @@ public class IntakeCommand extends Command {
   private final IntakeSubsystem m_IntakeSubsystem;
   private final IntakeArmSubsystem m_IntakeArmSubsystem;
 
-  public IntakeCommand(
-      IntakeSubsystem i_Subsystem, IntakeArmSubsystem armSubsystem) {
+  public IntakeCommand(IntakeSubsystem i_Subsystem, IntakeArmSubsystem armSubsystem) {
     m_IntakeSubsystem = i_Subsystem;
     m_IntakeArmSubsystem = armSubsystem;
   }
