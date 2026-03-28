@@ -123,7 +123,7 @@ public class RobotContainer {
     // create the commands for use in pathplanner
     NamedCommands.registerCommand("Honk", new HonkCommand("la-cucaracha.chrp"));
     NamedCommands.registerCommand(
-        "Shoot", new ShootCommand(shooterSubsystem, kickerSubsystem, false));
+        "Shoot", new ShootCommand(shooterSubsystem, kickerSubsystem, true));
     NamedCommands.registerCommand(
         "Intake", new AngleAndRunIntakeCommand(armSubsystem, intakeSubsystem));
     NamedCommands.registerCommand("Climb", new AlignWithClimberCommand(drivetrain));
@@ -170,13 +170,17 @@ public class RobotContainer {
     joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
     // Reset the field-centric heading on left bumper press.
-    joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+    joystick.leftBumper().whileFalse(new AngleArmCommand(armSubsystem, true));
+    joystick.leftBumper()
+        .whileTrue(
+            new SequentialCommandGroup(
+                new AngleArmCommand(armSubsystem, false),
+                new IntakeCommand(intakeSubsystem, armSubsystem)));
 
     // register the telemetry (Auto generated)
     drivetrain.registerTelemetry(logger::telemeterize);
 
     joystick.rightBumper().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, true));
-    joystick.leftBumper().whileTrue(new AngleArmCommand(armSubsystem, true));
     // joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
 
     // configure the second drivers controller
