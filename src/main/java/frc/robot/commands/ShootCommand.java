@@ -29,15 +29,15 @@ public class ShootCommand extends Command {
     m_ShooterSubsystem.Shoot(manualShoot);
 
     double nowRPM = m_ShooterSubsystem.GetRPM();
-    double rpmRampUp = nowRPM - previousRPM;
+    //double rpmRampUp = nowRPM - previousRPM;
 
-    if (Math.abs(rpmRampUp) < 50) {
-      if ((m_ShooterSubsystem.GetWantedVelocity(manualShoot) - 70) < m_ShooterSubsystem.GetRPM()
-          && m_ShooterSubsystem.GetRPM()
-              < (m_ShooterSubsystem.GetWantedVelocity(manualShoot) + 20)) {
-        m_KickerSubsystem.KickBalls();
-      }
+    //if (Math.abs(rpmRampUp) < 50) {
+    if ((m_ShooterSubsystem.GetWantedVelocity(manualShoot) - 70) < m_ShooterSubsystem.GetRPM()
+        && m_ShooterSubsystem.GetRPM()
+            < (m_ShooterSubsystem.GetWantedVelocity(manualShoot) + 20)) {
+      m_KickerSubsystem.KickBalls();
     }
+    //}
 
     previousRPM = nowRPM;
   }

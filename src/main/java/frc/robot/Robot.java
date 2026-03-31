@@ -43,6 +43,7 @@ public class Robot extends TimedRobot {
 
     // Add the autos we have and send it to smartdashboard
     m_chooser.setDefaultOption("Power Play", "Copy of Left Auto");
+    m_chooser.addOption("Power Play V2", "Left Auto");
     m_chooser.addOption("Emergency Power Play", "Left Auto Old");
     m_chooser.addOption("Firewall Fake", "Shorty");
     m_chooser.addOption("Hail Mary", "Copy of Right Auto");
@@ -70,16 +71,16 @@ public class Robot extends TimedRobot {
   public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    // get the auto command to be run
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand(m_chooser.getSelected());
+  }
 
   @Override
   public void disabledExit() {}
 
   @Override
   public void autonomousInit() {
-    // get the auto command to be run
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand(m_chooser.getSelected());
-
     // if that command exists schedule it to be executed
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(m_autonomousCommand);

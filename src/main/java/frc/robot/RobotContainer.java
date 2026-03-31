@@ -124,7 +124,9 @@ public class RobotContainer {
     // create the commands for use in pathplanner
     NamedCommands.registerCommand("Honk", new HonkCommand("la-cucaracha.chrp"));
     NamedCommands.registerCommand(
-        "Shoot", new ShootCommand(shooterSubsystem, kickerSubsystem, true));
+        "Shoot", new ShootCommand(shooterSubsystem, kickerSubsystem, false));
+    NamedCommands.registerCommand(
+        "ManualKicker", new ManualKicker(kickerSubsystem));
     NamedCommands.registerCommand(
         "Intake", new AngleAndRunIntakeCommand(armSubsystem, intakeSubsystem));
     NamedCommands.registerCommand("Climb", new AlignWithClimberCommand(drivetrain));

@@ -21,6 +21,18 @@
           "data": {
             "pathName": "Race For Middle"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Depot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Run Back"
+          }
         }
       ]
     }
