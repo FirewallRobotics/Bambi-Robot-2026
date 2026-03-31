@@ -35,6 +35,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private double wantedVelocity;
   private final double RPM_AT_8FT;
   private final double RPM_PER_FOOT;
+  private final double RPM_PER_SLOW_FOOT;
   private final double rpmManual;
 
   private final CommandSwerveDrivetrain ourDriveTrain;
@@ -52,6 +53,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     RPM_AT_8FT = 4100;
     RPM_PER_FOOT = 400;
+    RPM_PER_SLOW_FOOT = 300;
     rpmManual = 3500;
     wantedVelocity = 4100;
 
@@ -136,6 +138,8 @@ public class ShooterSubsystem extends SubsystemBase {
     if (shootMotorTop != null) {
       SmartDashboard.putNumber("ShooterRPM", shootMotorTop.getEncoder().getVelocity());
     }
+
+    SmartDashboard.putBoolean("Maintaining Standby", !isShooting);
   }
 
   public void setSpeed(double setpoint) {
@@ -226,7 +230,7 @@ public class ShooterSubsystem extends SubsystemBase {
     return wantedVelocity;
   }
 
-  private double rpmToHitTarget(double[] robotPoseFt, double[] targetPoseFt) {
+  public double rpmToHitTarget(double[] robotPoseFt, double[] targetPoseFt) {
 
     double dx = robotPoseFt[0] - targetPoseFt[0];
     double dy = robotPoseFt[1] - targetPoseFt[1];
@@ -234,7 +238,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber("Shooter Distance To HUB", distanceFt);
 
-    double rmpToHit = RPM_AT_8FT + ((distanceFt - 8) * RPM_PER_FOOT);
+    double rmpToHit;
+
+    if(distanceFt <= 8){
+      rmpToHit = RPM_AT_8FT + ((distanceFt - 8) * RPM_PER_SLOW_FOOT);
+    }else{
+      rmpToHit = RPM_AT_8FT + ((distanceFt - 8) * RPM_PER_FOOT);
+    }
 
     if (wantedVelocity != rmpToHit) {
       wantedVelocity = rmpToHit;
@@ -243,7 +253,7 @@ public class ShooterSubsystem extends SubsystemBase {
     return rmpToHit;
   }
 
-  private double MetersToFeet(double meters) {
+  public double MetersToFeet(double meters) {
     return meters * 3.2808399;
   }
 }

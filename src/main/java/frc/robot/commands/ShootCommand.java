@@ -19,7 +19,7 @@ public class ShootCommand extends Command {
   }
 
   @Override
-  public void initialize(){
+  public void initialize() {
     m_ShooterSubsystem.isShooting = true;
   }
 

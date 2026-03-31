@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants;
+import frc.robot.Constants.VisionSubsystemConstants;
 import frc.robot.RobotContainer;
 
 public class DriveAssistanceSubsystem extends SubsystemBase {
@@ -25,39 +25,57 @@ public class DriveAssistanceSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+
+    // if robot is enabled and the shoot command is not running
     if (RobotState.isEnabled() && !shooterSubsystem.isShooting) {
+
+      // create the double lists for the robot pose and target pose
+      double[] robotPose = new double[2];
+      double[] targetPose = new double[2];
+
+      // assign the robot pose
+      robotPose[0] = shooterSubsystem.MetersToFeet(drivetrain.getState().Pose.getX());
+      robotPose[1] = shooterSubsystem.MetersToFeet(drivetrain.getState().Pose.getY());
+
+      // if we are on blue
       if (DriverStation.getAlliance().get().equals(Alliance.Blue)) {
+
+        // set the HUB position for blue
+        targetPose[0] = 15.092;
+        targetPose[1] = 13.255;
+
+        // if the pose of our robot is within the zone
         if (drivetrain.getState().Pose.getX() < 4.5) {
-          double dx =
-              (drivetrain.getState().Pose.getX() * 3.2808399)
-                  - (Constants.VisionSubsystemConstants.BlueHUBCenter[0] * 3.2808399);
-          double dy =
-              (drivetrain.getState().Pose.getY() * 3.2808399)
-                  - (Constants.VisionSubsystemConstants.BlueHUBCenter[1] * 3.2808399);
-          double distanceFt = Math.hypot(dx, dy);
-          if (distanceFt <= 8) {
-            shooterSubsystem.setSpeed(distanceFt * 300);
-          } else {
-            shooterSubsystem.setSpeed(distanceFt * 400);
-          }
-        }else{
+
+          // get the RPM
+          double target = shooterSubsystem.rpmToHitTarget(robotPose, targetPose);
+
+          // set the RPM
+          shooterSubsystem.setSpeed(target);
+
+          // if we are not in the zone then disable the shooter
+        } else {
           shooterSubsystem.setSpeed(0);
         }
+
+        // if we are on red
       } else {
+
+        // set the HUB position for red
+        targetPose[0] = shooterSubsystem.MetersToFeet(VisionSubsystemConstants.RedHUBCenter[0]);
+        targetPose[1] = shooterSubsystem.MetersToFeet(VisionSubsystemConstants.RedHUBCenter[1]);
+
+        // if the pose of our robot is within the zone
         if (drivetrain.getState().Pose.getX() > 12) {
-          double dx =
-              (drivetrain.getState().Pose.getX() * 3.2808399)
-                  - (Constants.VisionSubsystemConstants.RedHUBCenter[0] * 3.2808399);
-          double dy =
-              (drivetrain.getState().Pose.getY() * 3.2808399)
-                  - (Constants.VisionSubsystemConstants.RedHUBCenter[1] * 3.2808399);
-          double distanceFt = Math.hypot(dx, dy);
-          if (distanceFt <= 8) {
-            shooterSubsystem.setSpeed(distanceFt * 300);
-          } else {
-            shooterSubsystem.setSpeed(distanceFt * 400);
-          }
-        }else{
+
+          // get the RPM
+          double target = shooterSubsystem.rpmToHitTarget(robotPose, targetPose);
+
+          // set the RPM
+          shooterSubsystem.setSpeed(target);
+
+          // if we are not in the zone then disable the shooter
+        } else {
           shooterSubsystem.setSpeed(0);
         }
       }
