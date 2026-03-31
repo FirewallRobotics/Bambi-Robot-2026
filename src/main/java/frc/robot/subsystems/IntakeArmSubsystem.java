@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeArmSubsystem extends SubsystemBase {
@@ -92,6 +93,13 @@ public class IntakeArmSubsystem extends SubsystemBase {
         armConfig,
         com.revrobotics.ResetMode.kNoResetSafeParameters,
         com.revrobotics.PersistMode.kPersistParameters);
+  }
+
+  @Override
+  public void periodic() {
+    if (armMotor != null) {
+      SmartDashboard.putNumber("IntakeArmPosition", armMotor.getEncoder().getPosition());
+    }
   }
 
   /** returns if the arm is within a certain tolerence of its setpoint */
