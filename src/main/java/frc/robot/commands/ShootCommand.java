@@ -7,14 +7,12 @@ import frc.robot.subsystems.ShooterSubsystem;
 public class ShootCommand extends Command {
   private ShooterSubsystem m_ShooterSubsystem;
   private KickerSubsystem m_KickerSubsystem;
-  private double previousRPM;
   private final boolean manualShoot;
 
   public ShootCommand(
       ShooterSubsystem s_Subsystem, KickerSubsystem kickerSubsystem, boolean manualShoot) {
     m_ShooterSubsystem = s_Subsystem;
     m_KickerSubsystem = kickerSubsystem;
-    previousRPM = 0;
     this.manualShoot = manualShoot;
   }
 
@@ -28,7 +26,7 @@ public class ShootCommand extends Command {
 
     m_ShooterSubsystem.Shoot(manualShoot);
 
-    double nowRPM = m_ShooterSubsystem.GetRPM();
+    // double nowRPM = m_ShooterSubsystem.GetRPM();
     //double rpmRampUp = nowRPM - previousRPM;
 
     //if (Math.abs(rpmRampUp) < 50) {
@@ -38,15 +36,12 @@ public class ShootCommand extends Command {
       m_KickerSubsystem.KickBalls();
     }
     //}
-
-    previousRPM = nowRPM;
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_ShooterSubsystem.StopShoot();
+    //m_ShooterSubsystem.StopShoot();
     m_KickerSubsystem.stopKicker();
-    previousRPM = 0;
     m_ShooterSubsystem.isShooting = false;
   }
 

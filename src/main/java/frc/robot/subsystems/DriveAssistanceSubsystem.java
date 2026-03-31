@@ -45,7 +45,7 @@ public class DriveAssistanceSubsystem extends SubsystemBase {
         targetPose[1] = 13.255;
 
         // if the pose of our robot is within the zone
-        if (drivetrain.getState().Pose.getX() < 4.5) {
+        if (drivetrain.getState().Pose.getX() < 5.5) {
 
           // get the RPM
           double target = shooterSubsystem.rpmToHitTarget(robotPose, targetPose);
@@ -66,7 +66,7 @@ public class DriveAssistanceSubsystem extends SubsystemBase {
         targetPose[1] = shooterSubsystem.MetersToFeet(VisionSubsystemConstants.RedHUBCenter[1]);
 
         // if the pose of our robot is within the zone
-        if (drivetrain.getState().Pose.getX() > 12) {
+        if (drivetrain.getState().Pose.getX() > 11) {
 
           // get the RPM
           double target = shooterSubsystem.rpmToHitTarget(robotPose, targetPose);
