@@ -52,7 +52,8 @@ public class KickerSubsystem extends SubsystemBase {
         com.revrobotics.PersistMode.kPersistParameters);
   }
 
-  public void execute() {
+  @Override
+  public void periodic() {
     if (kickerMotor != null) {
       SmartDashboard.putNumber("KickerRPM", kickerMotor.getEncoder().getVelocity());
     }
@@ -63,9 +64,11 @@ public class KickerSubsystem extends SubsystemBase {
     // kickMotor.set(1);
     // commented to add when we know kicker runs
     kickClosedLoopController.setSetpoint(setVelocityKicker, ControlType.kVelocity);
+    SmartDashboard.putNumber("KickerRPMSetpoint", setVelocityKicker);
   }
 
   public void stopKicker() {
     kickerMotor.setVoltage(0);
+    SmartDashboard.putNumber("KickerRPMSetpoint", 0);
   }
 }

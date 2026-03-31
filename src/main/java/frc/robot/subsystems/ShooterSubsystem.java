@@ -130,6 +130,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
   }
 
+  @Override
+  public void periodic(){
+    if(shootMotorTop != null){
+      SmartDashboard.putNumber("ShooterRPM", shootMotorTop.getEncoder().getVelocity());
+    }
+  }
+
   // Shoot balls. None adjustable velocity
   public void Shoot(boolean manual) {
     if (manual) {
