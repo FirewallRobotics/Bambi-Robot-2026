@@ -8,9 +8,10 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeSubsystemConstants;
 
-public class IntakeSubsystem {
+public class IntakeSubsystem extends SubsystemBase {
 
   /** The primary intake motor */
   private final SparkFlex intakeMotor;
@@ -58,7 +59,8 @@ public class IntakeSubsystem {
         com.revrobotics.PersistMode.kPersistParameters);
   }
 
-  public void execute() {
+  @Override
+  public void periodic() {
     if (intakeMotor != null) {
       SmartDashboard.putNumber("IntakeRPM", intakeMotor.getEncoder().getVelocity());
     }

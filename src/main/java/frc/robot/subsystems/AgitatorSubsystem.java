@@ -44,7 +44,8 @@ public class AgitatorSubsystem extends SubsystemBase {
     velocity = 1000;
   }
 
-  public void execute() {
+  @Override
+  public void periodic() {
     if (agitatorMotor != null) {
       SmartDashboard.putNumber("AgitatorRPM", agitatorMotor.getEncoder().getVelocity());
     }
