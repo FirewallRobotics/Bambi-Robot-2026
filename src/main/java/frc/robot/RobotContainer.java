@@ -115,11 +115,11 @@ public class RobotContainer {
 
     // create the subsystems
     intakeSubsystem = new IntakeSubsystem();
-    driveAssistanceSubsystem = new DriveAssistanceSubsystem(drivetrain, this);
     visionSubsystem = new VisionSubsystem(this);
     shooterSubsystem = new ShooterSubsystem(drivetrain);
     armSubsystem = new IntakeArmSubsystem();
     kickerSubsystem = new KickerSubsystem();
+    driveAssistanceSubsystem = new DriveAssistanceSubsystem(drivetrain, this, shooterSubsystem);
 
     // create the commands for use in pathplanner
     NamedCommands.registerCommand("Honk", new HonkCommand("la-cucaracha.chrp"));

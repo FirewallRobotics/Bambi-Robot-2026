@@ -39,6 +39,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private final CommandSwerveDrivetrain ourDriveTrain;
   private final SwerveDriveKinematics m_Kinematics;
+  public boolean isShooting = false;
 
   public ShooterSubsystem(CommandSwerveDrivetrain ourDriveTrain) {
 
@@ -131,10 +132,16 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic(){
-    if(shootMotorTop != null){
+  public void periodic() {
+    if (shootMotorTop != null) {
       SmartDashboard.putNumber("ShooterRPM", shootMotorTop.getEncoder().getVelocity());
     }
+  }
+
+  public void setSpeed(double setpoint) {
+    tShootClosedLoopController.setSetpoint(setpoint, ControlType.kVelocity);
+    bSparkClosedLoopController.setSetpoint(setpoint, ControlType.kVelocity);
+    SmartDashboard.putNumber("Shooter Velocity Setpoint", setpoint);
   }
 
   // Shoot balls. None adjustable velocity

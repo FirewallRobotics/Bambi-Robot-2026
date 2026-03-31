@@ -19,6 +19,11 @@ public class ShootCommand extends Command {
   }
 
   @Override
+  public void initialize(){
+    m_ShooterSubsystem.isShooting = true;
+  }
+
+  @Override
   public void execute() {
 
     m_ShooterSubsystem.Shoot(manualShoot);
@@ -42,6 +47,7 @@ public class ShootCommand extends Command {
     m_ShooterSubsystem.StopShoot();
     m_KickerSubsystem.stopKicker();
     previousRPM = 0;
+    m_ShooterSubsystem.isShooting = false;
   }
 
   @Override
