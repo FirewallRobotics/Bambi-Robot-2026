@@ -28,6 +28,7 @@ import frc.robot.commands.AngleArmCommand;
 import frc.robot.commands.HonkCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ManualKicker;
+import frc.robot.commands.PanicKicker;
 import frc.robot.commands.ShootCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -161,7 +162,7 @@ public class RobotContainer {
                 () ->
                     face.withTargetDirection(
                         new Rotation2d(VisionSubsystem.getAngleToHUB(drivetrain)))));
-
+    joystick.b().whileTrue(new PanicKicker(kickerSubsystem));
     // Run SysId routines when holding back/start and X/Y.
     // Note that each routine should be run exactly once in a single log.
     joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
