@@ -14,13 +14,15 @@ public class KickerSubsystem extends SubsystemBase {
   private final SparkFlex kickerMotor;
 
   private double setVelocityKicker;
+  private double panicVelocity;
 
   private final SparkFlexConfig kickConfig;
   private final SparkClosedLoopController kickClosedLoopController;
 
   public KickerSubsystem() {
     kickerMotor = new SparkFlex(31, MotorType.kBrushless);
-    setVelocityKicker = 3000;
+    setVelocityKicker = 4500;
+    panicVelocity = -3000;
 
     kickConfig = new SparkFlexConfig();
     kickClosedLoopController = kickerMotor.getClosedLoopController();
@@ -65,6 +67,10 @@ public class KickerSubsystem extends SubsystemBase {
     // commented to add when we know kicker runs
     kickClosedLoopController.setSetpoint(setVelocityKicker, ControlType.kVelocity);
     SmartDashboard.putNumber("KickerRPMSetpoint", setVelocityKicker);
+  }
+
+  public void panicKickBalls() {
+    kickClosedLoopController.setSetpoint(panicVelocity, ControlType.kVelocity);
   }
 
   public void stopKicker() {

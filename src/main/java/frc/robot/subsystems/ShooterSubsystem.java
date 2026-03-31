@@ -50,7 +50,7 @@ public class ShooterSubsystem extends SubsystemBase {
     m_Kinematics = new SwerveDriveKinematics(ourDriveTrain.getModuleLocations());
 
     RPM_AT_8FT = 4100;
-    RPM_PER_FOOT = 300;
+    RPM_PER_FOOT = 400;
     rpmManual = 3500;
     wantedVelocity = 4100;
 
@@ -208,7 +208,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public double GetRPM() {
-    return shootFollowTop.getEncoder().getVelocity();
+    return shootMotorBottom.getEncoder().getVelocity();
   }
 
   public double GetWantedVelocity(boolean isManual) {
