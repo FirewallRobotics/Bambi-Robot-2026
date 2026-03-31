@@ -60,7 +60,7 @@ public class KickerSubsystem extends SubsystemBase {
     kickClosedLoopController.setSetpoint(setVelocityKicker, ControlType.kVelocity);
   }
 
-  public void panicKickBalls(){
+  public void panicKickBalls() {
     kickClosedLoopController.setSetpoint(panicVelocity, ControlType.kVelocity);
   }
 

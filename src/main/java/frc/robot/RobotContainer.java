@@ -172,7 +172,8 @@ public class RobotContainer {
 
     // Reset the field-centric heading on left bumper press.
     joystick.leftBumper().whileFalse(new AngleArmCommand(armSubsystem, true));
-    joystick.leftBumper()
+    joystick
+        .leftBumper()
         .whileTrue(
             new SequentialCommandGroup(
                 new AngleArmCommand(armSubsystem, false),

@@ -13,7 +13,7 @@ public class ManualKicker extends Command {
 
   @Override
   public void initialize() {
-    
+
     m_KickerSubsystem.KickBalls();
   }
 
