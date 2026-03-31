@@ -28,9 +28,9 @@ import frc.robot.commands.AngleArmCommand;
 import frc.robot.commands.HonkCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ManualKicker;
+import frc.robot.commands.PanicKicker;
 import frc.robot.commands.ShootCommand;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.AgitatorSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.DriveAssistanceSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
@@ -97,9 +97,6 @@ public class RobotContainer {
   /** The only instance of the subsystem that controls the intake arm */
   private final IntakeArmSubsystem armSubsystem;
 
-  /** The only instance of the subsystem that controls the storage agitator belts */
-  private final AgitatorSubsystem agitatorSubsystem;
-
   /** The only instance of the subsystem that controls the lifting mechanism on the shooter */
   private final KickerSubsystem kickerSubsystem;
 
@@ -122,15 +119,14 @@ public class RobotContainer {
     visionSubsystem = new VisionSubsystem(this);
     shooterSubsystem = new ShooterSubsystem(drivetrain);
     armSubsystem = new IntakeArmSubsystem();
-    agitatorSubsystem = new AgitatorSubsystem();
     kickerSubsystem = new KickerSubsystem();
 
     // create the commands for use in pathplanner
     NamedCommands.registerCommand("Honk", new HonkCommand("la-cucaracha.chrp"));
     NamedCommands.registerCommand(
-        "Shoot", new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, false));
+        "Shoot", new ShootCommand(shooterSubsystem, kickerSubsystem, true));
     NamedCommands.registerCommand(
-        "Intake", new AngleAndRunIntakeCommand(armSubsystem, intakeSubsystem, agitatorSubsystem));
+        "Intake", new AngleAndRunIntakeCommand(armSubsystem, intakeSubsystem));
     NamedCommands.registerCommand("Climb", new AlignWithClimberCommand(drivetrain));
 
     // configure the controller bindings
@@ -166,7 +162,7 @@ public class RobotContainer {
                 () ->
                     face.withTargetDirection(
                         new Rotation2d(VisionSubsystem.getAngleToHUB(drivetrain)))));
-
+    joystick.b().whileTrue(new PanicKicker(kickerSubsystem));
     // Run SysId routines when holding back/start and X/Y.
     // Note that each routine should be run exactly once in a single log.
     joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
@@ -175,15 +171,17 @@ public class RobotContainer {
     joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
     // Reset the field-centric heading on left bumper press.
-    joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+    joystick.leftBumper().whileFalse(new AngleArmCommand(armSubsystem, true));
+    joystick.leftBumper()
+        .whileTrue(
+            new SequentialCommandGroup(
+                new AngleArmCommand(armSubsystem, false),
+                new IntakeCommand(intakeSubsystem, armSubsystem)));
 
     // register the telemetry (Auto generated)
     drivetrain.registerTelemetry(logger::telemeterize);
 
-    joystick
-        .rightBumper()
-        .whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, true));
-    joystick.leftBumper().whileTrue(new AngleArmCommand(armSubsystem, true));
+    joystick.rightBumper().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, true));
     // joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
 
     // configure the second drivers controller
@@ -192,12 +190,10 @@ public class RobotContainer {
         .whileTrue(
             new SequentialCommandGroup(
                 new AngleArmCommand(armSubsystem, false),
-                new IntakeCommand(intakeSubsystem, agitatorSubsystem, armSubsystem)));
+                new IntakeCommand(intakeSubsystem, armSubsystem)));
     secondDriver.povLeft().whileFalse(new AngleArmCommand(armSubsystem, true));
 
-    secondDriver
-        .b()
-        .whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, agitatorSubsystem, false));
+    secondDriver.b().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, false));
 
     secondDriver.y().whileTrue(new ManualKicker(kickerSubsystem));
   }
