@@ -15,6 +15,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -64,6 +65,12 @@ public class RobotContainer {
   private final SwerveRequest.FieldCentricFacingAngle face =
       new SwerveRequest.FieldCentricFacingAngle();
 
+  private final SwerveRequest.ApplyFieldSpeeds wiggle =
+      new SwerveRequest.ApplyFieldSpeeds();
+
+  boolean wiggleDirection = false;
+  double wiggleCounter = 0;
+
   /** Creates the telemetry subsystem for the drivetrain (Auto created by CTRE) */
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
@@ -112,6 +119,8 @@ public class RobotContainer {
     // This allows for the robot to rotate around smoothly
     // without this line the robot will do a full turn to follow a point passing over 360 degrees
     face.HeadingController.enableContinuousInput(-1, 1);
+
+    wiggle.ForwardPerspective = ForwardPerspectiveValue.OperatorPerspective;
 
     // create the subsystems
     intakeSubsystem = new IntakeSubsystem();
@@ -172,6 +181,13 @@ public class RobotContainer {
     joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
     joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
+    joystick.leftTrigger().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, false));
+    joystick
+        .leftTrigger()
+        .whileTrue(
+            drivetrain.applyRequest(
+                () -> wiggle));
+
     // Reset the field-centric heading on left bumper press.
     joystick.leftBumper().whileFalse(new AngleArmCommand(armSubsystem, true));
     joystick
@@ -185,6 +201,11 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
 
     joystick.rightBumper().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, true));
+    joystick
+        .rightBumper()
+        .whileTrue(
+            drivetrain.applyRequest(
+                () -> wiggle));
     // joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
 
     // configure the second drivers controller
@@ -197,6 +218,11 @@ public class RobotContainer {
     secondDriver.povLeft().whileFalse(new AngleArmCommand(armSubsystem, true));
 
     secondDriver.b().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, false));
+    secondDriver
+        .b()
+        .whileTrue(
+            drivetrain.applyRequest(
+                () -> wiggle));
 
     secondDriver.y().whileTrue(new ManualKicker(kickerSubsystem));
   }
@@ -205,6 +231,23 @@ public class RobotContainer {
     // periodically update the position of the joysticks so that they control the facing
     face.VelocityX = joystick.getLeftY() * MaxSpeed;
     face.VelocityY = joystick.getLeftX() * MaxSpeed;
+
+    if(wiggleDirection){
+        wiggle.Speeds = new ChassisSpeeds(joystick.getLeftY() * MaxSpeed, joystick.getLeftX() * MaxSpeed, 1);
+        wiggleCounter += 1;
+    }else{
+        wiggle.Speeds = new ChassisSpeeds(joystick.getLeftY() * MaxSpeed, joystick.getLeftX() * MaxSpeed, -1);
+        wiggleCounter += 1;
+    }
+
+    if(wiggleCounter > 15){
+        wiggleCounter = 0;
+        if(wiggleDirection){
+            wiggleDirection = false;
+        }else{
+            wiggleDirection = true;
+        }
+    }
   }
 
   /**
