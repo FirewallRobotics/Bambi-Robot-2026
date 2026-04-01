@@ -228,8 +228,8 @@ public class RobotContainer {
 
   public void periodic() {
     // periodically update the position of the joysticks so that they control the facing
-    face.VelocityX = joystick.getLeftY() * MaxSpeed;
-    face.VelocityY = joystick.getLeftX() * MaxSpeed;
+    face.VelocityX = -joystick.getLeftY() * MaxSpeed;
+    face.VelocityY = -joystick.getLeftX() * MaxSpeed;
 
     if(wiggleDirection){
         wiggle.Speeds = new ChassisSpeeds(joystick.getLeftY() * MaxSpeed, joystick.getLeftX() * MaxSpeed, 1);
