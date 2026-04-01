@@ -44,17 +44,6 @@
   ],
   "eventMarkers": [
     {
-      "name": "Shoot",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": 1.0,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "Shoot"
-        }
-      }
-    },
-    {
       "name": "ManualKicker",
       "waypointRelativePos": 0.2,
       "endWaypointRelativePos": 1.0,

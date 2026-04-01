@@ -133,8 +133,6 @@ public class RobotContainer {
     // create the commands for use in pathplanner
     NamedCommands.registerCommand("Honk", new HonkCommand("la-cucaracha.chrp"));
     NamedCommands.registerCommand(
-        "Shoot", new ShootCommand(shooterSubsystem, kickerSubsystem, false));
-    NamedCommands.registerCommand(
         "ManualKicker", new ManualKicker(kickerSubsystem));
     NamedCommands.registerCommand(
         "Intake", new AngleAndRunIntakeCommand(armSubsystem, intakeSubsystem));
@@ -217,7 +215,8 @@ public class RobotContainer {
                 new IntakeCommand(intakeSubsystem, armSubsystem)));
     secondDriver.povLeft().whileFalse(new AngleArmCommand(armSubsystem, true));
 
-    secondDriver.b().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, false));
+    //secondDriver.b().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, false));
+    secondDriver.b().whileTrue(new ManualKicker(kickerSubsystem));
     secondDriver
         .b()
         .whileTrue(
