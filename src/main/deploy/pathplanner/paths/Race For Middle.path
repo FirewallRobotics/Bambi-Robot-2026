@@ -34,7 +34,21 @@
       "rotationDegrees": -45.0
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.7019748653500902,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 3.0,
+        "maxAcceleration": 4.0,
+        "maxAngularVelocity": 800.0,
+        "maxAngularAcceleration": 700.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [
     {
       "fieldPosition": {
@@ -50,12 +64,23 @@
   "eventMarkers": [
     {
       "name": "ManualKicker",
-      "waypointRelativePos": 0.2,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": 0.8,
       "command": {
         "type": "named",
         "data": {
           "name": "ManualKicker"
+        }
+      }
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 0.8527827648114893,
+      "endWaypointRelativePos": 1.0,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake"
         }
       }
     }
@@ -69,7 +94,7 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 0.5,
     "rotation": 90.0
   },
   "reversed": false,
