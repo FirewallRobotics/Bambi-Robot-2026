@@ -23,7 +23,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Shoot"
+                  "name": "ManualKicker"
                 }
               }
             ]
@@ -54,7 +54,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Shoot"
+                  "name": "ManualKicker"
                 }
               }
             ]
