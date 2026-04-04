@@ -17,6 +17,8 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -107,6 +109,9 @@ public class RobotContainer {
   /** The only instance of the subsystem that controls the lifting mechanism on the shooter */
   private final KickerSubsystem kickerSubsystem;
 
+  /** Auto chooser. Sent to driver dashboard so they can pick an auto to run */
+  private final SendableChooser<Command> m_chooser = new SendableChooser<>();
+
   public RobotContainer() {
 
     // setup the HUB facing command
@@ -143,8 +148,17 @@ public class RobotContainer {
     // debug for the intake arm
     // SmartDashboard.putNumber("Hold Voltage", 0);
 
+    // Add the autos we have and send it to smartdashboard
+    m_chooser.setDefaultOption("Power Play", new PathPlannerAuto("Copy of Left Auto"));
+    m_chooser.addOption("Power Play V2", new PathPlannerAuto("Left Auto"));
+    m_chooser.addOption("Emergency Power Play", new PathPlannerAuto("Left Auto Old"));
+    m_chooser.addOption("Firewall Fake", new PathPlannerAuto("Shorty"));
+    m_chooser.addOption("Hail Mary", new PathPlannerAuto("Copy of Right Auto"));
+    m_chooser.addOption("Emergency Hail Mary", new PathPlannerAuto("Right Auto"));
+    SmartDashboard.putData("Auto Chooser", m_chooser);
+
     // Warmup PathPlanner to avoid Java pauses
-    CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
+    CommandScheduler.getInstance().schedule(new PathPlannerAuto("Warm Up"));
   }
 
   private void configureBindings() {
@@ -270,11 +284,10 @@ public class RobotContainer {
   /**
    * Constructs a new PathPlannerAuto command.
    *
-   * @param autoName the name of the autonomous routine to load and run
    * @throws AutoBuilderException if AutoBuilder is not configured before attempting to load the
    *     autonomous routine (which is the job of CommandSwerveDrivetrain)
    */
-  public Command getAutonomousCommand(String name) {
-    return new PathPlannerAuto(name);
+  public Command getAutonomousCommand() {
+    return m_chooser.getSelected();
   }
 }
