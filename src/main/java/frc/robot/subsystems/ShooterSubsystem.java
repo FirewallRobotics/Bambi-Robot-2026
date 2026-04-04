@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import org.opencv.features2d.FlannBasedMatcher;
+
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -41,6 +43,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private final CommandSwerveDrivetrain ourDriveTrain;
   private final SwerveDriveKinematics m_Kinematics;
   public boolean isShooting = false;
+  public static boolean constantShootingOn = true; 
 
   public ShooterSubsystem(CommandSwerveDrivetrain ourDriveTrain) {
 
@@ -140,6 +143,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     SmartDashboard.putBoolean("Maintaining Standby", !isShooting);
+    SmartDashboard.putBoolean("CONSTANT SHOOTING", constantShootingOn);
   }
 
   public void setSpeed(double setpoint) {
@@ -181,6 +185,7 @@ public class ShooterSubsystem extends SubsystemBase {
           robotPose[1] = MetersToFeet(robotY);
         }
 
+        //double[] robotSpeed = {MetersToFeet(ourDriveTrain.getState().Speeds.vxMetersPerSecond), MetersToFeet(ourDriveTrain.getState().Speeds.vyMetersPerSecond)};
         // Logger.getGlobal()
         //    .log(Level.INFO, "robot x : " + robotPose[0] + " robot y : " + robotPose[1]);
         // Logger.getGlobal()
@@ -230,6 +235,38 @@ public class ShooterSubsystem extends SubsystemBase {
     return wantedVelocity;
   }
 
+  public double rpmToHitTarget(double[] robotPoseFt, double[] targetPoseFt, double[] robotSpeedFt) {
+
+    double dx = robotPoseFt[0] - targetPoseFt[0];
+    double dy = robotPoseFt[1] - targetPoseFt[1];
+    double distanceFt = Math.hypot(dx, dy);
+
+    SmartDashboard.putNumber("Shooter Distance To HUB", distanceFt);
+
+    //unit vecctor of the x and y
+    double ux = dx/distanceFt;
+    double uy = dy/distanceFt;
+
+    double vParallel = robotSpeedFt[0] * ux + robotSpeedFt[1] * uy;
+
+    double stationaryEquivalentRangeFt = distanceFt - vParallel * 1.8;
+
+    double rmpToHit;
+
+    if(distanceFt <= 8){
+      rmpToHit = RPM_AT_8FT + ((stationaryEquivalentRangeFt - 8) * RPM_PER_SLOW_FOOT);
+    }else{
+      rmpToHit = RPM_AT_8FT + ((stationaryEquivalentRangeFt - 8) * RPM_PER_FOOT);
+    }
+
+    if (wantedVelocity != rmpToHit) {
+      wantedVelocity = rmpToHit;
+    }
+
+    return rmpToHit;
+  }
+
+  
   public double rpmToHitTarget(double[] robotPoseFt, double[] targetPoseFt) {
 
     double dx = robotPoseFt[0] - targetPoseFt[0];
@@ -237,6 +274,7 @@ public class ShooterSubsystem extends SubsystemBase {
     double distanceFt = Math.hypot(dx, dy);
 
     SmartDashboard.putNumber("Shooter Distance To HUB", distanceFt);
+
 
     double rmpToHit;
 
@@ -253,7 +291,9 @@ public class ShooterSubsystem extends SubsystemBase {
     return rmpToHit;
   }
 
+
   public double MetersToFeet(double meters) {
     return meters * 3.2808399;
   }
+
 }
