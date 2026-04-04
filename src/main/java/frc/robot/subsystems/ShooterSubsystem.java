@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterSubsystemConstants;
 import frc.robot.Constants.VisionSubsystemConstants;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -235,6 +237,7 @@ public class ShooterSubsystem extends SubsystemBase {
     double dx = robotPoseFt[0] - targetPoseFt[0];
     double dy = robotPoseFt[1] - targetPoseFt[1];
     double distanceFt = Math.hypot(dx, dy);
+    
 
     SmartDashboard.putNumber("Shooter Distance To HUB", distanceFt);
 
@@ -244,7 +247,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
     double vParallel = robotSpeedFt[0] * ux + robotSpeedFt[1] * uy;
 
-    double stationaryEquivalentRangeFt = distanceFt - vParallel * 1.8;
+
+    double stationaryEquivalentRangeFt = distanceFt - vParallel * 2.0;
+
+
 
     double rmpToHit;
 
