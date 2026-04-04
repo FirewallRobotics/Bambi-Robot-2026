@@ -10,6 +10,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterSubsystemConstants;
 import frc.robot.Constants.VisionSubsystemConstants;
@@ -131,7 +132,7 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (shootMotorTop != null) {
-      // SmartDashboard.putNumber("ShooterRPM", shootMotorTop.getEncoder().getVelocity());
+      SmartDashboard.putNumber("ShooterRPM", shootMotorTop.getEncoder().getVelocity());
     }
 
     // SmartDashboard.putBoolean("Maintaining Standby", !isShooting);
