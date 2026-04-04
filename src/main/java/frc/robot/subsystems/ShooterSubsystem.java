@@ -10,7 +10,6 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterSubsystemConstants;
 import frc.robot.Constants.VisionSubsystemConstants;
@@ -43,10 +42,6 @@ public class ShooterSubsystem extends SubsystemBase {
   public boolean isShooting = false;
 
   public ShooterSubsystem(CommandSwerveDrivetrain ourDriveTrain) {
-
-    SmartDashboard.putNumber("Velocity Top", 0);
-    SmartDashboard.putNumber("Velocity Bottom", 0);
-    SmartDashboard.putNumber("Current Limit", 0);
 
     this.ourDriveTrain = ourDriveTrain;
     m_Kinematics = new SwerveDriveKinematics(ourDriveTrain.getModuleLocations());
@@ -136,16 +131,16 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (shootMotorTop != null) {
-      SmartDashboard.putNumber("ShooterRPM", shootMotorTop.getEncoder().getVelocity());
+      // SmartDashboard.putNumber("ShooterRPM", shootMotorTop.getEncoder().getVelocity());
     }
 
-    SmartDashboard.putBoolean("Maintaining Standby", !isShooting);
+    // SmartDashboard.putBoolean("Maintaining Standby", !isShooting);
   }
 
   public void setSpeed(double setpoint) {
     tShootClosedLoopController.setSetpoint(setpoint, ControlType.kVelocity);
     bSparkClosedLoopController.setSetpoint(setpoint, ControlType.kVelocity);
-    SmartDashboard.putNumber("Shooter Velocity Setpoint", setpoint);
+    // SmartDashboard.putNumber("Shooter Velocity Setpoint", setpoint);
   }
 
   // Shoot balls. None adjustable velocity
@@ -153,7 +148,7 @@ public class ShooterSubsystem extends SubsystemBase {
     if (manual) {
       tShootClosedLoopController.setSetpoint(rpmManual, ControlType.kVelocity);
       bSparkClosedLoopController.setSetpoint(rpmManual, ControlType.kVelocity);
-      SmartDashboard.putNumber("Shooter Velocity Setpoint", rpmManual);
+      // SmartDashboard.putNumber("Shooter Velocity Setpoint", rpmManual);
     } else {
       double robotX = ourDriveTrain.getState().Pose.getX();
       double robotY = ourDriveTrain.getState().Pose.getY();
@@ -186,7 +181,7 @@ public class ShooterSubsystem extends SubsystemBase {
         // Logger.getGlobal()
         //    .log(Level.INFO, "target x: " + targetPose[0] + "target y : " + targetPose[1]);
         double target = rpmToHitTarget(robotPose, targetPose);
-        SmartDashboard.putNumber("Shooter Velocity Setpoint", target);
+        // SmartDashboard.putNumber("Shooter Velocity Setpoint", target);
         tShootClosedLoopController.setSetpoint(target, ControlType.kVelocity);
         bSparkClosedLoopController.setSetpoint(target, ControlType.kVelocity);
 
@@ -213,7 +208,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void StopShoot() {
 
-    SmartDashboard.putNumber("Shooter Velocity Setpoint", 0);
+    // SmartDashboard.putNumber("Shooter Velocity Setpoint", 0);
     shootMotorTop.setVoltage(0);
     shootMotorBottom.setVoltage(0);
   }
@@ -236,13 +231,13 @@ public class ShooterSubsystem extends SubsystemBase {
     double dy = robotPoseFt[1] - targetPoseFt[1];
     double distanceFt = Math.hypot(dx, dy);
 
-    SmartDashboard.putNumber("Shooter Distance To HUB", distanceFt);
+    // SmartDashboard.putNumber("Shooter Distance To HUB", distanceFt);
 
     double rmpToHit;
 
-    if(distanceFt <= 8){
+    if (distanceFt <= 8) {
       rmpToHit = RPM_AT_8FT + ((distanceFt - 8) * RPM_PER_SLOW_FOOT);
-    }else{
+    } else {
       rmpToHit = RPM_AT_8FT + ((distanceFt - 8) * RPM_PER_FOOT);
     }
 

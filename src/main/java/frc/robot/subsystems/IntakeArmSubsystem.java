@@ -9,7 +9,6 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeArmSubsystem extends SubsystemBase {
@@ -98,7 +97,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (armMotor != null) {
-      SmartDashboard.putNumber("IntakeArmPosition", armMotor.getEncoder().getPosition());
+      // SmartDashboard.putNumber("IntakeArmPosition", armMotor.getEncoder().getPosition());
     }
   }
 
