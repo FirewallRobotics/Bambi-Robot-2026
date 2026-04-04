@@ -66,8 +66,7 @@ public class RobotContainer {
   private final SwerveRequest.FieldCentricFacingAngle face =
       new SwerveRequest.FieldCentricFacingAngle();
 
-  private final SwerveRequest.ApplyFieldSpeeds wiggle =
-      new SwerveRequest.ApplyFieldSpeeds();
+  private final SwerveRequest.ApplyFieldSpeeds wiggle = new SwerveRequest.ApplyFieldSpeeds();
 
   boolean wiggleDirection = false;
   double wiggleCounter = 0;
@@ -133,8 +132,7 @@ public class RobotContainer {
 
     // create the commands for use in pathplanner
     NamedCommands.registerCommand("Honk", new HonkCommand("la-cucaracha.chrp"));
-    NamedCommands.registerCommand(
-        "ManualKicker", new ManualKicker(kickerSubsystem));
+    NamedCommands.registerCommand("ManualKicker", new ManualKicker(kickerSubsystem));
     NamedCommands.registerCommand(
         "Intake", new AngleAndRunIntakeCommand(armSubsystem, intakeSubsystem));
     NamedCommands.registerCommand("Climb", new AlignWithClimberCommand(drivetrain));
@@ -201,11 +199,7 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
 
     joystick.rightBumper().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, true));
-    joystick
-        .rightBumper()
-        .whileTrue(
-            drivetrain.applyRequest(
-                () -> wiggle));
+    joystick.rightBumper().whileTrue(drivetrain.applyRequest(() -> wiggle));
     // joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
 
     
@@ -218,13 +212,9 @@ public class RobotContainer {
                 new IntakeCommand(intakeSubsystem, armSubsystem)));
     secondDriver.povLeft().whileFalse(new AngleArmCommand(armSubsystem, true));
 
-    //secondDriver.b().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, false));
+    // secondDriver.b().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, false));
     secondDriver.b().whileTrue(new ManualKicker(kickerSubsystem));
-    secondDriver
-        .b()
-        .whileTrue(
-            drivetrain.applyRequest(
-                () -> wiggle));
+    secondDriver.b().whileTrue(drivetrain.applyRequest(() -> wiggle));
 
     secondDriver.y().whileTrue(new ManualKicker(kickerSubsystem));
   }
@@ -234,21 +224,23 @@ public class RobotContainer {
     face.VelocityX = -joystick.getLeftY() * MaxSpeed;
     face.VelocityY = -joystick.getLeftX() * MaxSpeed;
 
-    if(wiggleDirection){
-        wiggle.Speeds = new ChassisSpeeds(joystick.getLeftY() * MaxSpeed, joystick.getLeftX() * MaxSpeed, 1);
-        wiggleCounter += 1;
-    }else{
-        wiggle.Speeds = new ChassisSpeeds(joystick.getLeftY() * MaxSpeed, joystick.getLeftX() * MaxSpeed, -1);
-        wiggleCounter += 1;
+    if (wiggleDirection) {
+      wiggle.Speeds =
+          new ChassisSpeeds(joystick.getLeftY() * MaxSpeed, joystick.getLeftX() * MaxSpeed, 1);
+      wiggleCounter += 1;
+    } else {
+      wiggle.Speeds =
+          new ChassisSpeeds(joystick.getLeftY() * MaxSpeed, joystick.getLeftX() * MaxSpeed, -1);
+      wiggleCounter += 1;
     }
 
-    if(wiggleCounter > 15){
-        wiggleCounter = 0;
-        if(wiggleDirection){
-            wiggleDirection = false;
-        }else{
-            wiggleDirection = true;
-        }
+    if (wiggleCounter > 15) {
+      wiggleCounter = 0;
+      if (wiggleDirection) {
+        wiggleDirection = false;
+      } else {
+        wiggleDirection = true;
+      }
     }
   }
 
