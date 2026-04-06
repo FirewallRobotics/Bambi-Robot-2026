@@ -23,6 +23,8 @@ public class KickerSubsystem extends SubsystemBase {
   private final SparkFlexConfig kickConfig;
   private final SparkClosedLoopController kickClosedLoopController;
 
+  public static boolean ColorKickerLockout = false;
+
   public KickerSubsystem() {
     kickerMotor = new SparkFlex(31, MotorType.kBrushless);
     setVelocityKicker = 4500;
@@ -70,14 +72,26 @@ public class KickerSubsystem extends SubsystemBase {
       // SmartDashboard.putNumber("KickerRPM", kickerMotor.getEncoder().getVelocity());
     }
 
-    if (ballSensor.getData().proximity > Constants.KickerSubsystemConstants.MaxProx
-        && SmartDashboard.getBoolean("PreloadBalls", false)) {
-      SmartDashboard.putBoolean("BallSensor", false);
-      KickBalls();
-    } else if (ballSensor.getData().proximity < Constants.KickerSubsystemConstants.MaxProx
-        && SmartDashboard.getBoolean("PreloadBalls", false)) {
-      stopKicker();
+    if (!ColorKickerLockout) {
+      if (ballSensor.getData().proximity > Constants.KickerSubsystemConstants.MaxProx
+          && SmartDashboard.getBoolean("PreloadBalls", false)) {
+        SmartDashboard.putBoolean("BallSensor", false);
+        KickBalls(1500);
+      } else if (ballSensor.getData().proximity < Constants.KickerSubsystemConstants.MaxProx
+          && SmartDashboard.getBoolean("PreloadBalls", false)
+          && SmartDashboard.getBoolean("BallSensor", false)) {
+        SmartDashboard.putBoolean("BallSensor", true);
+        stopKicker();
+      }
     }
+  }
+
+  // Used to kick the balls up from the storage up into the shooter
+  public void KickBalls(double setpoint) {
+    // kickMotor.set(1);
+    // commented to add when we know kicker runs
+    kickClosedLoopController.setSetpoint(setpoint, ControlType.kVelocity);
+    // SmartDashboard.putNumber("KickerRPMSetpoint", setVelocityKicker);
   }
 
   // Used to kick the balls up from the storage up into the shooter
