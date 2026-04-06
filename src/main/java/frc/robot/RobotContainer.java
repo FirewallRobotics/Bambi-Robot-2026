@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.commands.AlignWithClimberCommand;
 import frc.robot.commands.AngleAndRunIntakeCommand;
 import frc.robot.commands.AngleArmCommand;
 import frc.robot.commands.HonkCommand;
@@ -139,7 +138,6 @@ public class RobotContainer {
     NamedCommands.registerCommand("ManualKicker", new ManualKicker(kickerSubsystem));
     NamedCommands.registerCommand(
         "Intake", new AngleAndRunIntakeCommand(armSubsystem, intakeSubsystem));
-    NamedCommands.registerCommand("Climb", new AlignWithClimberCommand(drivetrain));
 
     // configure the controller bindings
     configureBindings();
