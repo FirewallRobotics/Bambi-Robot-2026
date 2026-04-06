@@ -72,6 +72,15 @@ public class KickerSubsystem extends SubsystemBase {
       // SmartDashboard.putNumber("KickerRPM", kickerMotor.getEncoder().getVelocity());
     }
 
+    SmartDashboard.putNumberArray(
+        "Color Sensor Data",
+        new double[] {
+          ballSensor.getData().proximity,
+          ballSensor.getData().red,
+          ballSensor.getData().green,
+          ballSensor.getData().blue
+        });
+
     // if we are not locked out start the main logic
     // any kicker command locks us out
     if (!ColorKickerLockout) {
@@ -86,7 +95,8 @@ public class KickerSubsystem extends SubsystemBase {
         // kick balls at 1500 RPM
         KickBalls(1500);
 
-      // or if the ball sensor is under the prox, the driver has allowed preloading, and the sensor is off
+        // or if the ball sensor is under the prox, the driver has allowed preloading, and the
+        // sensor is off
       } else if (ballSensor.getData().proximity < Constants.KickerSubsystemConstants.MaxProx
           && SmartDashboard.getBoolean("PreloadBalls", false)
           && !SmartDashboard.getBoolean("BallSensor", false)) {
