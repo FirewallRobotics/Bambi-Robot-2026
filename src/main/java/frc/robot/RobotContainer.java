@@ -12,7 +12,6 @@ import com.ctre.phoenix6.swerve.SwerveRequest.ForwardPerspectiveValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import com.pathplanner.lib.auto.AutoBuilderException;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -88,7 +87,7 @@ public class RobotContainer {
   public final CommandXboxController secondDriver = new CommandXboxController(1);
 
   /** The only instance of the subsystem that controls the drivetrain */
-  public final static CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+  public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
   /** The only instance of the subsystem that controls the sucking part of the intake */
   private final IntakeSubsystem intakeSubsystem;
@@ -194,11 +193,7 @@ public class RobotContainer {
     joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
     joystick.leftTrigger().whileTrue(new ManualKicker(kickerSubsystem));
-    joystick
-        .leftTrigger()
-        .whileTrue(
-            drivetrain.applyRequest(
-                () -> wiggle));
+    joystick.leftTrigger().whileTrue(drivetrain.applyRequest(() -> wiggle));
 
     // Reset the field-centric heading on left bumper press.
     joystick.leftBumper().whileFalse(new AngleArmCommand(armSubsystem, true));
@@ -216,7 +211,6 @@ public class RobotContainer {
     joystick.rightBumper().whileTrue(drivetrain.applyRequest(() -> wiggle));
     // joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
 
-    
     // configure the second drivers controller
     secondDriver
         .povLeft()

@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.andymark.jni.AM_CAN_Color_Sensor;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -7,13 +8,17 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class KickerSubsystem extends SubsystemBase {
   private final SparkFlex kickerMotor;
 
   private double setVelocityKicker;
   private double panicVelocity;
+
+  AM_CAN_Color_Sensor ballSensor;
 
   private final SparkFlexConfig kickConfig;
   private final SparkClosedLoopController kickClosedLoopController;
@@ -22,6 +27,12 @@ public class KickerSubsystem extends SubsystemBase {
     kickerMotor = new SparkFlex(31, MotorType.kBrushless);
     setVelocityKicker = 4500;
     panicVelocity = -3000;
+
+    ballSensor = new AM_CAN_Color_Sensor(43);
+
+    ballSensor.turnLedOn();
+
+    SmartDashboard.putBoolean("PreloadBalls", true);
 
     kickConfig = new SparkFlexConfig();
     kickClosedLoopController = kickerMotor.getClosedLoopController();
@@ -57,6 +68,15 @@ public class KickerSubsystem extends SubsystemBase {
   public void periodic() {
     if (kickerMotor != null) {
       // SmartDashboard.putNumber("KickerRPM", kickerMotor.getEncoder().getVelocity());
+    }
+
+    if (ballSensor.getData().proximity > Constants.KickerSubsystemConstants.MaxProx
+        && SmartDashboard.getBoolean("PreloadBalls", false)) {
+      SmartDashboard.putBoolean("BallSensor", false);
+      KickBalls();
+    } else if (ballSensor.getData().proximity < Constants.KickerSubsystemConstants.MaxProx
+        && SmartDashboard.getBoolean("PreloadBalls", false)) {
+      stopKicker();
     }
   }
 

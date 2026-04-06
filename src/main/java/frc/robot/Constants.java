@@ -69,6 +69,10 @@ public final class Constants {
     public static final double shootIBot = 0.0000007;
   }
 
+  public static class KickerSubsystemConstants {
+    public static final int MaxProx = 1;
+  }
+
   public static class IntakeSubsystemConstants {
     public static final double intakeVelocity = 4000;
     public static final double intakeP = 0.0003;

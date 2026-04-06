@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import org.opencv.features2d.FlannBasedMatcher;
-
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -16,8 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterSubsystemConstants;
 import frc.robot.Constants.VisionSubsystemConstants;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 
 public class ShooterSubsystem extends SubsystemBase {
 
@@ -140,7 +136,7 @@ public class ShooterSubsystem extends SubsystemBase {
     if (shootMotorTop != null) {
       SmartDashboard.putNumber("ShooterRPM", shootMotorTop.getEncoder().getVelocity());
     }
-    
+
     if (!constantShootingOn && updated) {
       shootMotorTop.setVoltage(0);
       shootMotorBottom.setVoltage(0);
@@ -189,7 +185,8 @@ public class ShooterSubsystem extends SubsystemBase {
           robotPose[1] = MetersToFeet(robotY);
         }
 
-        //double[] robotSpeed = {MetersToFeet(ourDriveTrain.getState().Speeds.vxMetersPerSecond), MetersToFeet(ourDriveTrain.getState().Speeds.vyMetersPerSecond)};
+        // double[] robotSpeed = {MetersToFeet(ourDriveTrain.getState().Speeds.vxMetersPerSecond),
+        // MetersToFeet(ourDriveTrain.getState().Speeds.vyMetersPerSecond)};
         // Logger.getGlobal()
         //    .log(Level.INFO, "robot x : " + robotPose[0] + " robot y : " + robotPose[1]);
         // Logger.getGlobal()
@@ -244,26 +241,22 @@ public class ShooterSubsystem extends SubsystemBase {
     double dx = robotPoseFt[0] - targetPoseFt[0];
     double dy = robotPoseFt[1] - targetPoseFt[1];
     double distanceFt = Math.hypot(dx, dy);
-    
 
     SmartDashboard.putNumber("Shooter Distance To HUB", distanceFt);
 
-    //unit vecctor of the x and y
-    double ux = dx/distanceFt;
-    double uy = dy/distanceFt;
+    // unit vecctor of the x and y
+    double ux = dx / distanceFt;
+    double uy = dy / distanceFt;
 
     double vParallel = robotSpeedFt[0] * ux + robotSpeedFt[1] * uy;
 
-
     double stationaryEquivalentRangeFt = distanceFt - vParallel * 2.0;
-
-
 
     double rmpToHit;
 
-    if(distanceFt <= 8){
+    if (distanceFt <= 8) {
       rmpToHit = RPM_AT_8FT + ((stationaryEquivalentRangeFt - 8) * RPM_PER_SLOW_FOOT);
-    }else{
+    } else {
       rmpToHit = RPM_AT_8FT + ((stationaryEquivalentRangeFt - 8) * RPM_PER_FOOT);
     }
 
@@ -273,11 +266,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
     rmpToHit = clamp(rmpToHit, 6400);
 
-
     return rmpToHit;
   }
 
-  
   public double rpmToHitTarget(double[] robotPoseFt, double[] targetPoseFt) {
 
     double dx = robotPoseFt[0] - targetPoseFt[0];
@@ -301,17 +292,15 @@ public class ShooterSubsystem extends SubsystemBase {
     return rmpToHit;
   }
 
-
   public double MetersToFeet(double meters) {
     return meters * 3.2808399;
   }
 
-  private double clamp(double value, double max){
-    if(value > max){
+  private double clamp(double value, double max) {
+    if (value > max) {
       return max;
     }
 
     return value;
   }
-
 }
