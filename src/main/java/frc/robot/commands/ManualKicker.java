@@ -13,6 +13,7 @@ public class ManualKicker extends Command {
 
   @Override
   public void initialize() {
+    KickerSubsystem.ColorKickerLockout = true;
 
     m_KickerSubsystem.KickBalls();
   }
@@ -20,5 +21,6 @@ public class ManualKicker extends Command {
   @Override
   public void end(boolean interrupted) {
     m_KickerSubsystem.stopKicker();
+    KickerSubsystem.ColorKickerLockout = false;
   }
 }

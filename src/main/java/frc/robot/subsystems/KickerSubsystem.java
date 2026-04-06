@@ -96,6 +96,7 @@ public class KickerSubsystem extends SubsystemBase {
 
   // Used to kick the balls up from the storage up into the shooter
   public void KickBalls() {
+    ColorKickerLockout = true;
     // kickMotor.set(1);
     // commented to add when we know kicker runs
     kickClosedLoopController.setSetpoint(setVelocityKicker, ControlType.kVelocity);
@@ -103,6 +104,7 @@ public class KickerSubsystem extends SubsystemBase {
   }
 
   public void panicKickBalls() {
+    ColorKickerLockout = true;
     kickClosedLoopController.setSetpoint(panicVelocity, ControlType.kVelocity);
   }
 

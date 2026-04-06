@@ -19,6 +19,7 @@ public class ShootCommand extends Command {
   @Override
   public void initialize() {
     m_ShooterSubsystem.isShooting = true;
+    KickerSubsystem.ColorKickerLockout = true;
   }
 
   @Override
@@ -41,6 +42,7 @@ public class ShootCommand extends Command {
   public void end(boolean interrupted) {
     // m_ShooterSubsystem.StopShoot();
     m_KickerSubsystem.stopKicker();
+    KickerSubsystem.ColorKickerLockout = false;
     m_ShooterSubsystem.isShooting = false;
   }
 

@@ -12,6 +12,7 @@ public class PanicKicker extends Command {
 
   @Override
   public void initialize() {
+    KickerSubsystem.ColorKickerLockout = true;
 
     m_KickerSubsystem.panicKickBalls();
   }
@@ -19,5 +20,6 @@ public class PanicKicker extends Command {
   @Override
   public void end(boolean interrupted) {
     m_KickerSubsystem.stopKicker();
+    KickerSubsystem.ColorKickerLockout = false;
   }
 }
