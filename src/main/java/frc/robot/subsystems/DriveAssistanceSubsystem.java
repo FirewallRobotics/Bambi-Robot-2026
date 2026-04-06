@@ -80,6 +80,8 @@ public class DriveAssistanceSubsystem extends SubsystemBase {
           shooterSubsystem.setSpeed(0);
         }
       }
+
+      ShooterSubsystem.updated = true;
     }
   }
 

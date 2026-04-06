@@ -45,16 +45,17 @@ public class ShooterSubsystem extends SubsystemBase {
   private final CommandSwerveDrivetrain ourDriveTrain;
   private final SwerveDriveKinematics m_Kinematics;
   public boolean isShooting = false;
-  public static boolean constantShootingOn = true; 
+  public static boolean constantShootingOn = true;
+  public static boolean updated = true;
 
   public ShooterSubsystem(CommandSwerveDrivetrain ourDriveTrain) {
 
     this.ourDriveTrain = ourDriveTrain;
     m_Kinematics = new SwerveDriveKinematics(ourDriveTrain.getModuleLocations());
 
-    RPM_AT_8FT = 4100;
+    RPM_AT_8FT = 4300;
     RPM_PER_FOOT = 400;
-    RPM_PER_SLOW_FOOT = 300;
+    RPM_PER_SLOW_FOOT = 200;
     rpmManual = 3500;
     wantedVelocity = 4100;
 
@@ -139,7 +140,12 @@ public class ShooterSubsystem extends SubsystemBase {
     if (shootMotorTop != null) {
       SmartDashboard.putNumber("ShooterRPM", shootMotorTop.getEncoder().getVelocity());
     }
-
+    
+    if (!constantShootingOn && updated) {
+      shootMotorTop.setVoltage(0);
+      shootMotorBottom.setVoltage(0);
+      updated = false;
+    }
     // SmartDashboard.putBoolean("Maintaining Standby", !isShooting);
     SmartDashboard.putBoolean("CONSTANT SHOOTING", constantShootingOn);
   }
@@ -265,6 +271,9 @@ public class ShooterSubsystem extends SubsystemBase {
       wantedVelocity = rmpToHit;
     }
 
+    rmpToHit = clamp(rmpToHit, 6400);
+
+
     return rmpToHit;
   }
 
@@ -295,6 +304,14 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double MetersToFeet(double meters) {
     return meters * 3.2808399;
+  }
+
+  private double clamp(double value, double max){
+    if(value > max){
+      return max;
+    }
+
+    return value;
   }
 
 }
