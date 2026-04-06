@@ -7,7 +7,6 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,12 +17,8 @@ import frc.robot.Constants.VisionSubsystemConstants;
 public class ShooterSubsystem extends SubsystemBase {
 
   private final SparkFlex shootMotorTop;
-  private final SparkFlex shootFollowTop;
   private final SparkFlex shootMotorBottom;
-  private final SparkFlex shootFollowBottom;
 
-  private final SparkFlexConfig tFollowerConfig;
-  private final SparkFlexConfig bFollowerConfig;
   private final SparkFlexConfig tShootConfig;
   private final SparkFlexConfig bShootConfig;
 
@@ -39,7 +34,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private final double rpmManual;
 
   private final CommandSwerveDrivetrain ourDriveTrain;
-  private final SwerveDriveKinematics m_Kinematics;
   public boolean isShooting = false;
   public static boolean constantShootingOn = true;
   public static boolean updated = true;
@@ -47,7 +41,6 @@ public class ShooterSubsystem extends SubsystemBase {
   public ShooterSubsystem(CommandSwerveDrivetrain ourDriveTrain) {
 
     this.ourDriveTrain = ourDriveTrain;
-    m_Kinematics = new SwerveDriveKinematics(ourDriveTrain.getModuleLocations());
 
     RPM_AT_8FT = 4300;
     RPM_PER_FOOT = 400;
@@ -57,11 +50,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     shootMotorTop = new SparkFlex(13, MotorType.kBrushless);
     shootMotorBottom = new SparkFlex(15, MotorType.kBrushless);
-    shootFollowTop = new SparkFlex(14, MotorType.kBrushless);
-    shootFollowBottom = new SparkFlex(16, MotorType.kBrushless);
 
-    bFollowerConfig = new SparkFlexConfig();
-    tFollowerConfig = new SparkFlexConfig();
     tShootConfig = new SparkFlexConfig();
     bShootConfig = new SparkFlexConfig();
     // commented to add when we know kicker runs

@@ -128,7 +128,7 @@ public class RobotContainer {
 
     // create the subsystems
     intakeSubsystem = new IntakeSubsystem();
-    visionSubsystem = new VisionSubsystem(this);
+    visionSubsystem = new VisionSubsystem();
     shooterSubsystem = new ShooterSubsystem(drivetrain);
     armSubsystem = new IntakeArmSubsystem();
     kickerSubsystem = new KickerSubsystem();

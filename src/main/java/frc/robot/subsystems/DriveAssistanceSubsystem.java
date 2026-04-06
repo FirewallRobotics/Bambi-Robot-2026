@@ -28,7 +28,7 @@ public class DriveAssistanceSubsystem extends SubsystemBase {
 
     // if robot is enabled and the shoot command is not running
     if ((RobotState.isEnabled() && !shooterSubsystem.isShooting)
-        && shooterSubsystem.constantShootingOn) {
+        && ShooterSubsystem.constantShootingOn) {
 
       // create the double lists for the robot pose and target pose
       double[] robotPose = new double[2];
