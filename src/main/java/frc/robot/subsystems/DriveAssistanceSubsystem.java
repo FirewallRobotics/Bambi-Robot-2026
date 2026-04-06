@@ -27,7 +27,7 @@ public class DriveAssistanceSubsystem extends SubsystemBase {
   public void periodic() {
 
     // if robot is enabled and the shoot command is not running
-    if (RobotState.isEnabled() && !shooterSubsystem.isShooting) {
+    if ((RobotState.isEnabled() && !shooterSubsystem.isShooting) && shooterSubsystem.constantShootingOn) {
 
       // create the double lists for the robot pose and target pose
       double[] robotPose = new double[2];
@@ -36,6 +36,7 @@ public class DriveAssistanceSubsystem extends SubsystemBase {
       // assign the robot pose
       robotPose[0] = shooterSubsystem.MetersToFeet(drivetrain.getState().Pose.getX());
       robotPose[1] = shooterSubsystem.MetersToFeet(drivetrain.getState().Pose.getY());
+      double[] robotSpeed = {shooterSubsystem.MetersToFeet(drivetrain.getState().Speeds.vxMetersPerSecond), shooterSubsystem.MetersToFeet(drivetrain.getState().Speeds.vyMetersPerSecond)};
 
       // if we are on blue
       if (DriverStation.getAlliance().get().equals(Alliance.Blue)) {
@@ -48,7 +49,7 @@ public class DriveAssistanceSubsystem extends SubsystemBase {
         if (drivetrain.getState().Pose.getX() < 5.5) {
 
           // get the RPM
-          double target = shooterSubsystem.rpmToHitTarget(robotPose, targetPose);
+          double target = shooterSubsystem.rpmToHitTarget(robotPose, targetPose, robotSpeed);
 
           // set the RPM
           shooterSubsystem.setSpeed(target);
@@ -69,7 +70,7 @@ public class DriveAssistanceSubsystem extends SubsystemBase {
         if (drivetrain.getState().Pose.getX() > 11) {
 
           // get the RPM
-          double target = shooterSubsystem.rpmToHitTarget(robotPose, targetPose);
+          double target = shooterSubsystem.rpmToHitTarget(robotPose, targetPose, robotSpeed);
 
           // set the RPM
           shooterSubsystem.setSpeed(target);

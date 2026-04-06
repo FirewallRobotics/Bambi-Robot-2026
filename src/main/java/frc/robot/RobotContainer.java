@@ -33,6 +33,7 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ManualKicker;
 import frc.robot.commands.PanicKicker;
 import frc.robot.commands.ShootCommand;
+import frc.robot.commands.SwitchConstantOff;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.DriveAssistanceSubsystem;
@@ -87,7 +88,7 @@ public class RobotContainer {
   public final CommandXboxController secondDriver = new CommandXboxController(1);
 
   /** The only instance of the subsystem that controls the drivetrain */
-  public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+  public final static CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
   /** The only instance of the subsystem that controls the sucking part of the intake */
   private final IntakeSubsystem intakeSubsystem;
@@ -184,6 +185,7 @@ public class RobotContainer {
                     face.withTargetDirection(
                         new Rotation2d(VisionSubsystem.getAngleToHUB(drivetrain)))));
     joystick.b().whileTrue(new PanicKicker(kickerSubsystem));
+    joystick.leftTrigger().whileTrue(new ManualKicker(kickerSubsystem));
     // Run SysId routines when holding back/start and X/Y.
     // Note that each routine should be run exactly once in a single log.
     joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
@@ -191,8 +193,12 @@ public class RobotContainer {
     joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
     joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-    joystick.leftTrigger().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, false));
-    joystick.leftTrigger().whileTrue(drivetrain.applyRequest(() -> wiggle));
+    joystick.leftTrigger().whileTrue(new ManualKicker(kickerSubsystem));
+    joystick
+        .leftTrigger()
+        .whileTrue(
+            drivetrain.applyRequest(
+                () -> wiggle));
 
     // Reset the field-centric heading on left bumper press.
     joystick.leftBumper().whileFalse(new AngleArmCommand(armSubsystem, true));
@@ -202,7 +208,7 @@ public class RobotContainer {
             new SequentialCommandGroup(
                 new AngleArmCommand(armSubsystem, false),
                 new IntakeCommand(intakeSubsystem, armSubsystem)));
-
+    joystick.povRight().onTrue(new SwitchConstantOff());
     // register the telemetry (Auto generated)
     drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -210,6 +216,7 @@ public class RobotContainer {
     joystick.rightBumper().whileTrue(drivetrain.applyRequest(() -> wiggle));
     // joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
 
+    
     // configure the second drivers controller
     secondDriver
         .povLeft()
