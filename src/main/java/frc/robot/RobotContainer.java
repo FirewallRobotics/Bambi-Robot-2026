@@ -30,6 +30,7 @@ import frc.robot.commands.HonkCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ManualKicker;
 import frc.robot.commands.PanicKicker;
+import frc.robot.commands.PanicShooter;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.SwitchConstantOff;
 import frc.robot.generated.TunerConstants;
@@ -181,7 +182,7 @@ public class RobotContainer {
                 () ->
                     face.withTargetDirection(
                         new Rotation2d(VisionSubsystem.getAngleToHUB(drivetrain)))));
-    joystick.b().whileTrue(new PanicKicker(kickerSubsystem));
+    joystick.b().whileTrue(new PanicKicker(kickerSubsystem, false));
     joystick.leftTrigger().whileTrue(new ManualKicker(kickerSubsystem));
     // Run SysId routines when holding back/start and X/Y.
     // Note that each routine should be run exactly once in a single log.
@@ -210,19 +211,10 @@ public class RobotContainer {
     // joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
 
     // configure the second drivers controller
-    secondDriver
-        .povLeft()
-        .whileTrue(
-            new SequentialCommandGroup(
-                new AngleArmCommand(armSubsystem, false),
-                new IntakeCommand(intakeSubsystem, armSubsystem)));
-    secondDriver.povLeft().whileFalse(new AngleArmCommand(armSubsystem, true));
-
-    // secondDriver.b().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, false));
-    secondDriver.b().whileTrue(new ManualKicker(kickerSubsystem));
-    secondDriver.b().whileTrue(drivetrain.applyRequest(() -> wiggle));
-
-    secondDriver.y().whileTrue(new ManualKicker(kickerSubsystem));
+    secondDriver.y().whileTrue(new PanicKicker(kickerSubsystem, true));
+    secondDriver.a().whileTrue(new PanicKicker(kickerSubsystem, false));
+    secondDriver.povDown().whileTrue(new PanicShooter(shooterSubsystem));
+    secondDriver.leftBumper().whileTrue(new SwitchConstantOff());
   }
 
   public void periodic() {

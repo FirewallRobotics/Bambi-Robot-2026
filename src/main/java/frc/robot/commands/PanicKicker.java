@@ -5,15 +5,21 @@ import frc.robot.subsystems.KickerSubsystem;
 
 public class PanicKicker extends Command {
   private final KickerSubsystem m_KickerSubsystem;
+  private final boolean isGoingUp;
 
-  public PanicKicker(KickerSubsystem kickerSubsystem) {
+  public PanicKicker(KickerSubsystem kickerSubsystem, boolean isGoingUp) {
     m_KickerSubsystem = kickerSubsystem;
+    this.isGoingUp = isGoingUp;
   }
 
   @Override
   public void initialize() {
-
-    m_KickerSubsystem.panicKickBalls();
+    if (isGoingUp) {
+      m_KickerSubsystem.kickBalls(1000);
+    } else{
+      m_KickerSubsystem.panicKickBalls();
+    }
+    
   }
 
   @Override

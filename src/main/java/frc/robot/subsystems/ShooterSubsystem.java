@@ -213,6 +213,11 @@ public class ShooterSubsystem extends SubsystemBase {
     shootMotorBottom.setVoltage(0);
   }
 
+  public void panicShooter(double set){
+    tShootClosedLoopController.setSetpoint(set, ControlType.kVelocity);
+    bSparkClosedLoopController.setSetpoint(set, ControlType.kVelocity);
+  }
+
   public double GetRPM() {
     return shootMotorBottom.getEncoder().getVelocity();
   }
