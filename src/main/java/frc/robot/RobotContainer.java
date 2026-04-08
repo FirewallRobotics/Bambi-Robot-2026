@@ -33,6 +33,7 @@ import frc.robot.commands.PanicKicker;
 import frc.robot.commands.PanicShooter;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.SwitchConstantOff;
+import frc.robot.commands.SwitchWiggleCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.DriveAssistanceSubsystem;
@@ -112,6 +113,8 @@ public class RobotContainer {
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   public RobotContainer() {
+
+    SmartDashboard.putBoolean("Wiggle", false);
 
     // setup the HUB facing command
     // This was initally in driver assistance subsystem but for whatever reason it only seemed to
@@ -193,7 +196,7 @@ public class RobotContainer {
     joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
     joystick.leftTrigger().whileTrue(new ManualKicker(kickerSubsystem));
-    joystick.leftTrigger().whileTrue(drivetrain.applyRequest(() -> wiggle));
+    joystick.leftTrigger().and(() -> SmartDashboard.getBoolean("Wiggle", true)).whileTrue(drivetrain.applyRequest(() -> wiggle));
 
     // Reset the field-centric heading on left bumper press.
     joystick.leftBumper().whileFalse(new AngleArmCommand(armSubsystem, true));
@@ -208,7 +211,7 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
 
     joystick.rightBumper().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, true));
-    joystick.rightBumper().whileTrue(drivetrain.applyRequest(() -> wiggle));
+    joystick.rightBumper().and(() -> SmartDashboard.getBoolean("Wiggle", true)).whileTrue(drivetrain.applyRequest(() -> wiggle));
     // joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
 
     // configure the second drivers controller
@@ -216,6 +219,7 @@ public class RobotContainer {
     secondDriver.a().whileTrue(new PanicKicker(kickerSubsystem, false));
     secondDriver.povDown().whileTrue(new PanicShooter(shooterSubsystem));
     secondDriver.leftBumper().whileTrue(new SwitchConstantOff());
+    secondDriver.rightBumper().whileTrue(new SwitchWiggleCommand());
   }
 
   public void periodic() {
