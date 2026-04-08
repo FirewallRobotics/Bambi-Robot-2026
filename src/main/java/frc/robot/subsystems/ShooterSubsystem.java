@@ -44,7 +44,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     RPM_AT_8FT = 4300;
     RPM_PER_FOOT = 400;
-    RPM_PER_SLOW_FOOT = 200;
+    RPM_PER_SLOW_FOOT = 300;
     rpmManual = 3500;
     wantedVelocity = 4100;
 
