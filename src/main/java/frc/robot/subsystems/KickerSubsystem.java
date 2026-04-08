@@ -68,7 +68,7 @@ public class KickerSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("KickerRPMSetpoint", setVelocityKicker);
   }
 
-  public void kickBalls(double set){
+  public void kickBalls(double set) {
     kickClosedLoopController.setSetpoint(set, ControlType.kVelocity);
   }
 

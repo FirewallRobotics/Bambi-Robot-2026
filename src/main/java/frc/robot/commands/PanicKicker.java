@@ -16,10 +16,9 @@ public class PanicKicker extends Command {
   public void initialize() {
     if (isGoingUp) {
       m_KickerSubsystem.kickBalls(1000);
-    } else{
+    } else {
       m_KickerSubsystem.panicKickBalls();
     }
-    
   }
 
   @Override
