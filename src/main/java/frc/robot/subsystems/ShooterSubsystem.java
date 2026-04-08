@@ -43,7 +43,7 @@ public class ShooterSubsystem extends SubsystemBase {
     this.ourDriveTrain = ourDriveTrain;
 
     RPM_AT_8FT = 4300;
-    RPM_PER_FOOT = 400;
+    RPM_PER_FOOT = 450;
     RPM_PER_SLOW_FOOT = 300;
     rpmManual = 3500;
     wantedVelocity = 4100;
