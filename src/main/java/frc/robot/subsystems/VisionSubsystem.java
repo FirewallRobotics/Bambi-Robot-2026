@@ -30,22 +30,21 @@ public class VisionSubsystem extends SubsystemBase {
   // 0 - april tags
 
   private boolean doRejectUpdate;
-  private RobotContainer robotContainer;
 
   private Pigeon2 m_pigeon2;
 
-  public VisionSubsystem(RobotContainer robotContainer) {
-    this.robotContainer = robotContainer;
-    m_pigeon2 = robotContainer.drivetrain.getPigeon2();
+  public VisionSubsystem() {
+    m_pigeon2 = RobotContainer.drivetrain.getPigeon2();
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("HUBDistance", VisionSubsystem.DistanceToHUB());
-    SmartDashboard.putNumber("TrenchDistance", VisionSubsystem.DistanceToTrench());
-    SmartDashboard.putNumber("OutpostDistance", VisionSubsystem.DistanceToOutpost());
-    SmartDashboard.putNumber("TowerDistance", VisionSubsystem.DistanceToTower());
-    SmartDashboard.putNumber("HUBAngle", VisionSubsystem.getAngleToHUB(robotContainer.drivetrain));
+    // SmartDashboard.putNumber("HUBDistance", VisionSubsystem.DistanceToHUB());
+    // SmartDashboard.putNumber("TrenchDistance", VisionSubsystem.DistanceToTrench());
+    // SmartDashboard.putNumber("OutpostDistance", VisionSubsystem.DistanceToOutpost());
+    // SmartDashboard.putNumber("TowerDistance", VisionSubsystem.DistanceToTower());
+    // SmartDashboard.putNumber("HUBAngle",
+    // VisionSubsystem.getAngleToHUB(robotContainer.drivetrain));
 
     for (int i = 0; i < name.length; i++) {
       LimelightHelpers.SetRobotOrientation(
@@ -64,7 +63,7 @@ public class VisionSubsystem extends SubsystemBase {
           doRejectUpdate = false;
         }
         if (!doRejectUpdate) {
-          robotContainer.drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+          RobotContainer.drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
         }
       }
     }

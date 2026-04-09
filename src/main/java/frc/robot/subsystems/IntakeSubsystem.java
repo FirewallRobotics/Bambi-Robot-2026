@@ -7,9 +7,10 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeSubsystemConstants;
 
-public class IntakeSubsystem {
+public class IntakeSubsystem extends SubsystemBase {
 
   /** The primary intake motor */
   private final SparkFlex intakeMotor;
@@ -55,6 +56,13 @@ public class IntakeSubsystem {
         intakeMotorConfig,
         com.revrobotics.ResetMode.kNoResetSafeParameters,
         com.revrobotics.PersistMode.kPersistParameters);
+  }
+
+  @Override
+  public void periodic() {
+    if (intakeMotor != null) {
+      // SmartDashboard.putNumber("IntakeRPM", intakeMotor.getEncoder().getVelocity());
+    }
   }
 
   /** Makes the intake run at {@link IntakeSubsystemConstants#intakeVelocity} RPM */

@@ -1,18 +1,92 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.VisionSubsystemConstants;
 import frc.robot.RobotContainer;
 
 public class DriveAssistanceSubsystem extends SubsystemBase {
 
   private CommandSwerveDrivetrain drivetrain;
+  private ShooterSubsystem shooterSubsystem;
 
   public DriveAssistanceSubsystem(
-      CommandSwerveDrivetrain drivetrain, RobotContainer robotContainer) {
+      CommandSwerveDrivetrain drivetrain,
+      RobotContainer robotContainer,
+      ShooterSubsystem shooterSubsystem) {
     this.drivetrain = drivetrain;
+    this.shooterSubsystem = shooterSubsystem;
+  }
+
+  @Override
+  public void periodic() {
+
+    // if robot is enabled and the shoot command is not running
+    if ((RobotState.isEnabled() && !shooterSubsystem.isShooting)
+        && ShooterSubsystem.constantShootingOn) {
+
+      // create the double lists for the robot pose and target pose
+      double[] robotPose = new double[2];
+      double[] targetPose = new double[2];
+
+      // assign the robot pose
+      robotPose[0] = shooterSubsystem.MetersToFeet(drivetrain.getState().Pose.getX());
+      robotPose[1] = shooterSubsystem.MetersToFeet(drivetrain.getState().Pose.getY());
+      double[] robotSpeed = {
+        shooterSubsystem.MetersToFeet(drivetrain.getState().Speeds.vxMetersPerSecond),
+        shooterSubsystem.MetersToFeet(drivetrain.getState().Speeds.vyMetersPerSecond)
+      };
+
+      // if we are on blue
+      if (DriverStation.getAlliance().get().equals(Alliance.Blue)) {
+
+        // set the HUB position for blue
+        targetPose[0] = 15.092;
+        targetPose[1] = 13.255;
+
+        // if the pose of our robot is within the zone
+        if (drivetrain.getState().Pose.getX() < 5.5) {
+
+          // get the RPM
+          double target = shooterSubsystem.rpmToHitTarget(robotPose, targetPose, robotSpeed);
+
+          // set the RPM
+          shooterSubsystem.setSpeed(target);
+
+          // if we are not in the zone then disable the shooter
+        } else {
+          shooterSubsystem.setSpeed(0);
+        }
+
+        // if we are on red
+      } else {
+
+        // set the HUB position for red
+        targetPose[0] = shooterSubsystem.MetersToFeet(VisionSubsystemConstants.RedHUBCenter[0]);
+        targetPose[1] = shooterSubsystem.MetersToFeet(VisionSubsystemConstants.RedHUBCenter[1]);
+
+        // if the pose of our robot is within the zone
+        if (drivetrain.getState().Pose.getX() > 11) {
+
+          // get the RPM
+          double target = shooterSubsystem.rpmToHitTarget(robotPose, targetPose, robotSpeed);
+
+          // set the RPM
+          shooterSubsystem.setSpeed(target);
+
+          // if we are not in the zone then disable the shooter
+        } else {
+          shooterSubsystem.setSpeed(0);
+        }
+      }
+
+      ShooterSubsystem.updated = true;
+    }
   }
 
   /**

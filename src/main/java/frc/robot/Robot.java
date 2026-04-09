@@ -8,10 +8,9 @@ import com.ctre.phoenix6.HootAutoReplay;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.ShooterSubsystem;
 
 public class Robot extends TimedRobot {
 
@@ -20,9 +19,6 @@ public class Robot extends TimedRobot {
 
   /** The single universal instance of robot container */
   private final RobotContainer m_robotContainer;
-
-  /** Auto chooser. Sent to driver dashboard so they can pick an auto to run */
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   /* log and replay timestamp and joystick data */
   private final HootAutoReplay m_timeAndJoystickReplay =
@@ -35,19 +31,19 @@ public class Robot extends TimedRobot {
     DataLogManager.start();
 
     // port forward the second Limelight
-    PortForwarder.add(5801, "172.29.0.1", 5801);
     PortForwarder.add(5800, "172.29.0.1", 5800);
+    PortForwarder.add(5801, "172.29.0.1", 5801);
+    PortForwarder.add(5802, "172.29.0.1", 5802);
+    PortForwarder.add(5803, "172.29.0.1", 5803);
+    PortForwarder.add(5804, "172.29.0.1", 5804);
+    PortForwarder.add(5805, "172.29.0.1", 5805);
+    PortForwarder.add(5806, "172.29.0.1", 5806);
+    PortForwarder.add(5807, "172.29.0.1", 5807);
+    PortForwarder.add(5808, "172.29.0.1", 5808);
+    PortForwarder.add(5809, "172.29.0.1", 5809);
 
     // Create robot container
     m_robotContainer = new RobotContainer();
-
-    // Add the autos we have and send it to smartdashboard
-    m_chooser.setDefaultOption("Power Play", "Copy of Left Auto");
-    m_chooser.addOption("Emergency Power Play", "Left Auto Old");
-    m_chooser.addOption("Firewall Fake", "Shorty");
-    m_chooser.addOption("Hail Mary", "Copy of Right Auto");
-    m_chooser.addOption("Emergency Hail Mary", "Right Auto");
-    SmartDashboard.putData("Auto Chooser", m_chooser);
 
     // starts the datalogging for the drivetrain
     m_robotContainer.getLogger().initSwervePublisher(m_robotContainer);
@@ -78,8 +74,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // get the auto command to be run
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand(m_chooser.getSelected());
-
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    ShooterSubsystem.constantShootingOn = true;
     // if that command exists schedule it to be executed
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(m_autonomousCommand);

@@ -12,24 +12,28 @@ import com.ctre.phoenix6.swerve.SwerveRequest.ForwardPerspectiveValue;
 import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import com.pathplanner.lib.auto.AutoBuilderException;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.commands.AlignWithClimberCommand;
 import frc.robot.commands.AngleAndRunIntakeCommand;
 import frc.robot.commands.AngleArmCommand;
 import frc.robot.commands.HonkCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ManualKicker;
 import frc.robot.commands.PanicKicker;
+import frc.robot.commands.PanicShooter;
 import frc.robot.commands.ShootCommand;
+import frc.robot.commands.SwitchConstantOff;
+import frc.robot.commands.SwitchWiggleCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.DriveAssistanceSubsystem;
@@ -64,6 +68,11 @@ public class RobotContainer {
   private final SwerveRequest.FieldCentricFacingAngle face =
       new SwerveRequest.FieldCentricFacingAngle();
 
+  private final SwerveRequest.ApplyFieldSpeeds wiggle = new SwerveRequest.ApplyFieldSpeeds();
+
+  boolean wiggleDirection = false;
+  double wiggleCounter = 0;
+
   /** Creates the telemetry subsystem for the drivetrain (Auto created by CTRE) */
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
@@ -79,7 +88,7 @@ public class RobotContainer {
   public final CommandXboxController secondDriver = new CommandXboxController(1);
 
   /** The only instance of the subsystem that controls the drivetrain */
-  public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+  public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
   /** The only instance of the subsystem that controls the sucking part of the intake */
   private final IntakeSubsystem intakeSubsystem;
@@ -100,7 +109,12 @@ public class RobotContainer {
   /** The only instance of the subsystem that controls the lifting mechanism on the shooter */
   private final KickerSubsystem kickerSubsystem;
 
+  /** Auto chooser. Sent to driver dashboard so they can pick an auto to run */
+  private final SendableChooser<Command> m_chooser = new SendableChooser<>();
+
   public RobotContainer() {
+
+    SmartDashboard.putBoolean("Wiggle", false);
 
     // setup the HUB facing command
     // This was initally in driver assistance subsystem but for whatever reason it only seemed to
@@ -113,21 +127,21 @@ public class RobotContainer {
     // without this line the robot will do a full turn to follow a point passing over 360 degrees
     face.HeadingController.enableContinuousInput(-1, 1);
 
+    wiggle.ForwardPerspective = ForwardPerspectiveValue.OperatorPerspective;
+
     // create the subsystems
     intakeSubsystem = new IntakeSubsystem();
-    driveAssistanceSubsystem = new DriveAssistanceSubsystem(drivetrain, this);
-    visionSubsystem = new VisionSubsystem(this);
+    visionSubsystem = new VisionSubsystem();
     shooterSubsystem = new ShooterSubsystem(drivetrain);
     armSubsystem = new IntakeArmSubsystem();
     kickerSubsystem = new KickerSubsystem();
+    driveAssistanceSubsystem = new DriveAssistanceSubsystem(drivetrain, this, shooterSubsystem);
 
     // create the commands for use in pathplanner
     NamedCommands.registerCommand("Honk", new HonkCommand("la-cucaracha.chrp"));
-    NamedCommands.registerCommand(
-        "Shoot", new ShootCommand(shooterSubsystem, kickerSubsystem, true));
+    NamedCommands.registerCommand("ManualKicker", new ManualKicker(kickerSubsystem));
     NamedCommands.registerCommand(
         "Intake", new AngleAndRunIntakeCommand(armSubsystem, intakeSubsystem));
-    NamedCommands.registerCommand("Climb", new AlignWithClimberCommand(drivetrain));
 
     // configure the controller bindings
     configureBindings();
@@ -135,8 +149,18 @@ public class RobotContainer {
     // debug for the intake arm
     // SmartDashboard.putNumber("Hold Voltage", 0);
 
+    // Add the autos we have and send it to smartdashboard
+    m_chooser.setDefaultOption("Power Play", new PathPlannerAuto("Copy of Left Auto"));
+    m_chooser.addOption("Power Play V2", new PathPlannerAuto("Left Auto"));
+    m_chooser.addOption("Emergency Power Play", new PathPlannerAuto("Left Auto Old"));
+    m_chooser.addOption("Firewall Fake", new PathPlannerAuto("Shorty"));
+    m_chooser.addOption("Hail Mary", new PathPlannerAuto("Copy of Right Auto"));
+    m_chooser.addOption("Emergency Hail Mary", new PathPlannerAuto("Right Auto"));
+    m_chooser.addOption("Ballerina", new PathPlannerAuto("Ballerina"));
+    SmartDashboard.putData("Auto Chooser", m_chooser);
+
     // Warmup PathPlanner to avoid Java pauses
-    CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
+    CommandScheduler.getInstance().schedule(new PathPlannerAuto("Warm Up"));
   }
 
   private void configureBindings() {
@@ -162,13 +186,20 @@ public class RobotContainer {
                 () ->
                     face.withTargetDirection(
                         new Rotation2d(VisionSubsystem.getAngleToHUB(drivetrain)))));
-    joystick.b().whileTrue(new PanicKicker(kickerSubsystem));
+    joystick.b().whileTrue(new PanicKicker(kickerSubsystem, false));
+    joystick.leftTrigger().whileTrue(new ManualKicker(kickerSubsystem));
     // Run SysId routines when holding back/start and X/Y.
     // Note that each routine should be run exactly once in a single log.
     joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
     joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
     joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
     joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+
+    joystick.leftTrigger().whileTrue(new ManualKicker(kickerSubsystem));
+    joystick
+        .leftTrigger()
+        .and(() -> SmartDashboard.getBoolean("Wiggle", true))
+        .whileTrue(drivetrain.applyRequest(() -> wiggle));
 
     // Reset the field-centric heading on left bumper press.
     joystick.leftBumper().whileFalse(new AngleArmCommand(armSubsystem, true));
@@ -178,31 +209,48 @@ public class RobotContainer {
             new SequentialCommandGroup(
                 new AngleArmCommand(armSubsystem, false),
                 new IntakeCommand(intakeSubsystem, armSubsystem)));
-
+    joystick.povRight().onTrue(new SwitchConstantOff());
     // register the telemetry (Auto generated)
     drivetrain.registerTelemetry(logger::telemeterize);
 
     joystick.rightBumper().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, true));
+    joystick
+        .rightBumper()
+        .and(() -> SmartDashboard.getBoolean("Wiggle", true))
+        .whileTrue(drivetrain.applyRequest(() -> wiggle));
     // joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
 
     // configure the second drivers controller
-    secondDriver
-        .povLeft()
-        .whileTrue(
-            new SequentialCommandGroup(
-                new AngleArmCommand(armSubsystem, false),
-                new IntakeCommand(intakeSubsystem, armSubsystem)));
-    secondDriver.povLeft().whileFalse(new AngleArmCommand(armSubsystem, true));
-
-    secondDriver.b().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, false));
-
-    secondDriver.y().whileTrue(new ManualKicker(kickerSubsystem));
+    secondDriver.y().whileTrue(new PanicKicker(kickerSubsystem, true));
+    secondDriver.a().whileTrue(new PanicKicker(kickerSubsystem, false));
+    secondDriver.povDown().whileTrue(new PanicShooter(shooterSubsystem));
+    secondDriver.leftBumper().whileTrue(new SwitchConstantOff());
+    secondDriver.rightBumper().whileTrue(new SwitchWiggleCommand());
   }
 
   public void periodic() {
     // periodically update the position of the joysticks so that they control the facing
-    face.VelocityX = joystick.getLeftY() * MaxSpeed;
-    face.VelocityY = joystick.getLeftX() * MaxSpeed;
+    face.VelocityX = -joystick.getLeftY() * MaxSpeed;
+    face.VelocityY = -joystick.getLeftX() * MaxSpeed;
+
+    if (wiggleDirection) {
+      wiggle.Speeds =
+          new ChassisSpeeds(joystick.getLeftY() * MaxSpeed, joystick.getLeftX() * MaxSpeed, 1);
+      wiggleCounter += 1;
+    } else {
+      wiggle.Speeds =
+          new ChassisSpeeds(joystick.getLeftY() * MaxSpeed, joystick.getLeftX() * MaxSpeed, -1);
+      wiggleCounter += 1;
+    }
+
+    if (wiggleCounter > 15) {
+      wiggleCounter = 0;
+      if (wiggleDirection) {
+        wiggleDirection = false;
+      } else {
+        wiggleDirection = true;
+      }
+    }
   }
 
   /**
@@ -231,11 +279,10 @@ public class RobotContainer {
   /**
    * Constructs a new PathPlannerAuto command.
    *
-   * @param autoName the name of the autonomous routine to load and run
    * @throws AutoBuilderException if AutoBuilder is not configured before attempting to load the
    *     autonomous routine (which is the job of CommandSwerveDrivetrain)
    */
-  public Command getAutonomousCommand(String name) {
-    return new PathPlannerAuto(name);
+  public Command getAutonomousCommand() {
+    return m_chooser.getSelected();
   }
 }

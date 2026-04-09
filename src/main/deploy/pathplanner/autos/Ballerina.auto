@@ -7,13 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Zoom Zoom Middle"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Race For Shoot"
+            "pathName": "Zoom Zoom Empty"
           }
         },
         {
@@ -38,13 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Race For Middle 2"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Race For Shoot"
+            "pathName": "Ballerina"
           }
         },
         {
@@ -54,7 +42,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.5
+                  "waitTime": 3.0
                 }
               },
               {
@@ -64,6 +52,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Zoom Zoom Part2"
           }
         }
       ]

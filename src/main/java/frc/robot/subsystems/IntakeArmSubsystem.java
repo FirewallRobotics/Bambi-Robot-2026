@@ -94,6 +94,13 @@ public class IntakeArmSubsystem extends SubsystemBase {
         com.revrobotics.PersistMode.kPersistParameters);
   }
 
+  @Override
+  public void periodic() {
+    if (armMotor != null) {
+      // SmartDashboard.putNumber("IntakeArmPosition", armMotor.getEncoder().getPosition());
+    }
+  }
+
   /** returns if the arm is within a certain tolerence of its setpoint */
   public boolean isAtSetpoint(boolean goingUp) {
     if (goingUp && armMotor.getEncoder().getPosition() >= upPosition) {
