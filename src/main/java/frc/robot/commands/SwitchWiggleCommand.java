@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class SwitchWiggleCommand extends Command {
-    private boolean originalValue;
+  private boolean originalValue;
 
   @Override
   public void execute() {

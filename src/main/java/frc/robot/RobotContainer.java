@@ -196,7 +196,10 @@ public class RobotContainer {
     joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
     joystick.leftTrigger().whileTrue(new ManualKicker(kickerSubsystem));
-    joystick.leftTrigger().and(() -> SmartDashboard.getBoolean("Wiggle", true)).whileTrue(drivetrain.applyRequest(() -> wiggle));
+    joystick
+        .leftTrigger()
+        .and(() -> SmartDashboard.getBoolean("Wiggle", true))
+        .whileTrue(drivetrain.applyRequest(() -> wiggle));
 
     // Reset the field-centric heading on left bumper press.
     joystick.leftBumper().whileFalse(new AngleArmCommand(armSubsystem, true));
@@ -211,7 +214,10 @@ public class RobotContainer {
     drivetrain.registerTelemetry(logger::telemeterize);
 
     joystick.rightBumper().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, true));
-    joystick.rightBumper().and(() -> SmartDashboard.getBoolean("Wiggle", true)).whileTrue(drivetrain.applyRequest(() -> wiggle));
+    joystick
+        .rightBumper()
+        .and(() -> SmartDashboard.getBoolean("Wiggle", true))
+        .whileTrue(drivetrain.applyRequest(() -> wiggle));
     // joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
 
     // configure the second drivers controller
