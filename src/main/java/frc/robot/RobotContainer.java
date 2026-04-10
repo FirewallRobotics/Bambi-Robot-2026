@@ -157,6 +157,7 @@ public class RobotContainer {
     m_chooser.addOption("Hail Mary", new PathPlannerAuto("Copy of Right Auto"));
     m_chooser.addOption("Emergency Hail Mary", new PathPlannerAuto("Right Auto"));
     m_chooser.addOption("Ballerina", new PathPlannerAuto("Ballerina"));
+    m_chooser.addOption("Lynk Rush (Y O I N K)", new PathPlannerAuto("Lynk Rush"));
     SmartDashboard.putData("Auto Chooser", m_chooser);
 
     // Warmup PathPlanner to avoid Java pauses
