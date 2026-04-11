@@ -6,7 +6,7 @@
       "ModuleName": "Front Left",
       "ModuleId": 0,
       "Encoder": {
-        "Id": 9,
+        "Id": 12,
         "Name": "CANCoder FL",
         "Model": "CANCoder",
         "CANbus": "rio",
@@ -14,7 +14,7 @@
         "SelectedMotorType": null
       },
       "SteerMotor": {
-        "Id": 5,
+        "Id": 8,
         "Name": "Talon FX FL Turning",
         "Model": "Talon FX vers. C",
         "CANbus": "rio",
@@ -27,7 +27,7 @@
         }
       },
       "DriveMotor": {
-        "Id": 1,
+        "Id": 4,
         "Name": "Talon FX FL Drive",
         "Model": "Talon FX vers. C",
         "CANbus": "rio",
@@ -42,20 +42,20 @@
       "IsEncoderInverted": false,
       "IsSteerInverted": false,
       "SelectedEncoderType": "CANcoder",
-      "EncoderOffset": -0.190673828125,
+      "EncoderOffset": 0.06103515625,
       "DriveMotorSelectionState": 1,
       "SteerMotorSelectionState": 1,
       "SteerEncoderSelectionState": 1,
       "IsModuleValidationComplete": true,
-      "ValidatedSteerId": 5,
-      "ValidatedDriveId": 1,
-      "ValidatedEncoderId": 9
+      "ValidatedSteerId": 8,
+      "ValidatedDriveId": 4,
+      "ValidatedEncoderId": 12
     },
     {
       "ModuleName": "Front Right",
       "ModuleId": 1,
       "Encoder": {
-        "Id": 10,
+        "Id": 11,
         "Name": "CANCoder FR",
         "Model": "CANCoder",
         "CANbus": "rio",
@@ -63,7 +63,7 @@
         "SelectedMotorType": null
       },
       "SteerMotor": {
-        "Id": 6,
+        "Id": 7,
         "Name": "Talon FX FR Turning",
         "Model": "Talon FX vers. C",
         "CANbus": "rio",
@@ -76,7 +76,7 @@
         }
       },
       "DriveMotor": {
-        "Id": 2,
+        "Id": 3,
         "Name": "Talon FX FR Drive",
         "Model": "Talon FX vers. C",
         "CANbus": "rio",
@@ -91,20 +91,20 @@
       "IsEncoderInverted": false,
       "IsSteerInverted": false,
       "SelectedEncoderType": "CANcoder",
-      "EncoderOffset": -0.440185546875,
+      "EncoderOffset": -0.178955078125,
       "DriveMotorSelectionState": 1,
       "SteerMotorSelectionState": 1,
       "SteerEncoderSelectionState": 1,
       "IsModuleValidationComplete": true,
-      "ValidatedSteerId": 6,
-      "ValidatedDriveId": 2,
-      "ValidatedEncoderId": 10
+      "ValidatedSteerId": 7,
+      "ValidatedDriveId": 3,
+      "ValidatedEncoderId": 11
     },
     {
       "ModuleName": "Back Left",
       "ModuleId": 2,
       "Encoder": {
-        "Id": 11,
+        "Id": 10,
         "Name": "CANCoder RL",
         "Model": "CANCoder",
         "CANbus": "rio",
@@ -112,7 +112,7 @@
         "SelectedMotorType": null
       },
       "SteerMotor": {
-        "Id": 7,
+        "Id": 1,
         "Name": "Talon FX RL Turning",
         "Model": "Talon FX vers. C",
         "CANbus": "rio",
@@ -125,7 +125,7 @@
         }
       },
       "DriveMotor": {
-        "Id": 3,
+        "Id": 2,
         "Name": "Talon FX RL Drive",
         "Model": "Talon FX vers. C",
         "CANbus": "rio",
@@ -140,20 +140,20 @@
       "IsEncoderInverted": false,
       "IsSteerInverted": false,
       "SelectedEncoderType": "CANcoder",
-      "EncoderOffset": -0.201904296875,
+      "EncoderOffset": -0.436279296875,
       "DriveMotorSelectionState": 1,
       "SteerMotorSelectionState": 1,
       "SteerEncoderSelectionState": 1,
       "IsModuleValidationComplete": true,
-      "ValidatedSteerId": 7,
-      "ValidatedDriveId": 3,
-      "ValidatedEncoderId": 11
+      "ValidatedSteerId": 1,
+      "ValidatedDriveId": 2,
+      "ValidatedEncoderId": 10
     },
     {
       "ModuleName": "Back Right",
       "ModuleId": 3,
       "Encoder": {
-        "Id": 12,
+        "Id": 9,
         "Name": "CANCoder RR",
         "Model": "CANCoder",
         "CANbus": "rio",
@@ -161,7 +161,7 @@
         "SelectedMotorType": null
       },
       "SteerMotor": {
-        "Id": 8,
+        "Id": 5,
         "Name": "Talon FX RR Turning",
         "Model": "Talon FX vers. C",
         "CANbus": "rio",
@@ -174,8 +174,8 @@
         }
       },
       "DriveMotor": {
-        "Id": 4,
-        "Name": "Talon FX Drive RR",
+        "Id": 6,
+        "Name": "Talon FX RR Drive",
         "Model": "Talon FX vers. C",
         "CANbus": "rio",
         "CANbusFriendly": "",
@@ -189,14 +189,14 @@
       "IsEncoderInverted": false,
       "IsSteerInverted": false,
       "SelectedEncoderType": "CANcoder",
-      "EncoderOffset": 0.063720703125,
+      "EncoderOffset": -0.184326171875,
       "DriveMotorSelectionState": 1,
       "SteerMotorSelectionState": 1,
       "SteerEncoderSelectionState": 1,
       "IsModuleValidationComplete": true,
-      "ValidatedSteerId": 8,
-      "ValidatedDriveId": 4,
-      "ValidatedEncoderId": 12
+      "ValidatedSteerId": 5,
+      "ValidatedDriveId": 6,
+      "ValidatedEncoderId": 9
     }
   ],
   "SwerveOptions": {
@@ -223,10 +223,10 @@
       "CustomName": ""
     },
     "HasVerifiedSteer": true,
-    "SelectedModuleManufacturer": "Custom",
+    "SelectedModuleManufacturer": "WestCoast Products (WCP)",
     "HasVerifiedDrive": true,
     "IsValidConfiguration": true
   },
-  "TeamNumber": 5607,
+  "TeamNumber": 0,
   "schema_version": "1"
 }
