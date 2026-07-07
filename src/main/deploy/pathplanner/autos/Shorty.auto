@@ -5,12 +5,6 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "Backup"
-          }
-        },
-        {
           "type": "deadline",
           "data": {
             "commands": [
