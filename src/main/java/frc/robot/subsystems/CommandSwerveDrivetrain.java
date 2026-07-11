@@ -11,7 +11,14 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.ConstraintsZone;
+import com.pathplanner.lib.path.EventMarker;
+import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.PointTowardsZone;
+import com.pathplanner.lib.path.RotationTarget;
+import com.pathplanner.lib.path.Waypoint;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -28,6 +35,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -103,9 +112,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                       .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())),
           new PPHolonomicDriveController(
               // PID constants for translation
-              new PIDConstants(1.4, 0.3, 0),
+              new PIDConstants(1.6, 0.3, 0),
               // PID constants for rotation
-              new PIDConstants(1.25, 0.25, 0)),
+              new PIDConstants(1.25, 0.26, 0)),
           config,
           // Assume the path needs to be flipped for Red vs Blue, this is normally the case
           () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
@@ -124,16 +133,94 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
    * @return PathFinding command
    */
   public Command driveToPose(Pose2d pose) {
+
+    // Create a list of waypoints from poses. Each pose represents one waypoint.
+    // The rotation component of the pose should be the direction of travel. Do not use holonomic
+    // rotation.
+    List<Waypoint> waypoints =
+        PathPlannerPath.waypointsFromPoses(
+            new Pose2d(pose.getX() + 2.5, pose.getY(), Rotation2d.fromDegrees(0)),
+            new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(0)));
+
     // Create the constraints to use while pathfinding
     PathConstraints constraints =
-        new PathConstraints(3, 4.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
+        new PathConstraints(1.0, 1.0, Units.degreesToRadians(720), Units.degreesToRadians(900));
+    // PathConstraints constraints = new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI); // The
+    // constraints for this path.
+    // PathConstraints constraints = PathConstraints.unlimitedConstraints(12.0); // You can also use
+    // unlimited constraints, only limited by motor torque and nominal battery voltage
+
+    // Create the path using the waypoints created above
+    PathPlannerPath path =
+        new PathPlannerPath(
+            waypoints,
+            constraints,
+            null, // The ideal starting state, this is only relevant for pre-planned paths, so can
+            // be null for on-the-fly paths.
+            new GoalEndState(0.0, pose.getRotation()),
+            true);
+
+    // Prevent the path from being flipped if the coordinates are already correct
+    path.preventFlipping = false;
 
     // Since AutoBuilder is configured, we can use it to build pathfinding commands
-    return AutoBuilder.pathfindToPose(
-        pose,
-        constraints,
-        edu.wpi.first.units.Units.MetersPerSecond.of(0) // Goal end velocity in meters/sec
-        );
+    return AutoBuilder.pathfindThenFollowPath(
+        path.flipPath(),
+        new PathConstraints(3, 3, Units.degreesToRadians(720), Units.degreesToRadians(900)));
+  }
+
+  public Command driveToPose(Pose2d pose, Pose2d runwayStopPose2d) {
+
+    // Create a list of waypoints from poses. Each pose represents one waypoint.
+    // The rotation component of the pose should be the direction of travel. Do not use holonomic
+    // rotation.
+    List<Waypoint> waypoints =
+        PathPlannerPath.waypointsFromPoses(
+            new Pose2d(
+                runwayStopPose2d.getX() + 2.5,
+                runwayStopPose2d.getY(),
+                runwayStopPose2d.getRotation()),
+            new Pose2d(pose.getX(), pose.getY(), Rotation2d.fromDegrees(180)));
+
+    List<ConstraintsZone> constraintZones = new ArrayList<ConstraintsZone>();
+    List<RotationTarget> holonomicRotations = new ArrayList<RotationTarget>();
+    List<PointTowardsZone> pointTowardsZones = new ArrayList<PointTowardsZone>();
+    List<EventMarker> eventMarkers = new ArrayList<EventMarker>();
+
+    constraintZones.add(
+        new ConstraintsZone(
+            0.9,
+            1,
+            new PathConstraints(0.65, 1, Units.degreesToRadians(720), Units.degreesToRadians(900))));
+
+    // Create the constraints to use while pathfinding
+    PathConstraints constraints =
+        new PathConstraints(3.25, 3.0, Units.degreesToRadians(720), Units.degreesToRadians(900));
+    // PathConstraints constraints = new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI); // The
+    // constraints for this path.
+    // PathConstraints constraints = PathConstraints.unlimitedConstraints(12.0); // You can also use
+    // unlimited constraints, only limited by motor torque and nominal battery voltage
+
+    // Create the path using the waypoints created above
+    PathPlannerPath path =
+        new PathPlannerPath(
+            waypoints,
+            holonomicRotations,
+            pointTowardsZones,
+            constraintZones,
+            eventMarkers,
+            constraints,
+            null,
+            new GoalEndState(0.0, pose.getRotation()),
+            true);
+
+    // Prevent the path from being flipped if the coordinates are already correct
+    path.preventFlipping = false;
+
+    // Since AutoBuilder is configured, we can use it to build pathfinding commands
+    return AutoBuilder.pathfindThenFollowPath(
+        path.flipPath(),
+        new PathConstraints(3, 3, Units.degreesToRadians(720), Units.degreesToRadians(900)));
   }
 
   /*

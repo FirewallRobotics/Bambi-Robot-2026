@@ -35,6 +35,7 @@ public class VisionSubsystem extends SubsystemBase {
 
   public VisionSubsystem() {
     m_pigeon2 = RobotContainer.drivetrain.getPigeon2();
+    SmartDashboard.putNumber("PrecisionDist", 2);
   }
 
   @Override
@@ -55,6 +56,21 @@ public class VisionSubsystem extends SubsystemBase {
           0,
           m_pigeon2.getRoll().getValueAsDouble(),
           0);
+
+      RawFiducial[] tags = LimelightHelpers.getRawFiducials(name[i]);
+      for (int j = 0; j < tags.length; j++) {
+        SmartDashboard.putNumber("DistTag", tags[j].distToCamera);
+        if (tags[j].distToCamera < SmartDashboard.getNumber("PrecisionDist", 1)) {
+          LimelightHelpers.setPipelineIndex(name[i], 1);
+        }
+        if (tags[j].distToCamera > SmartDashboard.getNumber("PrecisionDist", 1)) {
+          LimelightHelpers.setPipelineIndex(name[i], 0);
+        }
+      }
+      if (tags.length == 0) {
+        LimelightHelpers.setPipelineIndex(name[i], 0);
+      }
+
       LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(name[i]);
       if (mt2 != null) {
         if (mt2.tagCount == 0) {
