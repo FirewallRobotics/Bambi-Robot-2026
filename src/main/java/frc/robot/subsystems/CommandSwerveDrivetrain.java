@@ -189,9 +189,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     constraintZones.add(
         new ConstraintsZone(
-            0.9,
+            0.96,
             1,
-            new PathConstraints(0.65, 1, Units.degreesToRadians(720), Units.degreesToRadians(900))));
+            new PathConstraints(0.65, 1.25, Units.degreesToRadians(720), Units.degreesToRadians(900))));
 
     // Create the constraints to use while pathfinding
     PathConstraints constraints =
