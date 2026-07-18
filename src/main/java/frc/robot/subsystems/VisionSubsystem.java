@@ -36,6 +36,7 @@ public class VisionSubsystem extends SubsystemBase {
   public VisionSubsystem() {
     m_pigeon2 = RobotContainer.drivetrain.getPigeon2();
     SmartDashboard.putNumber("PrecisionDist", 2);
+    SmartDashboard.putNumber("Offset", 150);
   }
 
   @Override
@@ -50,28 +51,29 @@ public class VisionSubsystem extends SubsystemBase {
     for (int i = 0; i < name.length; i++) {
       LimelightHelpers.SetRobotOrientation(
           name[i],
-          m_pigeon2.getYaw().getValueAsDouble(),
+          m_pigeon2.getYaw().getValueAsDouble()+SmartDashboard.getNumber("Offset", 180),
           0,
           m_pigeon2.getPitch().getValueAsDouble(),
           0,
           m_pigeon2.getRoll().getValueAsDouble(),
           0);
+    }
 
-      RawFiducial[] tags = LimelightHelpers.getRawFiducials(name[i]);
+    RawFiducial[] tags = LimelightHelpers.getRawFiducials(name[0]);
       for (int j = 0; j < tags.length; j++) {
         SmartDashboard.putNumber("DistTag", tags[j].distToCamera);
         if (tags[j].distToCamera < SmartDashboard.getNumber("PrecisionDist", 1)) {
-          LimelightHelpers.setPipelineIndex(name[i], 1);
+          LimelightHelpers.setPipelineIndex(name[0], 1);
         }
         if (tags[j].distToCamera > SmartDashboard.getNumber("PrecisionDist", 1)) {
-          LimelightHelpers.setPipelineIndex(name[i], 0);
+          LimelightHelpers.setPipelineIndex(name[0], 0);
         }
       }
       if (tags.length == 0) {
-        LimelightHelpers.setPipelineIndex(name[i], 0);
+        LimelightHelpers.setPipelineIndex(name[0], 0);
       }
 
-      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(name[i]);
+      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(name[0]);
       if (mt2 != null) {
         if (mt2.tagCount == 0) {
           doRejectUpdate = true;
@@ -82,7 +84,18 @@ public class VisionSubsystem extends SubsystemBase {
           RobotContainer.drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
         }
       }
-    }
+
+      LimelightHelpers.PoseEstimate mt22 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name[1]);
+      if (mt22 != null) {
+        if (mt22.tagCount == 0) {
+          doRejectUpdate = true;
+        } else {
+          doRejectUpdate = false;
+        }
+        if (!doRejectUpdate) {
+          RobotContainer.drivetrain.addVisionMeasurement(mt22.pose, mt22.timestampSeconds);
+        }
+      }
   }
 
   /** Outputs all the tags that we can see */

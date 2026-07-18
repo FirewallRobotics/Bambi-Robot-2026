@@ -21,6 +21,30 @@
           "data": {
             "pathName": "Part 3"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Part 4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Part 5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Part 4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Part 5"
+          }
         }
       ]
     }
