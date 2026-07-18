@@ -75,7 +75,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     // get the auto command to be run
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    ShooterSubsystem.constantShootingOn = true;
+    ShooterSubsystem.constantShootingOn = false;
     // if that command exists schedule it to be executed
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(m_autonomousCommand);

@@ -151,14 +151,7 @@ public class RobotContainer {
     // SmartDashboard.putNumber("Hold Voltage", 0);
 
     // Add the autos we have and send it to smartdashboard
-    m_chooser.setDefaultOption("Power Play", new PathPlannerAuto("Copy of Left Auto"));
-    m_chooser.addOption("Power Play V2", new PathPlannerAuto("Left Auto"));
-    m_chooser.addOption("Emergency Power Play", new PathPlannerAuto("Left Auto Old"));
-    m_chooser.addOption("Firewall Fake", new PathPlannerAuto("Shorty"));
-    m_chooser.addOption("Hail Mary", new PathPlannerAuto("Copy of Right Auto"));
-    m_chooser.addOption("Emergency Hail Mary", new PathPlannerAuto("Right Auto"));
-    m_chooser.addOption("Ballerina", new PathPlannerAuto("Ballerina"));
-    m_chooser.addOption("Lynk Rush (Y O I N K)", new PathPlannerAuto("Lynk Rush"));
+    m_chooser.addOption("Lynk Rush (Y O I N K)", new PathPlannerAuto("New Auto"));
     SmartDashboard.putData("Auto Chooser", m_chooser);
 
     // Warmup PathPlanner to avoid Java pauses
