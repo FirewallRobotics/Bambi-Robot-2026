@@ -37,6 +37,9 @@ public class VisionSubsystem extends SubsystemBase {
     m_pigeon2 = RobotContainer.drivetrain.getPigeon2();
     SmartDashboard.putNumber("PrecisionDist", 2);
     SmartDashboard.putNumber("Offset", 150);
+    SmartDashboard.putNumber("Offset2", 90);
+
+    LimelightHelpers.SetIMUMode(name[0], 0);
   }
 
   @Override
@@ -48,32 +51,24 @@ public class VisionSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("HUBAngle",
     // VisionSubsystem.getAngleToHUB(robotContainer.drivetrain));
 
-    for (int i = 0; i < name.length; i++) {
-      LimelightHelpers.SetRobotOrientation(
-          name[i],
+    LimelightHelpers.SetRobotOrientation(
+          name[0],
+          m_pigeon2.getYaw().getValueAsDouble()+SmartDashboard.getNumber("Offset2", 180),
+          0,
+          m_pigeon2.getPitch().getValueAsDouble(),
+          0,
+          m_pigeon2.getRoll().getValueAsDouble(),
+          0);
+    LimelightHelpers.SetRobotOrientation(
+          name[1],
           m_pigeon2.getYaw().getValueAsDouble()+SmartDashboard.getNumber("Offset", 180),
           0,
           m_pigeon2.getPitch().getValueAsDouble(),
           0,
           m_pigeon2.getRoll().getValueAsDouble(),
           0);
-    }
 
-    RawFiducial[] tags = LimelightHelpers.getRawFiducials(name[0]);
-      for (int j = 0; j < tags.length; j++) {
-        SmartDashboard.putNumber("DistTag", tags[j].distToCamera);
-        if (tags[j].distToCamera < SmartDashboard.getNumber("PrecisionDist", 1)) {
-          LimelightHelpers.setPipelineIndex(name[0], 1);
-        }
-        if (tags[j].distToCamera > SmartDashboard.getNumber("PrecisionDist", 1)) {
-          LimelightHelpers.setPipelineIndex(name[0], 0);
-        }
-      }
-      if (tags.length == 0) {
-        LimelightHelpers.setPipelineIndex(name[0], 0);
-      }
-
-      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(name[0]);
+      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(name[0]);
       if (mt2 != null) {
         if (mt2.tagCount == 0) {
           doRejectUpdate = true;

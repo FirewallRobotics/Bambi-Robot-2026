@@ -15,6 +15,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -192,14 +193,15 @@ public class RobotContainer {
         .b()
         .whileTrue(
             drivetrain.driveToPose(
-                new Pose2d(13.258, 0.671, new Rotation2d(Math.toRadians(-12.39)))));
+                new Pose2d(3.55, 1.15, new Rotation2d(Math.toRadians(135))),
+                new Translation2d(0, 0.5)));
     joystick.leftTrigger().whileTrue(new ManualKicker(kickerSubsystem));
     joystick
         .y()
         .whileTrue(
             drivetrain.driveToPose(
-                new Pose2d(13.258, 0.671, new Rotation2d(Math.toRadians(-12.39))),
-                new Pose2d(13.335, 4.076, new Rotation2d(Math.toRadians(-135)))));
+                new Pose2d(2, 3.75, new Rotation2d(Math.toRadians(-90))),
+                new Translation2d(0, -0.5)));
     // Run SysId routines when holding back/start and X/Y.
     // Note that each routine should be run exactly once in a single log.
     joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
