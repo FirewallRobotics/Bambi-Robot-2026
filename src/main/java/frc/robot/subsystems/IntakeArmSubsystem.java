@@ -85,9 +85,11 @@ public class IntakeArmSubsystem extends SubsystemBase {
         .d(0, ClosedLoopSlot.kSlot1)
         .outputRange(-1, 1, ClosedLoopSlot.kSlot1)
         .feedForward
-        //  .kG(0)
-        // .kS((0.36-0.35)/2)
-        .kCos(0.35 + ((0.45 - 0.35) / 2));
+        .kA(0)
+        .kCos(0.38 + ((0.47 - 0.38) / 2))
+        .kG(0)
+        .kS(0)
+        .kV(0);
     // .kCosRatio(1);
 
     // configure the primary motor
