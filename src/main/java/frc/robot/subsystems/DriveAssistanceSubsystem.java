@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -8,6 +11,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.VisionSubsystemConstants;
+import frc.robot.LimelightHelpers.RawFiducial;
+import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
 
 public class DriveAssistanceSubsystem extends SubsystemBase {
@@ -23,6 +29,16 @@ public class DriveAssistanceSubsystem extends SubsystemBase {
     this.shooterSubsystem = shooterSubsystem;
   }
 
+  public Rotation2d pointTowardsTag(){
+    RawFiducial[] demo = LimelightHelpers.getRawFiducials(Constants.VisionSubsystemConstants.limelightName[0]);
+    for(int i = 0; i < demo.length; i++) {
+      if(demo[i].id == 6){
+        Rotation2d next = new Rotation2d(Math.toRadians(demo[i].txnc));
+        return next;
+      }
+    }
+    return new Rotation2d(0,0);
+  }
   @Override
   public void periodic() {
 

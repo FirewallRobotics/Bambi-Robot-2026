@@ -70,6 +70,9 @@ public class RobotContainer {
   private final SwerveRequest.FieldCentricFacingAngle face =
       new SwerveRequest.FieldCentricFacingAngle();
 
+  private final SwerveRequest.RobotCentricFacingAngle adjust =
+      new SwerveRequest.RobotCentricFacingAngle();
+
   private final SwerveRequest.ApplyFieldSpeeds wiggle = new SwerveRequest.ApplyFieldSpeeds();
 
   boolean wiggleDirection = false;
@@ -129,6 +132,7 @@ public class RobotContainer {
     // without this line the robot will do a full turn to follow a point passing over 360 degrees
     face.HeadingController.enableContinuousInput(-1, 1);
 
+    adjust.HeadingController = new PhoenixPIDController(6, 0, 0);
     wiggle.ForwardPerspective = ForwardPerspectiveValue.OperatorPerspective;
 
     // create the subsystems

@@ -9,7 +9,10 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class IntakeArmSubsystem extends SubsystemBase {
   /** The primary arm motor */
@@ -20,6 +23,8 @@ public class IntakeArmSubsystem extends SubsystemBase {
 
   /** The config of the primary arm motor */
   private final SparkFlexConfig armConfig;
+
+  SysIdRoutine routine;
 
   /** The config for the follower arm motor */
   private final SparkFlexConfig FollowerarmConfig;
@@ -34,6 +39,9 @@ public class IntakeArmSubsystem extends SubsystemBase {
   private double downPosition;
 
   public IntakeArmSubsystem() {
+
+    SmartDashboard.putNumber("Hold Voltage", 0);
+
     // define the primary arm motor, its config, and the PID controller for it pending setting it up
     armMotor = new SparkFlex(17, MotorType.kBrushless);
     armConfig = new SparkFlexConfig();
@@ -60,11 +68,6 @@ public class IntakeArmSubsystem extends SubsystemBase {
 
     // set the current limit on the primary
     armConfig.smartCurrentLimit(40);
-
-    // we don't have a abs encoder :( but I did calcuate the settings for the encoder and stored
-    // them like this
-    // armConfig.absoluteEncoder.positionConversionFactor(0.0725);
-    // armConfig.absoluteEncoder.zeroOffset(0.275);
 
     // setup the PIDF for the primary
     armConfig
@@ -98,7 +101,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
   public void periodic() {
     if (armMotor != null) {
       // SmartDashboard.putNumber("IntakeArmPosition", armMotor.getEncoder().getPosition());
-    }
+  }
   }
 
   /** returns if the arm is within a certain tolerence of its setpoint */

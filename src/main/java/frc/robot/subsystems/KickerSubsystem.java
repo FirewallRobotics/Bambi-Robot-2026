@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Volts;
+
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -7,7 +9,11 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.util.StatusLogger;
+
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class KickerSubsystem extends SubsystemBase {
   private final SparkFlex kickerMotor;
@@ -22,6 +28,8 @@ public class KickerSubsystem extends SubsystemBase {
     kickerMotor = new SparkFlex(31, MotorType.kBrushless);
     setVelocityKicker = 4500;
     panicVelocity = -3000;
+
+    StatusLogger.start();
 
     kickConfig = new SparkFlexConfig();
     kickClosedLoopController = kickerMotor.getClosedLoopController();
