@@ -39,11 +39,10 @@ public class ShootCommand extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    
+
     m_ShooterSubsystem.StopShoot();
     m_KickerSubsystem.stopKicker();
     m_ShooterSubsystem.isShooting = false;
-    
   }
 
   @Override
