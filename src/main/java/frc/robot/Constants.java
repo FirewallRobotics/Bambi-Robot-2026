@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
  */
 public final class Constants {
   public static class VisionSubsystemConstants {
-    public static final String[] limelightName = {"limelight-cyclops", "limelight-iris"};
+    public static final String[] limelightName = {"limelight-theia", "limelight-iris"};
 
     public static final int ApriltagsPipeline = 0;
 

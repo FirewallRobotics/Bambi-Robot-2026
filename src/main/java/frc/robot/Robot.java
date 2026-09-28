@@ -63,7 +63,10 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    LimelightHelpers.setPipelineIndex(Constants.VisionSubsystemConstants.limelightName[0], 1);
+    LimelightHelpers.SetThrottle(Constants.VisionSubsystemConstants.limelightName[0], 200);
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -73,9 +76,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    LimelightHelpers.setPipelineIndex(Constants.VisionSubsystemConstants.limelightName[0], 0);
+    LimelightHelpers.SetThrottle(Constants.VisionSubsystemConstants.limelightName[0], 0);
     // get the auto command to be run
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    ShooterSubsystem.constantShootingOn = true;
+    ShooterSubsystem.constantShootingOn = false;
     // if that command exists schedule it to be executed
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(m_autonomousCommand);
@@ -90,6 +95,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    LimelightHelpers.setPipelineIndex(Constants.VisionSubsystemConstants.limelightName[0], 0);
+    LimelightHelpers.SetThrottle(Constants.VisionSubsystemConstants.limelightName[0], 0);
     // if the auto command exists and teleop starts then cancel it
     if (m_autonomousCommand != null) {
       CommandScheduler.getInstance().cancel(m_autonomousCommand);

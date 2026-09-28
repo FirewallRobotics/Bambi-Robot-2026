@@ -35,7 +35,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private final CommandSwerveDrivetrain ourDriveTrain;
   public boolean isShooting = false;
-  public static boolean constantShootingOn = true;
+  public static boolean constantShootingOn = false;
   public static boolean updated = true;
 
   public ShooterSubsystem(CommandSwerveDrivetrain ourDriveTrain) {

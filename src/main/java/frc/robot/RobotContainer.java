@@ -13,7 +13,9 @@ import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import com.pathplanner.lib.auto.AutoBuilderException;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -67,6 +69,9 @@ public class RobotContainer {
   /** The command for facing towards the HUB */
   private final SwerveRequest.FieldCentricFacingAngle face =
       new SwerveRequest.FieldCentricFacingAngle();
+
+  private final SwerveRequest.RobotCentricFacingAngle adjust =
+      new SwerveRequest.RobotCentricFacingAngle();
 
   private final SwerveRequest.ApplyFieldSpeeds wiggle = new SwerveRequest.ApplyFieldSpeeds();
 
@@ -127,6 +132,7 @@ public class RobotContainer {
     // without this line the robot will do a full turn to follow a point passing over 360 degrees
     face.HeadingController.enableContinuousInput(-1, 1);
 
+    adjust.HeadingController = new PhoenixPIDController(6, 0, 0);
     wiggle.ForwardPerspective = ForwardPerspectiveValue.OperatorPerspective;
 
     // create the subsystems
@@ -150,14 +156,7 @@ public class RobotContainer {
     // SmartDashboard.putNumber("Hold Voltage", 0);
 
     // Add the autos we have and send it to smartdashboard
-    m_chooser.setDefaultOption("Power Play", new PathPlannerAuto("Copy of Left Auto"));
-    m_chooser.addOption("Power Play V2", new PathPlannerAuto("Left Auto"));
-    m_chooser.addOption("Emergency Power Play", new PathPlannerAuto("Left Auto Old"));
-    m_chooser.addOption("Firewall Fake", new PathPlannerAuto("Shorty"));
-    m_chooser.addOption("Hail Mary", new PathPlannerAuto("Copy of Right Auto"));
-    m_chooser.addOption("Emergency Hail Mary", new PathPlannerAuto("Right Auto"));
-    m_chooser.addOption("Ballerina", new PathPlannerAuto("Ballerina"));
-    m_chooser.addOption("Lynk Rush (Y O I N K)", new PathPlannerAuto("Lynk Rush"));
+    m_chooser.addOption("Lynk Rush (Y O I N K)", new PathPlannerAuto("New Auto"));
     SmartDashboard.putData("Auto Chooser", m_chooser);
 
     // Warmup PathPlanner to avoid Java pauses
@@ -168,6 +167,13 @@ public class RobotContainer {
     // setup the default command for driving field oriented
     // acts as a quick off switch for the drivetrain
     DriveFieldOriented();
+
+    // Run SysId routines when holding back/start and X/Y.
+    // Note that each routine should be run exactly once in a single log.
+    joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+    joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+    joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+    joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.
@@ -187,8 +193,19 @@ public class RobotContainer {
                 () ->
                     face.withTargetDirection(
                         new Rotation2d(VisionSubsystem.getAngleToHUB(drivetrain)))));
-    joystick.b().whileTrue(new PanicKicker(kickerSubsystem, false));
+    joystick
+        .b()
+        .whileTrue(
+            drivetrain.driveToPose(
+                new Pose2d(3.55, 1.15, new Rotation2d(Math.toRadians(135))),
+                new Translation2d(0, 0.5)));
     joystick.leftTrigger().whileTrue(new ManualKicker(kickerSubsystem));
+    joystick
+        .y()
+        .whileTrue(
+            drivetrain.driveToPose(
+                new Pose2d(2, 3.75, new Rotation2d(Math.toRadians(-90))),
+                new Translation2d(0, -0.5)));
     // Run SysId routines when holding back/start and X/Y.
     // Note that each routine should be run exactly once in a single log.
     joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
