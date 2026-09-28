@@ -177,19 +177,19 @@ public class RobotContainer {
         .whileTrue(drivetrain.applyRequest(() -> idle).ignoringDisable(true));
 
     // set the bindings for the primary driver
-    joystick.button(1).whileTrue(drivetrain.applyRequest(() -> brake));
+    joystick.button(2).whileTrue(drivetrain.applyRequest(() -> brake));
     //joystick
     //    .rightTrigger()
     //    .whileTrue(driveAssistanceSubsystem.vibrateIfFaceingHUBDiscriptive(joystick));
     joystick
-        .button(2)
+        .button(3)
         .whileTrue(
             drivetrain.applyRequest(
                 () ->
                     face.withTargetDirection(
                         new Rotation2d(VisionSubsystem.getAngleToHUB(drivetrain)))));
-    joystick.button(5).whileTrue(new PanicKicker(kickerSubsystem, false));
-    joystick.button(6).whileTrue(new ManualKicker(kickerSubsystem));
+    joystick.button(6).whileTrue(new PanicKicker(kickerSubsystem, false));
+    joystick.button(4).whileTrue(new ManualKicker(kickerSubsystem));
     // Run SysId routines when holding back/start and X/Y.
     // Note that each routine should be run exactly once in a single log.
     //joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
@@ -204,9 +204,9 @@ public class RobotContainer {
     //    .whileTrue(drivetrain.applyRequest(() -> wiggle));
 
     // Reset the field-centric heading on left bumper press.
-    joystick.button(3).whileFalse(new AngleArmCommand(armSubsystem, true));
+    joystick.button(7).whileFalse(new AngleArmCommand(armSubsystem, true));
     joystick
-        .button(3)
+        .button(7)
         .whileTrue(
             new SequentialCommandGroup(
                 new AngleArmCommand(armSubsystem, false),
@@ -215,7 +215,7 @@ public class RobotContainer {
     // register the telemetry (Auto generated)
     drivetrain.registerTelemetry(logger::telemeterize);
 
-    joystick.button(0).whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, true));
+    joystick.button(1).whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, true));
     //joystick
     //    .rightBumper()
     //    .and(() -> SmartDashboard.getBoolean("Wiggle", true))
@@ -273,9 +273,19 @@ public class RobotContainer {
                     .withVelocityY(
                        -joystick.getRawAxis(0) * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(
-                        (-joystick.getRawAxis(3)
-                            * MaxAngularRate)-10) // Drive counterclockwise with negative X (left)
+                        NormalizeRotation()) // Drive counterclockwise with negative X (left)
             ));
+  }
+
+  private double NormalizeRotation() {
+    if(joystick.getRawAxis(3)>0.2 || joystick.getRawAxis(3)<-0.2)
+   { 
+    return  -joystick.getRawAxis(3)
+        * MaxAngularRate;
+   }
+   else{
+    return 0;
+   }
   }
 
   /**
