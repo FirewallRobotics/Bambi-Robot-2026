@@ -13,7 +13,9 @@ import com.ctre.phoenix6.swerve.utility.PhoenixPIDController;
 import com.pathplanner.lib.auto.AutoBuilderException;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -67,6 +69,9 @@ public class RobotContainer {
   /** The command for facing towards the HUB */
   private final SwerveRequest.FieldCentricFacingAngle face =
       new SwerveRequest.FieldCentricFacingAngle();
+
+  private final SwerveRequest.RobotCentricFacingAngle adjust =
+      new SwerveRequest.RobotCentricFacingAngle();
 
   private final SwerveRequest.ApplyFieldSpeeds wiggle = new SwerveRequest.ApplyFieldSpeeds();
 
@@ -127,6 +132,7 @@ public class RobotContainer {
     // without this line the robot will do a full turn to follow a point passing over 360 degrees
     face.HeadingController.enableContinuousInput(-1, 1);
 
+    adjust.HeadingController = new PhoenixPIDController(6, 0, 0);
     wiggle.ForwardPerspective = ForwardPerspectiveValue.OperatorPerspective;
 
     // create the subsystems
