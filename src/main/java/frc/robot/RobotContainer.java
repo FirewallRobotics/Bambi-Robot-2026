@@ -273,8 +273,8 @@ public class RobotContainer {
                     .withVelocityY(
                        -joystick.getRawAxis(0) * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(
-                        -joystick.getRawAxis(3)
-                            * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                        (-joystick.getRawAxis(3)
+                            * MaxAngularRate)-10) // Drive counterclockwise with negative X (left)
             ));
   }
 
