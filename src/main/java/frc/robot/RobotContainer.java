@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -87,7 +88,7 @@ public class RobotContainer {
   }
 
   /** Object that allows for binding to the primary drivers xbox controller */
-  public final CommandXboxController joystick = new CommandXboxController(0);
+  public final CommandGenericHID joystick = new CommandGenericHID(0);
 
   /** Object that allows for binding to the secondary drivers xbox controller */
   public final CommandXboxController secondDriver = new CommandXboxController(1);
@@ -182,36 +183,36 @@ public class RobotContainer {
         .whileTrue(drivetrain.applyRequest(() -> idle).ignoringDisable(true));
 
     // set the bindings for the primary driver
-    joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+    joystick.button(2).whileTrue(drivetrain.applyRequest(() -> brake));
+    //joystick
+    //    .rightTrigger()
+    //    .whileTrue(driveAssistanceSubsystem.vibrateIfFaceingHUBDiscriptive(joystick));
     joystick
-        .rightTrigger()
-        .whileTrue(driveAssistanceSubsystem.vibrateIfFaceingHUBDiscriptive(joystick));
-    joystick
-        .rightTrigger()
+        .button(3)
         .whileTrue(
             drivetrain.applyRequest(
                 () ->
                     face.withTargetDirection(
                         new Rotation2d(VisionSubsystem.getAngleToHUB(drivetrain)))));
-    joystick.b().whileTrue(new PanicKicker(kickerSubsystem, false));
-    joystick.leftTrigger().whileTrue(new ManualKicker(kickerSubsystem));
+    joystick.button(6).whileTrue(new PanicKicker(kickerSubsystem, false));
+    joystick.button(4).whileTrue(new ManualKicker(kickerSubsystem));
     // Run SysId routines when holding back/start and X/Y.
     // Note that each routine should be run exactly once in a single log.
-    joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-    joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-    joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-    joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+    //joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+    //joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+    //joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+    //joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-    joystick.leftTrigger().whileTrue(new ManualKicker(kickerSubsystem));
-    joystick
-        .leftTrigger()
-        .and(() -> SmartDashboard.getBoolean("Wiggle", true))
-        .whileTrue(drivetrain.applyRequest(() -> wiggle));
+    //joystick.leftTrigger().whileTrue(new ManualKicker(kickerSubsystem));
+    //joystick
+    //    .leftTrigger()
+    //    .and(() -> SmartDashboard.getBoolean("Wiggle", true))
+    //    .whileTrue(drivetrain.applyRequest(() -> wiggle));
 
     // Reset the field-centric heading on left bumper press.
-    joystick.leftBumper().whileFalse(new AngleArmCommand(armSubsystem, true));
+    joystick.button(7).whileFalse(new AngleArmCommand(armSubsystem, true));
     joystick
-        .leftBumper()
+        .button(7)
         .whileTrue(
             new SequentialCommandGroup(
                 new AngleArmCommand(armSubsystem, false),
@@ -220,11 +221,11 @@ public class RobotContainer {
     // register the telemetry (Auto generated)
     drivetrain.registerTelemetry(logger::telemeterize);
 
-    joystick.rightBumper().whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, true));
-    joystick
-        .rightBumper()
-        .and(() -> SmartDashboard.getBoolean("Wiggle", true))
-        .whileTrue(drivetrain.applyRequest(() -> wiggle));
+    joystick.button(1).whileTrue(new ShootCommand(shooterSubsystem, kickerSubsystem, true));
+    //joystick
+    //    .rightBumper()
+    //    .and(() -> SmartDashboard.getBoolean("Wiggle", true))
+    //    .whileTrue(drivetrain.applyRequest(() -> wiggle));
     // joystick.povLeft().whileTrue(new AngleArmCommand(armSubsystem, false));
 
     // configure the second drivers controller
@@ -237,16 +238,16 @@ public class RobotContainer {
 
   public void periodic() {
     // periodically update the position of the joysticks so that they control the facing
-    face.VelocityX = -joystick.getLeftY() * MaxSpeed;
-    face.VelocityY = -joystick.getLeftX() * MaxSpeed;
+    face.VelocityX = -joystick.getRawAxis(0) * MaxSpeed;
+    face.VelocityY = -joystick.getRawAxis(1) * MaxSpeed;
 
     if (wiggleDirection) {
       wiggle.Speeds =
-          new ChassisSpeeds(joystick.getLeftY() * MaxSpeed, joystick.getLeftX() * MaxSpeed, 1);
+          new ChassisSpeeds(joystick.getRawAxis(1) * MaxSpeed, joystick.getRawAxis(0) * MaxSpeed, 1);
       wiggleCounter += 1;
     } else {
       wiggle.Speeds =
-          new ChassisSpeeds(joystick.getLeftY() * MaxSpeed, joystick.getLeftX() * MaxSpeed, -1);
+          new ChassisSpeeds(joystick.getRawAxis(1) * MaxSpeed, joystick.getRawAxis(0) * MaxSpeed, -1);
       wiggleCounter += 1;
     }
 
@@ -274,13 +275,23 @@ public class RobotContainer {
             () ->
                 drive
                     .withVelocityX(
-                        -joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                        -joystick.getRawAxis(1) * MaxSpeed) // Drive forward with negative Y (forward)
                     .withVelocityY(
-                        -joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                       -joystick.getRawAxis(0) * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(
-                        -joystick.getRightX()
-                            * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                        NormalizeRotation()) // Drive counterclockwise with negative X (left)
             ));
+  }
+
+  private double NormalizeRotation() {
+    if(joystick.getRawAxis(3)>0.2 || joystick.getRawAxis(3)<-0.2)
+   { 
+    return  -joystick.getRawAxis(3)
+        * MaxAngularRate;
+   }
+   else{
+    return 0;
+   }
   }
 
   /**
